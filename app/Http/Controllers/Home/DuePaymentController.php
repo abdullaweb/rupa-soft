@@ -82,14 +82,14 @@ class DuePaymentController extends Controller
         if($companyInfo->status == '1') {
 
             $notification = array(
-                'message' => 'Due Payment Successfully Updated!',
+                'message' => 'Due Payment Approval in Progress!',
                 'alert_type' => 'success',
             );
             return redirect()->route('all.corporate.due.payment')->with($notification);
         } elseif($companyInfo->status == '0') {
 
         $notification = array(
-            'message' => 'Due Payment Successfully Updated!',
+            'message' => 'Due Payment Approval in Progress!',
             'alert_type' => 'success',
         );
         return redirect()->route('all.due.payment')->with($notification);
@@ -363,19 +363,6 @@ class DuePaymentController extends Controller
         $dueAll = DuePayment::where('status', 'pending')->get();
         return view('admin.due_payment.due_payment_approval', compact('dueAll'));
     }
-
-    // public function DuePaymentApprove($id){
-    //     $due_payment = DuePayment::findOrFail($id);
-    //     $due_payment->status = 'approved';
-    //     $due_payment->save();
-
-    //     $notification = array(
-    //         'message' => 'Due Payment Approved Successfully!',
-    //         'alert-type' => 'success',
-    //     );
-
-    //     return redirect()->route('due.payment.approval')->with($notification);
-    // }
 
 
     public function DuePaymentApprovalNow($id)

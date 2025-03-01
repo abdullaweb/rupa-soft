@@ -19,7 +19,7 @@
                  </li>
                  <hr>
                  
-                  @if (Auth::user()->can('customer.menu'))
+                  {{-- @if (Auth::user()->can('customer.menu'))
                      <li>
                          <a href="javascript: void(0);" class="has-arrow waves-effect">
                              <i class="ri-user-3-line"></i>
@@ -45,7 +45,7 @@
                          </ul>
                      </li>
                      <hr>
-                 @endif 
+                 @endif  --}}
 
                  <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
@@ -103,7 +103,7 @@
                  <hr>
              {{-- @endif  --}}
                  
-                  @if (Auth::user()->can('product.menu'))
+                  {{-- @if (Auth::user()->can('product.menu'))
                      <li>
                          <a href="javascript: void(0);" class="has-arrow waves-effect">
                              <i class="ri-product-hunt-line"></i>
@@ -141,8 +141,8 @@
                          </ul>
                      </li>
                      <hr>
-                 @endif 
-                 
+                 @endif  --}}
+{{--                  
                   @if (Auth::user()->can('sale.menu'))
                      <li>
                          <a href="javascript: void(0);" class="has-arrow waves-effect">
@@ -228,10 +228,10 @@
                     </li>
                 
                 <hr>
-            @endif
+            @endif --}}
 
              
-             @if (Auth::user()->can('invoice.menu'))
+             {{-- @if (Auth::user()->can('invoice.menu'))
                 <li>
                      <a href="javascript: void(0);" class="has-arrow waves-effect">
                          <i class="ri-file-text-line"></i>
@@ -246,9 +246,9 @@
                      </ul>
                  </li>
                  <hr>
-             @endif
+             @endif --}}
              
-             <li>
+             {{-- <li>
                      <a href="javascript: void(0);" class="has-arrow waves-effect">
                          <i class="ri-file-text-line"></i>
                          <span>Manage Vat Chalan</span>
@@ -258,9 +258,9 @@
                                  Vat Chalan All</a>
                      </ul>
                  </li>
-                 <hr>
+                 <hr> --}}
                 
-             @if (Auth::user()->can('employee.menu'))
+             {{-- @if (Auth::user()->can('employee.menu'))
                   <li>
                      <a href="javascript: void(0);" class="has-arrow waves-effect">
                          <i class="ri-user-line"></i>
@@ -333,7 +333,7 @@
                      </ul>
                  </li>
                  <hr>
-             @endif
+             @endif --}}
              
               @if (Auth::user()->can('purchase.menu'))
                  <li>
@@ -360,7 +360,7 @@
              @endif
              
              
-             @if (Auth::user()->can('account.menu'))
+             {{-- @if (Auth::user()->can('account.menu'))
                  <li>
                      <a href="javascript: void(0);" class="has-arrow waves-effect">
                          <i class="ri-account-box-line"></i>
@@ -441,7 +441,7 @@
                      </ul>
                  </li>
                  <hr>
-             @endif
+             @endif --}}
 
             @if (Auth::user()->can('report.menu'))
                  <li>
@@ -475,7 +475,7 @@
                  <hr>
             @endif
 
-                 @if (Auth::user()->can('role.permission.menu'))
+                 {{-- @if (Auth::user()->can('role.permission.menu'))
                      <li>
                          <a href="javascript: void(0);" class="has-arrow waves-effect">
                              <i class="ri-lock-line"></i>
@@ -523,9 +523,9 @@
                          </ul>
                      </li>
                      <hr>
-                 @endif
+                 @endif --}}
                  
-                   <li>
+                   {{-- <li>
                          <a href="javascript: void(0);" class="has-arrow waves-effect">
                              <i class="ri-settings-2-line"></i>
                              <span>Settings</span>
@@ -537,7 +537,7 @@
                                      </a>
                                  </li>
                          </ul>
-                     </li>
+                     </li> --}}
                      <hr>
 
              </ul>
