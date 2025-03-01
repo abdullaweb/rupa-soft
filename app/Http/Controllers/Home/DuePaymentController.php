@@ -461,10 +461,22 @@ class DuePaymentController extends Controller
         $due_payment->status = 'approved';
         $due_payment->save();
 
-        return redirect()->route('due.payment.approval')->with([
-            'message' => 'Due Payment Approved and Data Updated Successfully!',
-            'alert-type' => 'success',
-        ]);
+        if ($companyInfo->status == '1') {
+            $notification = array(
+                'message' => 'Due Payment Successfully Deleted!',
+                'alert_type' => 'success',
+            );
+
+            return redirect()->route('all.corporate.due.payment')->with($notification);
+        } elseif ($companyInfo->status == '0') {   
+
+            $notification = array(
+                'message' => 'Due Payment Successfully Deleted!',
+                'alert_type' => 'success',
+            );
+
+        return redirect()->route('all.due.payment')->with($notification);
+      }
     }
 
 }
