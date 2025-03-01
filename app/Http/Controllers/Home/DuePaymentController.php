@@ -101,7 +101,13 @@ class DuePaymentController extends Controller
         $due_payment_info = DuePayment::findOrFail($id);
         $companies = Company::get();
         $invoices = Invoice::whereIn('id', DuePaymentDetail::where('due_payment_id', $due_payment_info->id)->pluck('invoice_id'))->get();
-        $due_amount = Payment::where('company_id', $due_payment_info->customer_id)->sum('due_amount');
+        $payment_due_amount = Payment::where('company_id', $due_payment_info->customer_id)->sum('due_amount');
+
+        $account_details = AccountDetail::where('company_id', $due_payment_info->customer_id)
+            ->latest('id')
+            ->first();
+        
+        $due_amount = $account_details->balance ?? $payment_due_amount;
         $companyInfo = Company::where('id', $due_payment_info->customer_id)->first();
 
         return view('admin.due_payment.edit_due', compact('due_payment_info', 'companies', 'invoices', 'due_amount', 'companyInfo'));
