@@ -226,10 +226,29 @@ class DuePaymentController extends Controller
             $detail->delete();
         }
 
-        AccountDetail::where('company_id', $due_payment->customer_id)
+        // AccountDetail::where('company_id', $due_payment->customer_id)
+        //     ->where('paid_amount', $due_payment->paid_amount)
+        //     ->where('date', $due_payment->date)
+        //     ->delete();
+        
+            $accountDetail = AccountDetail::where('company_id', $due_payment->customer_id)
             ->where('paid_amount', $due_payment->paid_amount)
             ->where('date', $due_payment->date)
-            ->delete();
+            ->first();
+        
+        if ($accountDetail) {
+            $nextAccountDetail = AccountDetail::where('company_id', $due_payment->customer_id)
+                ->where('id', '>', $accountDetail->id)
+                ->get();
+        
+            foreach ($nextAccountDetail as $next) {
+                $next->balance = $next->balance + $due_payment->paid_amount;
+                $next->save();
+            }
+
+            $accountDetail->delete();
+        }
+        
     }
 
     public function UpdateDuePayment(Request $request)
@@ -310,10 +329,23 @@ class DuePaymentController extends Controller
             $detail->delete();
         }
 
-        AccountDetail::where('company_id', $due_payment->customer_id)
+        $accountDetail = AccountDetail::where('company_id', $due_payment->customer_id)
             ->where('paid_amount', $due_payment->paid_amount)
             ->where('date', $due_payment->date)
-            ->delete();
+            ->first();
+        
+        if ($accountDetail) {
+            $nextAccountDetail = AccountDetail::where('company_id', $due_payment->customer_id)
+                ->where('id', '>', $accountDetail->id)
+                ->get();
+        
+            foreach ($nextAccountDetail as $next) {
+                $next->balance = $next->balance + $due_payment->paid_amount;
+                $next->save();
+            }
+
+            $accountDetail->delete();
+        }
 
             $due_payment->delete();
 
