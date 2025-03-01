@@ -18,8 +18,8 @@
                                 <div class="col-md-2">
                                     <div class="md-3">
                                         <label for="example-text-input" class="col-sm-12 col-form-label">Date</label>
-                                        <input type="date" class="form-control"
-                                            name="date" id="date">
+                                        <input type="date" class="form-control date_picker"
+                                            name="date" id="date" required="">
                                     </div>
                                 </div>
                                 
