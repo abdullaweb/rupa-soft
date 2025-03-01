@@ -56,7 +56,7 @@
                                         {{ $item->unit_price }}
                                     </td>
                                     <td>
-                                        {{ $item->purchase->total_amount }}
+                                        {{ $item->quantity * $item->unit_price }}
                                     </td>
                                 </tr>
                             @endforeach
