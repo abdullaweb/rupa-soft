@@ -365,9 +365,9 @@
                     <span>Stock Deduction</span>
                 </a>
                 <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{ route('deduct.stock') }}"><i class="ri-arrow-right-line"></i>Add
+                        {{-- <li><a href="{{ route('deduct.stock') }}"><i class="ri-arrow-right-line"></i>Add
                             Deduction</a>
-                        </li>
+                        </li> --}}
                 </ul>
             </li>
             <hr>

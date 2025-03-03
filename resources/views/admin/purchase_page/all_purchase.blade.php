@@ -108,11 +108,6 @@
                                         <a href="{{ route('purchase.due.payment.history', $item->id) }}" class="btn btn-info" title="Purchase Due  Payment History">
                                             Payment History
                                         </a>
-
-                                        {{-- stock deduction --}}
-                                        <a href="{{ route('deduct.stock', $item->id) }}" class="btn btn-info" title="Stock Deduction">
-                                            Stock Deduction
-                                        </a>
                                     </td>
                                 </tr>
                             @endforeach
