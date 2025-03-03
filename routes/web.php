@@ -20,6 +20,7 @@ use App\Http\Controllers\Home\SupplierController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\WastesSaleController;
+use App\Http\Controllers\StockDeductionController;
 use App\Models\WastesSale;
 use Illuminate\Support\Facades\Route;
 
@@ -237,11 +238,23 @@ Route::middleware('auth', 'role:admin')->group(function () {
         Route::get('/stock/purchase/{id}', 'StockPurchase')->name('purchase.stock');
         Route::post('/update/purchase', 'UpdateStockPurchase')->name('update.purchase.stock');
         // stock deduct
-        Route::get('/stock/deduct/{id}', 'StockDeduct')->name('deduct.stock');
+        Route::get('/stock/deduct', 'StockDeduct')->name('deduct.stock');
         Route::post('/update/deduct/purchase', 'StockDeductUpdate')->name('update.deduct.stock');
     });
 
-    // purchase all route
+    //stock deduction
+    Route::controller(StockDeductionController::class)->group(function () {
+        Route::get('/stock/deduction/all', 'AllStockDeduction')->name('all.stock.deduction');
+        Route::get('/stock/deduction/add', 'AddStockDeduction')->name('add.stock.deduction');
+        Route::post('/stock/deduction/store', 'StoreStockDeduction')->name('store.stock.deduction');
+        Route::get('/stock/deduction/edit/{id}', 'EditStockDeduction')->name('edit.stock.deduction');
+        Route::post('/stock/deduction/update', 'UpdateStockDeduction')->name('update.stock.deduction');
+        Route::get('/stock/deduction/delete/{id}', 'DeleteStockDeduction')->name('delete.stock.deduction');
+    });
+
+
+
+    // wastage sale route
     Route::controller(WastesSaleController::class)->group(function () {
         Route::get('/all/wastes/sale', 'AllWastesSale')->name('all.wastes.sale');
         Route::get('/add/wastes/sale', 'AddWastesSale')->name('add.wastes.sale');

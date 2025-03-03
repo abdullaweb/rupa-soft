@@ -241,13 +241,10 @@ class PurchaseController extends Controller
     }
 
 
-    public function StockDeduct(Request $request, $id)
+    public function StockDeduct()
     {
-        $purchaseInfo = Purchase::findOrFail($id);
-        $purchases = Purchase::all();
-        $suppliers = Supplier::where('status', 'active')->get();
-        $categories = Category::get();
-        return view('admin.purchase_page.deduct_stock', compact('purchases', 'purchaseInfo', 'suppliers', 'categories'));
+        $products = PurchaseMeta::distinct()->pluck('product_name');
+        return view('admin.purchase_page.deduct_stock', compact('products'));
     }
 
     public function StockDeductUpdate(Request $request)
