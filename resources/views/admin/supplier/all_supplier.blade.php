@@ -66,6 +66,10 @@
                                                 class="btn btn-danger" id="delete"> 
                                                 <i class="fas fa-trash-alt"></i>
                                             </a>
+                                            <a style="margin-left: 5px;" href="{{ route('supplier.payment.details', $item->id) }}"
+                                                class="btn btn-info"> 
+                                                Payment Details
+                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach

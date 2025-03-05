@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Home;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Supplier;
+use App\Models\SupplierAccountDetail;
 
 class SupplierController extends Controller
 {
@@ -70,6 +71,14 @@ class SupplierController extends Controller
             'alert-type' => 'success'
         );
         return redirect()->route('all.supplier')->with($notification);
+    }
+
+
+    public function SupplierPaymentDetails($id)
+    {
+        $supplierInfo = Supplier::findOrFail($id);
+        $billDetails = SupplierAccountDetail::where('supplier_id', $id)->get();
+        return view('admin.supplier.supplier_payment_details', compact('supplierInfo', 'billDetails'));
     }
 
 }

@@ -5,12 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SupplierPaymentDetail extends Model
+class SupplierDuePayment extends Model
 {
     use HasFactory;
     protected $guarded = [];
 
-    public function payment(){
-        return $this->belongsTo(SupplierPaymentDetail::class, 'id', 'purchase_id');
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class, 'supplier_id', 'id');
     }
 }

@@ -7,6 +7,7 @@ use App\Models\Expense;
 use App\Models\Payment;
 use App\Models\Purchase;
 use App\Models\DuePayment;
+use App\Models\SupplierDuePayment;
 use App\Models\User;
 use App\Models\WastesSale;
 use Carbon\Carbon;
@@ -26,7 +27,8 @@ class AdminController extends Controller
         $payment = Payment::all();
         $dueAmount = $payment->sum('due_amount');
         $pending_due_payment = DuePayment::where('status', 'pending')->get();
-        return view('admin.index', compact('purchase', 'expense', 'dueAmount', 'payment', 'pending_due_payment'));
+        $supplier_pending_due_payment = SupplierDuePayment::where('status', 'pending')->get();
+        return view('admin.index', compact('purchase', 'expense', 'dueAmount', 'payment', 'pending_due_payment', 'supplier_pending_due_payment'));
     }
 
     public function RedirectDashboard()

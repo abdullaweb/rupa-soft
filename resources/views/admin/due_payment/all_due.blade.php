@@ -62,6 +62,12 @@
                                                     <i class="fas fa-trash-alt"></i>
                                                 </a>
                                             {{-- @endif --}}
+
+                                            @if($item->status == 'pending')
+                                                <a style="margin-left: 5px;" href="{{ route('due.payment.approval.now', $item->id) }}" class="btn btn-success" id="approve" title="Approve">
+                                                    <i class="fas fa-check"></i>
+                                                </a>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach

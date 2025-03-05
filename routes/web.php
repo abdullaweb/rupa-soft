@@ -17,6 +17,7 @@ use App\Http\Controllers\Home\DuePaymentController;
 use App\Http\Controllers\Home\TaxController;
 use App\Http\Controllers\Home\RoleController;
 use App\Http\Controllers\Home\SupplierController;
+use App\Http\Controllers\Home\SupplierDuePaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\WastesSaleController;
@@ -242,6 +243,20 @@ Route::middleware('auth', 'role:admin')->group(function () {
         Route::post('/update/deduct/purchase', 'StockDeductUpdate')->name('update.deduct.stock');
     });
 
+    //Supplier Due Payment
+    Route::controller(SupplierDuePaymentController::class)->group(function () {
+        Route::get('/all/supplier-due-payment', 'AllDuePayment')->name('all.supplier.due.payment');
+        Route::get('/add/supplier-due-payment', 'AddDuePayment')->name('add.supplier.due.payment');
+        Route::post('/submit/supplier-due-payment', 'StoreDuePayment')->name('submit.supplier.due.payment');
+        Route::get('/edit/supplier-due-payment/{id}', 'EditDuePayment')->name('edit.supplier.due.payment');
+        Route::post('/update/supplier-due-payment', 'UpdateDuePayment')->name('update.supplier.due.payment');
+        Route::get('/delete/supplier-due-payment/{id}', 'DeleteDuePayment')->name('delete.supplier.due.payment');
+
+        Route::post('/get/supplier-due-payment', 'GetDuePayment')->name('get.supplier.due.amount');
+        Route::get('/supplier-due-payment/approval', 'DuePaymentApproval')->name('supplier.due.payment.approval');
+        Route::get('/supplier-due-payment/approval/{id}', 'DuePaymentApprovalNow')->name('supplier.due.payment.approval.now');
+    });
+
     //stock deduction
     Route::controller(StockDeductionController::class)->group(function () {
         Route::get('/stock/deduction/all', 'AllStockDeduction')->name('all.stock.deduction');
@@ -271,6 +286,9 @@ Route::middleware('auth', 'role:admin')->group(function () {
         Route::get('/edit/supplier/{id}', 'EditSupplier')->name('edit.supplier');
         Route::post('/update/supplier', 'UpdateSupplier')->name('update.supplier');
         Route::get('/delete/supplier/{id}', 'DeleteSupplier')->name('delete.supplier');
+
+        //supplier payment details
+        Route::get('/supplier/payment/details/{id}', 'SupplierPaymentDetails')->name('supplier.payment.details');
     });
 
 

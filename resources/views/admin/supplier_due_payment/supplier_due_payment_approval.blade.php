@@ -5,10 +5,10 @@
     <div class="page-content">
         <!--breadcrumb-->
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <h6 class="m-0 font-weight-bold text-primary">All Due</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Due Approval List</h6>
             <h6 class="m-0 font-weight-bold text-primary">
-                <a href="{{ route('add.corporate.due.payment') }}">
-                    <button class="btn btn-info">Add Corporate Due</button>
+                <a href="{{ route('all.supplier.due.payment') }}">
+                    <button class="btn btn-info">Supplier Due List</button>
                 </a>
             </h6>
         </div>
@@ -21,7 +21,7 @@
                             <thead>
                                 <tr>
                                     <th>Sl</th>
-                                    <th>Customer Name</th>
+                                    <th>Supplier Name</th>
                                     <th>Date</th>
                                     <th>Paid Amount</th>
                                     <th>Action</th>
@@ -30,7 +30,7 @@
                             <tfoot>
                                 <tr>
                                     <th>Sl</th>
-                                    <th>Customer Name</th>
+                                    <th>Supplier Name</th>
                                     <th>Date</th>
                                     <th>Paid Amount</th>
                                     <th>Action</th>
@@ -41,7 +41,7 @@
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
                                         <td>
-                                            {{ $item->company->name }}
+                                            {{ $item->supplier->name }}
                                         </td>
                                         <td>
                                             {{ $item->date }}
@@ -52,22 +52,16 @@
 
                                         <td>
                                             {{-- @if (Auth::user()->can('due.payment.edit')) --}}
-                                                <a style="margin-left: 5px;" href="{{ route('edit.due.payment', $item->id) }}" class="btn btn-info">
-                                                    <i class="fas fa-edit"></i>
+                                                <a style="margin-left: 5px;" href="{{ route('due.payment.approval.now', $item->id) }}" class="btn btn-info" id="approve">
+                                                    Approve
                                                 </a>
                                             {{-- @endif --}}
 
                                             {{-- @if (Auth::user()->can('due.payment.delete')) --}}
-                                                <a style="margin-left: 5px;" href="{{ route('delete.due.payment', $item->id) }}" class="btn btn-danger" title="Delete" id="delete">
-                                                    <i class="fas fa-trash-alt"></i>
+                                                <a style="margin-left: 5px;" href="{{ route('delete.due.payment', $item->id) }}" class="btn btn-danger" title="Delete" id="decline">
+                                                    Decline
                                                 </a>
                                             {{-- @endif --}}
-
-                                            @if($item->status == 'pending')
-                                                <a style="margin-left: 5px;" href="{{ route('due.payment.approval.now', $item->id) }}" class="btn btn-success" id="approve" title="Approve">
-                                                    <i class="fas fa-check"></i>
-                                                </a>
-                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach

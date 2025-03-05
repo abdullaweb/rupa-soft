@@ -19,7 +19,7 @@ class DuePaymentController extends Controller
 {
     public function AllDuePayment()
     {
-        $dueAll = DuePayment::where('status', 'approved')->whereHas('company', function ($query) {
+        $dueAll = DuePayment::whereHas('company', function ($query) {
             $query->where('status', '0');
         })->get();
         return view('admin.due_payment.all_due', compact('dueAll'));
@@ -27,7 +27,7 @@ class DuePaymentController extends Controller
 
     public function AllCorporateDuePayment()
     {
-        $dueAll = DuePayment::where('status', 'approved')->whereHas('company', function ($query) {
+        $dueAll = DuePayment::whereHas('company', function ($query) {
             $query->where('status', '1');
         })->get();
         return view('admin.due_payment.all_corporate_due', compact('dueAll'));
@@ -347,7 +347,7 @@ class DuePaymentController extends Controller
             $accountDetail->delete();
         }
 
-            $due_payment->delete();
+        $due_payment->delete();
 
         if ($companyInfo->status == '1') {
             $notification = array(

@@ -44,7 +44,7 @@
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
                                         <td>
-                                            {{ $item->company->name }}
+                                            {{ $item->customer->name ?? '' }}
                                         </td>
                                         <td>
                                             {{ $item->date }}
@@ -55,13 +55,13 @@
 
                                         <td>
                                             {{-- @if (Auth::user()->can('due.payment.edit')) --}}
-                                                <a style="margin-left: 5px;" href="{{ route('due.payment.approval.now', $item->id) }}" class="btn btn-info" id="approve">
+                                                <a style="margin-left: 5px;" href="{{ route('supplier.due.payment.approval.now', $item->id) }}" class="btn btn-info" id="approve">
                                                     Approve
                                                 </a>
                                             {{-- @endif --}}
 
                                             {{-- @if (Auth::user()->can('due.payment.delete')) --}}
-                                                <a style="margin-left: 5px;" href="{{ route('delete.due.payment', $item->id) }}" class="btn btn-danger" title="Delete" id="decline">
+                                                <a style="margin-left: 5px;" href="{{ route('delete.supplier.due.payment', $item->id) }}" class="btn btn-danger" title="Delete" id="decline">
                                                     Decline
                                                 </a>
                                             {{-- @endif --}}

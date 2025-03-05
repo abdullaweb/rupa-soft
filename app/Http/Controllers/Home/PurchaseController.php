@@ -7,11 +7,13 @@ use App\Models\Purchase;
 use App\Models\Supplier;
 use App\Models\PurchaseMeta;
 use App\Models\SupplierPaymentDetail;
+use App\Models\SupplierAccountDetail;
 use App\Models\Category;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+
 
 class PurchaseController extends Controller
 {
@@ -61,18 +63,37 @@ class PurchaseController extends Controller
             $supplier_payment->total_amount = $request->estimated_amount;
             $supplier_payment->balance = $request->estimated_amount - $request->paid_amount;
 
+            $supplier_account_details = new SupplierAccountDetail();
+            $supplier_account_details->supplier_id = $request->supplier_id;
+            $supplier_account_details->purchase_id = $purchase->id;
+            $supplier_account_details->date = date('Y-m-d', strtotime($request->date));
+            $supplier_account_details->total_amount = $request->estimated_amount;
+            $supplier_account_details->balance = $request->estimated_amount - $request->paid_amount;
+
+
+
             if ($request->paid_status == 'full_paid') {
                 $supplier_payment->paid_amount = $request->estimated_amount;
                 $supplier_payment->due_amount = '0';
+
+                $supplier_account_details->paid_amount = $request->estimated_amount;
+                $supplier_account_details->due_amount = '0';
             } elseif ($request->paid_status == 'full_due') {
                 $supplier_payment->paid_amount = '0';
                 $supplier_payment->due_amount = $request->estimated_amount;
+
+                $supplier_account_details->paid_amount = '0';
+                $supplier_account_details->due_amount = $request->estimated_amount;
             } elseif ($request->paid_status == 'partial_paid') {
                 $supplier_payment->paid_amount = $request->paid_amount;
                 $supplier_payment->due_amount = $request->estimated_amount - $request->paid_amount;
+
+                $supplier_account_details->paid_amount = $request->paid_amount;
+                $supplier_account_details->due_amount = $request->estimated_amount - $request->paid_amount;
             }
 
             $supplier_payment->save();
+            $supplier_account_details->save();
 
             DB::commit();
 
@@ -115,6 +136,8 @@ class PurchaseController extends Controller
         PurchaseMeta::where('purchase_id', $purchaseId)->delete();
 
         SupplierPaymentDetail::where('purchase_id', $purchaseId)->delete();
+
+        SupplierAccountDetail::where('purchase_id', $purchaseId)->delete();
     }
 
     public function UpdatePurchase(Request $request)
@@ -154,18 +177,35 @@ class PurchaseController extends Controller
             $supplier_payment->total_amount = $request->estimated_amount;
             $supplier_payment->balance = $request->estimated_amount - $request->paid_amount;
 
+            $supplier_account_details = new SupplierAccountDetail();
+            $supplier_account_details->supplier_id = $request->supplier_id;
+            $supplier_account_details->purchase_id = $purchase->id;
+            $supplier_account_details->date = date('Y-m-d', strtotime($request->date));
+            $supplier_account_details->total_amount = $request->estimated_amount;
+            $supplier_account_details->balance = $request->estimated_amount - $request->paid_amount;
+
             if ($request->paid_status == 'full_paid') {
                 $supplier_payment->paid_amount = $request->estimated_amount;
                 $supplier_payment->due_amount = '0';
+
+                $supplier_account_details->paid_amount = $request->estimated_amount;
+                $supplier_account_details->due_amount = '0';
             } elseif ($request->paid_status == 'full_due') {
                 $supplier_payment->paid_amount = '0';
                 $supplier_payment->due_amount = $request->estimated_amount;
+
+                $supplier_account_details->paid_amount = '0';
+                $supplier_account_details->due_amount = $request->estimated_amount;
             } elseif ($request->paid_status == 'partial_paid') {
                 $supplier_payment->paid_amount = $request->paid_amount;
                 $supplier_payment->due_amount = $request->estimated_amount - $request->paid_amount;
+
+                $supplier_account_details->paid_amount = $request->paid_amount;
+                $supplier_account_details->due_amount = $request->estimated_amount - $request->paid_amount;
             }
 
             $supplier_payment->save();
+            $supplier_account_details->save();
 
             DB::commit();
 
