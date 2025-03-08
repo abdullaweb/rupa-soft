@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Invoice;
 use App\Models\InvoiceDetail;
+use App\Models\PurchaseSummery;
+use App\Models\PurchaseSubCategory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -76,5 +78,16 @@ class ReportController extends Controller
         }
         
         return view('admin.report.invoice.get_invoice_report', compact('invoiceAll', 'start_date', 'end_date'));
+    }
+
+
+    public function PurchaseSummeryReport(){
+        $summaries = PurchaseSummery::get();
+        return view('admin.report.purchase.purchase_report', compact('summaries'));
+    }
+
+    public function PurchaseReport(){
+        $sub_categories = PurchaseSubCategory::get();
+        return view('admin.report.purchase.purchase_stock_report', compact('sub_categories'));
     }
 }

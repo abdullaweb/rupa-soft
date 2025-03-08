@@ -14,6 +14,16 @@ class StockDeductionDetail extends Model
     {
         return $this->belongsTo(StockDeduction::class);
     }
+
+    public function category()
+    {
+        return $this->belongsTo(PurchaseCategory::class, 'category_id', 'id');
+    }
+
+    public function sub_category()
+    {
+        return $this->belongsTo(PurchaseSubCategory::class, 'sub_cat_id', 'id');
+    }
     
     public function product()
     {

@@ -11,18 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stock_deduction_details', function (Blueprint $table) {
+        Schema::create('purchase_summeries', function (Blueprint $table) {
             $table->id();
-            $table->date('date')->nullable();
+            $table->string('purchase_id')->nullable();
+            $table->string('purchase_meta_id')->nullable();
             $table->string('deduction_id')->nullable();
-            $table->string('category_id')->nullable();
-            $table->string('sub_cat_id')->nullable();
-            $table->longText('description')->nullable();
+            $table->string('purchase_sub_cat_id')->nullable();
             $table->string('quantity')->nullable();
             $table->string('unit_price')->nullable();
-            $table->string('total_price')->nullable();
-            $table->integer('created_by')->nullable();
-            $table->integer('updated_by')->nullable();
+            $table->string('amount')->nullable();
+            $table->string('stock')->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stock_deduction_details');
+        Schema::dropIfExists('purchase_summeries');
     }
 };

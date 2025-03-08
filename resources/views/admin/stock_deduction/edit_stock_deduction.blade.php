@@ -13,27 +13,13 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title">Add Purchase </h4><br><br>
+                            <h4 class="card-title">Edit Stock Deduction </h4><br><br>
                             <div class="row mt-3">
                                 <div class="col-md-2">
                                     <div class="md-3">
                                         <label for="example-text-input" class="col-sm-12 col-form-label">Date</label>
                                         <input type="date" class="form-control date_picker"
-                                            name="date" id="date" required="">
-                                    </div>
-                                </div>
-                                
-                                <div class="col-md-2">
-                                    <div class="md-3">
-                                        <label for="example-text-input" class="col-sm-12 col-form-label">Supplier Name</label>
-                                        <select name="supplier_id" id="supplier_id" class="form-control form-select supplier_id">
-                                            <option value="" selected disabled>Select Supplier Name</option>
-                                            @foreach ($suppliers as $supplier)
-                                                <option value="{{ $supplier->id }}">
-                                                    {{ $supplier->name  }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                            name="date" id="date" required="" value="{{ $stock_deduction->date }}">
                                     </div>
                                 </div>
                                 <div class="col-md-2">
@@ -56,9 +42,16 @@
                                     <div class="md-3">
                                         <label for="example-text-input" class="col-sm-12 col-form-label">Sub Category
                                             Name</label>
-                                        <select name="sub_cat_id" id="sub_cat_id" class="form-control form-select select2">
+                                        <select name="sub_cat_id" id="sub_cat_id" class="form-control form-select">
                                             <option selected value="">Select Sub Category</option>
                                         </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2" hidden>
+                                    <div class="md-3">
+                                        <label for="example-text-input" class="col-sm-12 col-form-label">Current Quantity</label>
+                                        <input type="text" class="form-control" name="stock_quantity" id="stock_quantity" required="" readonly value="0">
                                     </div>
                                 </div>
 
@@ -76,7 +69,7 @@
 
 
                         <div class="card-body">
-                            <form method="POST" action="{{ route('store.purchase') }}" novalidate=""
+                            <form method="POST" action="{{ route('update.stock.deduction') }}" novalidate=""
                                 id="invoiceForm" autocomplete="off" >
                                 @csrf
                                 <table class="table table-sm table-bordered" width="100%" style="border-color: #ddd;">
@@ -85,68 +78,81 @@
                                             <th>Category Name</th>
                                             <th>Sub Category</th>
                                             <th>Description</th>
-                                            <th width="7%">Quantity</th>
-                                            <th width="10%">Unit Price</th>
-                                            <th width="15%">Total Price</th>
+                                            <th width="10%">Stock Qty</th>
+                                            <th width="10%">Quantity</th>
                                             <th width="7%">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody id="addRow" class="addRow">
 
+                                        @foreach ($stock_deduction_details as $item)
+                                            <tr class="delete_add" id="delete_add">
+                                                <input type="hidden" name="id[]" value="{{ $item->id }}">
+                                                <td hidden>
+                                                    <input type="text" name="category_id[]" value="{{ $item->category_id }}">
+                                                    <span class="cat_name">{{ $item->category->name }}</span>
+                                                </td>
+                                                <td>
+                                                    <input type="hidden" name="category_name[]"
+                                                        value="{{ $item->category->name }}">
+                                                    <span class="cat_name">{{ $item->category->name }}</span>
+                                                </td>
+                                                <td>
+                                                    <input type="hidden" name="sub_cat_id[]"
+                                                        value="{{ $item->sub_cat_id }}">
+                                                    <span class="sub_cat_name">{{ $item->sub_category->name }}</span>
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control" placeholder="Write Description"
+                                                        name="description[]" value="{{ $item->description }}">
+                                                </td>
+
+                                                @php
+                                                    $stock_qty = App\Models\PurchaseSummery::where('purchase_sub_cat_id', $item->sub_cat_id)->latest('id')->first();
+                                                @endphp
+
+                                                <td width="4%">
+                                                    <input type="digit" class="form-control stock_qty text-right" required=""
+                                                        data-parsley-required-message="Qty is required" name="stock_qty[]"
+                                                        value="{{ $stock_qty->stock + $item->total_quantity }}" autocomplete="off" readonly>
+                                                </td>
+
+                                                <td width="4%">
+                                                    <input type="digit" class="form-control selling_qty text-right" required=""
+                                                        data-parsley-required-message="Qty is required" name="selling_qty[]"
+                                                        value="{{ $item->total_quantity }}" autocomplete="off">
+                                                </td>
+                                                <td>
+                                                    <i class="btn btn-danger btn-sm fas fa-window-close" id="removeEventMore"></i>
+                                                </td>
+                                            </tr>
+                                 </tr>
+                            @endforeach
+
                                     </tbody>
                                     <tbody>
                                         <tr>
-                                            <td colspan="5">Sub Total</td>
+                                            <td colspan="4">Total Qty</td>
                                             <td>
-                                                <input type="number" name="sub_total" id="sub_total"
-                                                    class="form-control sub_total" placeholder="Sub Total" value="0"
-                                                    readonly>
+                                                <input type="text" name="estimated_qty" id="estimated_qty"
+                                                    class="form-control estimated_qty" style="background:#ddd;" readonly
+                                                    value="{{ $stock_deduction->total_qty }}">
                                             </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="5">Discount Amount</td>
-                                            <td>
-                                                <input type="number" name="discount_amount" id="discount_amount"
-                                                    class="form-control discount_amount" placeholder="Discount Amount">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="5">Grand Total</td>
-                                            <td>
-                                                <input type="text" name="estimated_amount" id="estimated_amount"
-                                                    class="form-control estimated_amount" style="background:#ddd;" readonly
-                                                    value="0">
-                                            </td>
+                                            <input type="text" name="stock_deduction_id" value="{{ $stock_deduction->id }}"
+                                                hidden>
+                                            <input type="text" name="deduction_no" value="{{ $stock_deduction->deduction_no }}"
+                                                hidden>
+
+                                            <input type="date" class="form-control"
+                                                name="date" id="form_date" required="" value="{{ $stock_deduction->date }}" hidden>
+                                            
                                         </tr>
                                     </tbody>
                                 </table>
                                 <br>
-                                <div class="row mb-3">
-                                    <div class="col-md-3">
-                                        <select class="form-control" name="paid_status" id="paid_status">
-                                            <option value="" selected disabled>Select Paid Status</option>
-                                            <option value="full_paid">Full Paid</option>
-                                            <option value="full_due">Full Due</option>
-                                            <option value="partial_paid">Partial Paid</option>
-                                        </select>
-                                        <input type="text" placeholder="Enter Paid Amount" class="form-control"
-                                            name="paid_amount" id="paid_amount" style="display:none;">
-                                    </div>
-                                    <div class="col-md-3" id="paid_source_col" style="display: none;">
-                                        <select class="form-control" name="paid_source" id="paid_source">
-                                            <option value="" selected disabled>Select Payment Status</option>
-                                            <option value="cash">Cash</option>
-                                            <option value="check">Check</option>
-                                            <option value="online-banking">Online Banking</option>
-                                        </select>
-                                        <input type="text" placeholder="Check OR Online Banking Name"
-                                            class="form-control" name="check_or_banking" id="check_or_banking"
-                                            style="display:none;">
-                                    </div>
-                                </div>
 
                                 <div class="form-group mt-4">
-                                    <button type="submit" class="btn btn-info" id="storeButton">Purchase Store</button>
+                                    <button type="submit" class="btn btn-info" id="storeButton">Update</button>
                                 </div>
                             </form>
                         </div>
@@ -157,13 +163,36 @@
         </div>
     </div>
 
+    <script>
+        $('#sub_cat_id').on('change', function() {
+            let sub_category = $(this).val();
+
+            // alert(sub_category);
+            $.ajax({
+                url: "{{ route('get.stock.quantity') }}",
+                type: "GET",
+                data: {
+                    sub_category: sub_category
+                },
+                success: function(data) {
+                    $('#stock_quantity').val(data);
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#date').on('change', function() {
+                let date = $(this).val();
+                $('#form_date').val(date);
+            });
+        });
+    </script>
+
     <script id="document-template" type="text/x-handlebars-template">
         <tr class="delete_add_more_item" id="delete_add_more_item">
             <input type="hidden" name="date" value="@{{ date }}">
-            <td hidden>
-                <input type="hidden" name="supplier_id" value="@{{ supplier_id }}">
-                <span class="supplier_id">@{{ supplier_id }}</span>
-            </td>
             <td hidden>
                 <input type="text" name="category_id[]" value="@{{ category_id }}">
                 <span class="cat_name">@{{ category_name }}</span>
@@ -179,17 +208,15 @@
             <td>
                 <input type="text" class="form-control" placeholder="Write Description"  name="description[]">
             </td>
+
+            <td width="4%">
+                <input type="digit" class="form-control stock_qty text-right" required="" data-parsley-required-message="Qty is required" name="stock_qty[]"
+                    value="@{{ stock_qty }}" autocomplete="off" readonly>
+            </td>
             
             <td width="4%">
                 <input type="digit" class="form-control selling_qty text-right" required="" data-parsley-required-message="Qty is required" name="selling_qty[]"
                     value="" autocomplete="off">
-            </td>
-            <td width="10%">
-                <input type="digit" class="form-control unit_price text-right" required="" data-parsley-required-message="Uiit Price is required"  name="unit_price[]" value="" autocomplete="off">
-            </td>
-            <td>
-                <input type="digit"  class="form-control selling_price text-right" required="" data-parsley-required-message="Selling Price is required" name="selling_price[]"
-                    value="0" readonly>
             </td>
             <td>
                 <i class="btn btn-danger btn-sm fas fa-window-close" id="removeEventMore"></i>
@@ -204,23 +231,14 @@
             $(document).on("click", "#addEventMore", function() {
 
                 let date = $("#date").val();
-                let supplier_id = $("#supplier_id").val();
                 let category_id = $("#category_id").val();
                 let category_name = $("#category_id").find('option:selected').text();
                 let sub_cat_id = $("#sub_cat_id").val();
                 let sub_cat_name = $("#sub_cat_id").find('option:selected').text();
-
-                // console.log('cat_id', category_id);
+                let stock_qty = $("#stock_quantity").val();
 
                 if (date == '') {
                     $.notify("Date is required", {
-                        globalPosition: 'top right',
-                        className: 'error'
-                    });
-                    return false;
-                }
-                if (supplier_id == '') {
-                    $.notify("Supplier is required", {
                         globalPosition: 'top right',
                         className: 'error'
                     });
@@ -247,69 +265,44 @@
 
                 let data = {
                     date: date,
-                    supplier_id: supplier_id,
                     category_id: category_id,
                     category_name: category_name,
                     sub_cat_id: sub_cat_id,
                     sub_cat_name: sub_cat_name,
+                    stock_qty: stock_qty
+
                 };
                 let html = template(data);
                 $("#addRow").append(html);
             });
 
-
             $(document).on("click", "#removeEventMore", function() {
                 $(this).closest(".delete_add_more_item").remove();
-                totalAmountPrice();
+                totalQuantity();
             });
-
-
-            $(document).on("keyup click", ".unit_price,.selling_qty", function() {
-                let category_name_check = $("#category_id").find('option:selected').text();
-                let subcat_name_check = $("#sub_cat_id").find('option:selected').text();
-                let cat_name = category_name_check.trim();
-                let sub_cat_name = subcat_name_check.trim();
-
-
-                let unit_price = $(this).closest("tr").find('input.unit_price').val();
-                let selling_qty = $(this).closest("tr").find('input.selling_qty').val();
-
-                let total = unit_price * selling_qty;
-
-                $(this).closest("tr").find('input.selling_price').val(total);
-                $("#discount_amount").trigger('keyup');
-
-            });
-
-            $(document).on('keyup', '#discount_amount', function() {
-                totalAmountPrice();
-            });
-
-            //  calculate sum amount for invoice
-
-            function totalAmountPrice() {
-                let sum = 0;
-                let subTotal = 0;
-                $('.selling_price').each(function() {
-                    let value = $(this).val();
-                    if (!isNaN(value) && value.length != 0) {
-                        sum += parseFloat(value);
-                        subTotal += parseFloat(value);
-                    }
-                });
-                $("#sub_total").val(subTotal);
-
-
-                let discount_amount = parseFloat($('#discount_amount').val());
-                if (!isNaN(discount_amount) && discount_amount.length != 0) {
-                    sum -= parseFloat(discount_amount);
-                }
-
-                $("#estimated_amount").val(sum);
-            }
 
         });
     </script>
+
+    <script>
+        $(document).on("keyup click", ".selling_qty", function () {
+               totalQuantity();
+         });
+
+        function totalQuantity() {
+            let totalQty = 0;
+            $('.selling_qty').each(function () {
+                let qty = $(this).val();
+                if (!isNaN(qty) && qty.length != 0) {
+                    totalQty += parseFloat(qty);
+                }
+            });
+            $("#estimated_qty").val(totalQty);
+        }
+
+    </script>
+
+    
 
 
 
@@ -342,21 +335,6 @@
                     $('#check_or_banking').show();
                 } else {
                     $('#check_or_banking').hide();
-                }
-            });
-        });
-    </script>
-
-    {{-- New Company --}}
-
-    <script>
-        $(document).ready(function() {
-            $('#company_id').on('change', function() {
-                let company_id = $(this).val();
-                if (company_id == 'new_company') {
-                    $('#new_company').show();
-                } else {
-                    $('#new_company').hide();
                 }
             });
         });
@@ -399,6 +377,8 @@
             });
         });
     </script>
+
+    
     <script src="{{ asset('backend/assets/libs/parsleyjs/parsley.min.js') }}"></script>
 
     <script>

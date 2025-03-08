@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->string('quantity')->nullable();
             $table->string('unit_price')->nullable();
+            $table->string('current_qty')->nullable();
             $table->timestamps();
         });
     }

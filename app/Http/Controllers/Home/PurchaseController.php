@@ -8,11 +8,13 @@ use App\Models\Supplier;
 use App\Models\PurchaseMeta;
 use App\Models\SupplierPaymentDetail;
 use App\Models\SupplierAccountDetail;
-use App\Models\Category;
+use App\Models\PurchaseCategory;
+use App\Models\PurchaseSummery;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+
 
 
 class PurchaseController extends Controller
@@ -26,7 +28,7 @@ class PurchaseController extends Controller
     public function AddPurchase()
     {
         $suppliers = Supplier::where('status', 'active')->get();
-        $categories = Category::get();
+        $categories = PurchaseCategory::get();
         return view('admin.purchase_page.add_purchase', compact('suppliers', 'categories'));
     }
 
@@ -44,16 +46,30 @@ class PurchaseController extends Controller
             $purchase->paid_status = $request->paid_status;
             $purchase->save();
 
-            foreach ($request->product_name as $key => $value) {
+            
+
+            foreach ($request->category_id as $key => $value) {
                 $purchase_meta = new PurchaseMeta();
                 $purchase_meta->purchase_id = $purchase->id;
-                $purchase_meta->product_name = $request->product_name[$key];
                 $purchase_meta->category_id = $request->category_id[$key];
                 $purchase_meta->sub_cat_id = $request->sub_cat_id[$key];
                 $purchase_meta->description = $request->description[$key];
                 $purchase_meta->quantity = $request->selling_qty[$key];
+                $purchase_meta->current_qty = $request->selling_qty[$key];
                 $purchase_meta->unit_price = $request->unit_price[$key];
                 $purchase_meta->save();
+
+                $latest_purchase_summery = PurchaseSummery::where('purchase_sub_cat_id', $request->sub_cat_id[$key])->latest('id')->first() ?? '0';
+
+                $purchase_summery = new PurchaseSummery();
+                $purchase_summery->purchase_id = $purchase->id;
+                $purchase_summery->purchase_meta_id = $purchase_meta->id;
+                $purchase_summery->purchase_sub_cat_id = $request->sub_cat_id[$key];
+                $purchase_summery->quantity = $request->selling_qty[$key];
+                $purchase_summery->unit_price = $request->unit_price[$key];
+                $purchase_summery->amount = $request->selling_price[$key];
+                $purchase_summery->stock = is_numeric($latest_purchase_summery) ? $request->selling_qty[$key] : $latest_purchase_summery->stock + $request->selling_qty[$key];
+                $purchase_summery->save();
             }
 
             $supplier_payment = new SupplierPaymentDetail();
@@ -106,7 +122,7 @@ class PurchaseController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
-            \Log::error('Error storing purchase: ' . $e->getMessage());
+            \Log::error('Error storing purchase on line ' . $e->getLine() . ': ' . $e->getMessage());
 
             $notification = array(
                 'message' => 'Purchase Add Failed ' . $e->getMessage(),
@@ -124,7 +140,7 @@ class PurchaseController extends Controller
         // dd($purchaseInfo);
         $purchaseDetails = PurchaseMeta::where('purchase_id', $id)->get();
         $suppliers = Supplier::where('status', 'active')->get();
-        $categories = Category::get();
+        $categories = PurchaseCategory::get();
         return view('admin.purchase_page.edit_purchase', compact('purchaseInfo', 'suppliers', 'categories', 'purchaseDetails'));
     }
 
@@ -138,6 +154,20 @@ class PurchaseController extends Controller
         SupplierPaymentDetail::where('purchase_id', $purchaseId)->delete();
 
         SupplierAccountDetail::where('purchase_id', $purchaseId)->delete();
+
+        $purchaseSummery = PurchaseSummery::where('purchase_id', $purchaseId)->get();
+        $nextPurchaseSummery = PurchaseSummery::where('purchase_id', '>', $purchaseId)->get();
+
+        foreach ($purchaseSummery as $key => $value) {
+            foreach ($nextPurchaseSummery as $nextKey => $nextValue) {
+                if ($value->purchase_sub_cat_id == $nextValue->purchase_sub_cat_id) {
+                    $nextValue->stock = $nextValue->stock - $value->quantity;
+                    $nextValue->save();
+                }
+            }
+        }
+
+        PurchaseSummery::where('purchase_id', $purchaseId)->delete();
     }
 
     public function UpdatePurchase(Request $request)
@@ -158,16 +188,28 @@ class PurchaseController extends Controller
             $purchase->paid_status = $request->paid_status;
             $purchase->save();
 
-            foreach ($request->product_name as $key => $value) {
+            foreach ($request->category_id as $key => $value) {
                 $purchase_meta = new PurchaseMeta();
                 $purchase_meta->purchase_id = $purchase->id;
-                $purchase_meta->product_name = $request->product_name[$key];
                 $purchase_meta->category_id = $request->category_id[$key];
                 $purchase_meta->sub_cat_id = $request->sub_cat_id[$key];
                 $purchase_meta->description = $request->description[$key];
                 $purchase_meta->quantity = $request->selling_qty[$key];
+                $purchase_meta->current_qty = $request->selling_qty[$key];
                 $purchase_meta->unit_price = $request->unit_price[$key];
                 $purchase_meta->save();
+
+                $latest_purchase_summery = PurchaseSummery::where('purchase_sub_cat_id', $request->sub_cat_id[$key])->latest('id')->first() ?? '0';
+
+                $purchase_summery = new PurchaseSummery();
+                $purchase_summery->purchase_id = $purchase->id;
+                $purchase_summery->purchase_meta_id = $purchase_meta->id;
+                $purchase_summery->purchase_sub_cat_id = $request->sub_cat_id[$key];
+                $purchase_summery->quantity = $request->selling_qty[$key];
+                $purchase_summery->unit_price = $request->unit_price[$key];
+                $purchase_summery->amount = $request->selling_price[$key];
+                $purchase_summery->stock = is_numeric($latest_purchase_summery) ? $request->selling_qty[$key] : $latest_purchase_summery->stock + $request->selling_qty[$key];
+                $purchase_summery->save();
             }
 
             $supplier_payment = new SupplierPaymentDetail();
@@ -218,7 +260,7 @@ class PurchaseController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
-            \Log::error('Error storing purchase: ' . $e->getMessage());
+            \Log::error('Error Updating purchase on line ' . $e->getLine() . ': ' . $e->getMessage());
 
             $notification = array(
                 'message' => 'Purchase Update Failed ' . $e->getMessage(),
@@ -313,11 +355,31 @@ class PurchaseController extends Controller
 
     public function DeletePurchase($id)
     {
-        Purchase::findOrFail($id)->delete();
+        DB::beginTransaction();
+        try{
+            Purchase::findOrFail($id)->delete();
 
         PurchaseMeta::where('purchase_id', $id)->delete();
 
         SupplierPaymentDetail::where('purchase_id', $id)->delete();
+
+        SupplierAccountDetail::where('purchase_id', $id)->delete();
+
+        $purchaseSummery = PurchaseSummery::where('purchase_id', $id)->get();
+        $nextPurchaseSummery = PurchaseSummery::where('purchase_id', '>', $id)->get();
+
+        foreach ($purchaseSummery as $key => $value) {
+            foreach ($nextPurchaseSummery as $nextKey => $nextValue) {
+                if ($value->purchase_sub_cat_id == $nextValue->purchase_sub_cat_id) {
+                    $nextValue->stock = $nextValue->stock - $value->quantity;
+                    $nextValue->save();
+                }
+            }
+        }
+
+        PurchaseSummery::where('purchase_id', $id)->delete();
+
+        DB::commit();
 
         $notification = array(
             'message' => 'Purchase Deleted Successfully',
@@ -325,6 +387,17 @@ class PurchaseController extends Controller
         );
 
         return redirect()->back()->with($notification);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('Error deleting purchase: ' . $e->getMessage());
+
+            $notification = array(
+                'message' => 'Purchase Delete Failed ' . $e->getMessage(),
+                'alert-type' => 'error'
+            );
+
+            return redirect()->back()->with($notification);
+        }
     }
 
 

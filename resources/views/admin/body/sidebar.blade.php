@@ -365,6 +365,30 @@
                  </li>
                  <hr>
              @endif --}}
+
+                     <li>
+                         <a href="javascript: void(0);" class="has-arrow waves-effect">
+                             <i class="ri-product-hunt-line"></i>
+                             <span>Purchase Product</span>
+                         </a>
+                         <ul class="sub-menu" aria-expanded="true">
+                             <li>
+                                 <a href="{{ route('all.purchase.category') }}" class="waves-effect">
+                                     <i class="ri-list-check"></i>
+                                     <span>Category Setup</span>
+                                 </a>
+                             </li>
+                             
+                             <li>
+                                 <a href="{{ route('all.purchase.sub.category') }}" class="waves-effect">
+                                     <i class="ri-play-list-add-fill"></i>
+                                     <span>Sub Category Setup</span>
+                                 </a>
+                             </li>
+    
+                         </ul>
+                     </li>
+                     <hr>
              
               @if (Auth::user()->can('purchase.menu'))
                  <li>
@@ -390,18 +414,21 @@
                  <hr>
              @endif
 
-             {{-- <li>
+             <li>
                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                     <i class="ri-bank-card-line"></i>
                     <span>Stock Deduction</span>
                 </a>
                 <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{ route('deduct.stock') }}"><i class="ri-arrow-right-line"></i>Add
+                        <li><a href="{{ route('add.stock.deduction') }}"><i class="ri-arrow-right-line"></i>Add
+                            Deduction</a>
+                        </li>
+                        <li><a href="{{ route('all.stock.deduction') }}"><i class="ri-arrow-right-line"></i>All
                             Deduction</a>
                         </li>
                 </ul>
             </li>
-            <hr> --}}
+            <hr>
              
              
              {{-- @if (Auth::user()->can('account.menu'))
@@ -513,6 +540,16 @@
                         <li>
                             <a href="{{ route('invoice.report') }}">
                                 <i class="ri-arrow-right-line"></i>Invoice Report</a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('purchase.summery.report') }}">
+                                <i class="ri-arrow-right-line"></i>Purchase Summery</a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('purchase.report') }}">
+                                <i class="ri-arrow-right-line"></i>Stock Report</a>
                         </li>
                      </ul>
                  </li>

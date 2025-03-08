@@ -17,7 +17,6 @@ class SubCategoryController extends Controller
         return view('admin.sub_category.sub_category_all', compact('subcatAll'));
     }
 
-
     public function SubCategoryAdd()
     {
         $categories = Category::all();

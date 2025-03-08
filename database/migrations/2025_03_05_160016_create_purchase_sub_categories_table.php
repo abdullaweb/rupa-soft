@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stock_deductions', function (Blueprint $table) {
+        Schema::create('purchase_sub_categories', function (Blueprint $table) {
             $table->id();
-            $table->string('deduction_no')->nullable();
-            $table->date('date')->nullable();
-            $table->string('total_qty')->nullable();
+            $table->integer('category_id')->nullable();
+            $table->integer('unit_id')->nullable();
+            $table->string('name')->nullable();
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->timestamps();
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stock_deductions');
+        Schema::dropIfExists('purchase_sub_categories');
     }
 };

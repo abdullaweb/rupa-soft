@@ -18,10 +18,12 @@ use App\Http\Controllers\Home\TaxController;
 use App\Http\Controllers\Home\RoleController;
 use App\Http\Controllers\Home\SupplierController;
 use App\Http\Controllers\Home\SupplierDuePaymentController;
+use App\Http\Controllers\Home\PurchaseCategoryController;
+use App\Http\Controllers\Home\PurchaseSubCategoryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\WastesSaleController;
-use App\Http\Controllers\StockDeductionController;
+use App\Http\Controllers\Home\StockDeductionController;
 use App\Models\WastesSale;
 use Illuminate\Support\Facades\Route;
 
@@ -265,8 +267,32 @@ Route::middleware('auth', 'role:admin')->group(function () {
         Route::get('/stock/deduction/edit/{id}', 'EditStockDeduction')->name('edit.stock.deduction');
         Route::post('/stock/deduction/update', 'UpdateStockDeduction')->name('update.stock.deduction');
         Route::get('/stock/deduction/delete/{id}', 'DeleteStockDeduction')->name('delete.stock.deduction');
+
+        //stock quantity
+        Route::get('/get/stock/quantity', 'GetStockQuantity')->name('get.stock.quantity');
     });
 
+
+    Route::controller(PurchaseCategoryController::class)->group(function () {
+        Route::get('/purchase/category/all', 'AllPurchaseCategory')->name('all.purchase.category');
+        Route::get('/purchase/category/add', 'AddPurchaseCategory')->name('add.purchase.category');
+        Route::post('/purchase/category/store', 'StorePurchaseCategory')->name('store.purchase.category');
+        Route::get('/purchase/category/edit/{id}', 'EditPurchaseCategory')->name('edit.purchase.category');
+        Route::post('/purchase/category/update', 'UpdatePurchaseCategory')->name('update.purchase.category');
+        Route::get('/purchase/category/delete/{id}', 'DeletePurchaseCategory')->name('delete.purchase.category'); 
+    });
+
+
+    
+    Route::controller(PurchaseSubCategoryController::class)->group(function () {
+        Route::get('/purchase/sub/category/all', 'AllPurchaseSubCategory')->name('all.purchase.sub.category');
+        Route::get('/purchase/sub/category/add', 'AddPurchaseSubCategory')->name('add.purchase.sub.category');
+        Route::post('/purchase/sub/category/store', 'StorePurchaseSubCategory')->name('store.purchase.sub.category');
+        Route::get('/purchase/sub/category/edit/{id}', 'EditPurchaseSubCategory')->name('edit.purchase.sub.category');
+        Route::post('/purchase/sub/category/update', 'UpdatePurchaseSubCategory')->name('update.purchase.sub.category');
+        Route::get('/purchase/sub/category/delete/{id}', 'DeletePurchaseSubCategory')->name('delete.purchase.sub.category');
+        Route::get('/get-purchase-sub-category', 'GetPurchaseSubCategory')->name('get.purchase.sub.cat');
+    });
 
 
     // wastage sale route
@@ -388,6 +414,13 @@ Route::middleware('auth', 'role:admin')->group(function () {
 
         Route::get('/invoice/report', 'InvoiceReport')->name('invoice.report');
         Route::post('/get/invoice/report', 'GetInvoiceReport')->name('get.invoice.report');
+
+        Route::get('/purchase/summery/report', 'PurchaseSummeryReport')->name('purchase.summery.report');
+        Route::post('/get/purchase/summery/report', 'GetPurchaseSummeryReport')->name('get.purchase.summery.report');
+
+        Route::get('/purchase/report', 'PurchaseReport')->name('purchase.report');
+        Route::post('/get/purchase/report', 'GetPurchaseReport')->name('get.purchase.report');
+
     });
 
 

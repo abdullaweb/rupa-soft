@@ -15,7 +15,6 @@
                                         <label for="example-text-input" class="col-sm-12 col-form-label">Date</label>
                                         <input type="date" class="form-control"
                                             name="date" id="date" value="{{ $purchaseInfo->date }}">
-                                            
                                     </div>
                                 </div>
 
@@ -33,14 +32,6 @@
                                     </div>
                                 </div>
                                 
-                                <div class="col-md-2">
-                                    <div class="md-3">
-                                        <label for="example-text-input" class="col-sm-12 col-form-label">Product Name</label>
-                                        <input type="text" class="form-control" id="product_name" name="product_name"
-                                            placeholder="Product Name" required=""
-                                            data-parsley-required-message="Product Name is required">
-                                    </div>
-                                </div>
                                 <div class="col-md-2">
                                     <div class="md-3">
                                         <label for="example-text-input" class="col-sm-12 col-form-label">Category Name</label>
@@ -85,7 +76,7 @@
                                 <table class="table table-sm table-bordered" width="100%" style="border-color: #ddd;">
                                     <thead>
                                         <tr>
-                                            <th>Product Name</th>
+                                            <th>Category Name</th>
                                             <th>Sub Category</th>
                                             <th>Description</th>
                                             <th width="7%">Quantity</th>
@@ -105,16 +96,16 @@
                                                 <input type="hidden" name="supplier_id"
                                                     value="{{ $purchaseInfo->supplier_id }}">
                                             </td>
-                                            <td hidden>
+                                            <td width="15%">
                                                 <input type="hidden" name="category_id[]"
                                                     value="{{ $details->category_id }}">
                                                 <span class="cat_name">{{ $details->category->name ?? '' }}</span>
                                             </td>
-                                            <td width="15%">
+                                            {{-- <td width="15%">
                                                 <input type="hidden" name="product_name[]"
                                                     value="{{ $details->product_name }}">
                                                 <span>{{ $details->product_name }}</span>
-                                            </td>
+                                            </td> --}}
                                             <td>
                                                 <input type="hidden" name="sub_cat_id[]"
                                                     value="{{ $details->sub_cat_id }}">
@@ -230,9 +221,9 @@
                 <input type="hidden" name="category_id[]" value="@{{ category_id }}">
                 <span class="cat_name">@{{ category_name }}</span>
             </td>
-            <td width="15%">
-                <input type="hidden" name="product_name[]" value="@{{ product_name }}">
-                <span>@{{ product_name }}</span>
+            <td>
+                <input type="hidden" name="category_id[]" value="@{{ category_id }}">
+                     <span class="cat_name">@{{ category_name }}</span>
             </td>
             <td>
                 <input type="hidden" name="sub_cat_id[]" value="@{{ sub_cat_id }}">
@@ -265,17 +256,15 @@
         $(document).ready(function() {
             $(document).on("click", "#addEventMore", function() {
 
-                let test = $("#test").val();
                 let date = $("#date").val();
                 let purchase_no = $("#purchase_no").val();
-                let product_name = $("#product_name").val();
                 let supplier_id = $("#supplier_id").val();
                 let category_id = $("#category_id").val();
                 let category_name = $("#category_id").find('option:selected').text();
                 let sub_cat_id = $("#sub_cat_id").val();
                 let sub_cat_name = $("#sub_cat_id").find('option:selected').text();
 
-                alert('supplier_id', supplier_id);
+                // alert('supplier_id', supplier_id);
 
                 // console.log('cat_id', category_id);
 
@@ -287,14 +276,7 @@
                     return false;
                 }
                 if (supplier_id == '') {
-                    $.notify("Company is required", {
-                        globalPosition: 'top right',
-                        className: 'error'
-                    });
-                    return false;
-                }
-                if (product_name == '') {
-                    $.notify("Product Name is required", {
+                    $.notify("Supplier is required", {
                         globalPosition: 'top right',
                         className: 'error'
                     });
@@ -320,7 +302,6 @@
                 let template = Handlebars.compile(source);
 
                 let data = {
-                    test: test,
                     date: date,
                     purchase_no: purchase_no,
                     supplier_id: supplier_id,
@@ -328,7 +309,6 @@
                     category_name: category_name,
                     sub_cat_id: sub_cat_id,
                     sub_cat_name: sub_cat_name,
-                    product_name: product_name,
                 };
                 let html = template(data);
                 $("#addRow").append(html);
@@ -351,40 +331,10 @@
                 let unit_price = $(this).closest("tr").find('input.unit_price').val();
                 let selling_qty = $(this).closest("tr").find('input.selling_qty').val();
 
+                let total = unit_price * selling_qty;
 
-                if (cat_name == 'Printing' || cat_name == 'Die Cutting') {
-                    let convert_price = unit_price / 1000;
-                    let total = Math.round(convert_price * selling_qty);
-                    $(this).closest("tr").find('input.selling_price').val(total);
-                    $("#discount_amount").trigger('keyup');
-                }
-
-                if (cat_name == 'Lamination') {
-                    let side = $(this).closest("tr").find('option:selected').val();
-                    let total = Math.round(size_length * size_width * unit_price * selling_qty * side);
-                    $(this).closest("tr").find('input.selling_price').val(total);
-                    $("#discount_amount").trigger('keyup');
-                }
-
-                if (cat_name == 'Foyle Print' || cat_name == 'Paper' || cat_name == 'Pasting' || cat_name ==
-                    'Printing Item' || cat_name == 'Carton' || cat_name == 'Paper Cutting'  || cat_name == 'Garments Printing Item' || cat_name == 'Dise') {
-                    let total = Math.round(unit_price * selling_qty);
-                    $(this).closest("tr").find('input.selling_price').val(total);
-                    $("#discount_amount").trigger('keyup');
-                }
-
-                if (cat_name == 'Foyle Print' && sub_cat_name == 'Foyle Dise') {
-                    let total = Math.round(size_length * size_width * unit_price * selling_qty);
-                    $(this).closest("tr").find('input.selling_price').val(total);
-                    $("#discount_amount").trigger('keyup');
-                }
-                
-                if(selling_qty == 'MM'){
-                    let total = Math.round(unit_price * 1);
-                    $(this).closest("tr").find('input.selling_price').val(total);
-                    $("#discount_amount").trigger('keyup');
-                }
-
+                $(this).closest("tr").find('input.selling_price').val(total);
+                $("#discount_amount").trigger('keyup');
             });
 
             $(document).on('keyup', '#discount_amount', function() {
@@ -491,7 +441,7 @@
                 }
 
                 $.ajax({
-                    url: '{{ route('get.sub.cat') }}?category_id=' + categoryId,
+                    url: '{{ route('get.purchase.sub.cat') }}?category_id=' + categoryId,
                     type: 'GET',
                     success: function(data) {
                         let html = '<option value="">Select Sub Category </option>';
