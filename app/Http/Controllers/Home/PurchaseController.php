@@ -146,17 +146,10 @@ class PurchaseController extends Controller
 
     public function resetPurchase($purchaseId)
     {
-        $purchase = Purchase::findOrFail($purchaseId);
-        $purchase->delete();
-
-        PurchaseMeta::where('purchase_id', $purchaseId)->delete();
-
-        SupplierPaymentDetail::where('purchase_id', $purchaseId)->delete();
-
-        SupplierAccountDetail::where('purchase_id', $purchaseId)->delete();
-
         $purchaseSummery = PurchaseSummery::where('purchase_id', $purchaseId)->get();
-        $nextPurchaseSummery = PurchaseSummery::where('purchase_id', '>', $purchaseId)->get();
+        $purchaseSummeryFirst = PurchaseSummery::where('purchase_id', $purchaseId)->first();
+
+        $nextPurchaseSummery = PurchaseSummery::where('id', '>', $purchaseSummeryFirst->id)->get();
 
         foreach ($purchaseSummery as $key => $value) {
             foreach ($nextPurchaseSummery as $nextKey => $nextValue) {
@@ -168,6 +161,15 @@ class PurchaseController extends Controller
         }
 
         PurchaseSummery::where('purchase_id', $purchaseId)->delete();
+
+        $purchase = Purchase::findOrFail($purchaseId);
+        $purchase->delete();
+
+        PurchaseMeta::where('purchase_id', $purchaseId)->delete();
+
+        SupplierPaymentDetail::where('purchase_id', $purchaseId)->delete();
+
+        SupplierAccountDetail::where('purchase_id', $purchaseId)->delete();
     }
 
     public function UpdatePurchase(Request $request)
@@ -357,25 +359,27 @@ class PurchaseController extends Controller
     {
         DB::beginTransaction();
         try{
-            Purchase::findOrFail($id)->delete();
+        $purchaseSummery = PurchaseSummery::where('purchase_id', $id)->get();
+
+        $purchaseSummeryFirst = PurchaseSummery::where('purchase_id', $id)->first();
+
+        $nextPurchaseSummery = PurchaseSummery::where('id', '>', $purchaseSummeryFirst->id)->get();
+        foreach ($purchaseSummery as $key => $value) {
+            foreach ($nextPurchaseSummery as $nextKey => $nextValue) {
+            if ($value->purchase_sub_cat_id == $nextValue->purchase_sub_cat_id) {
+                $nextValue->stock = $nextValue->stock - $value->quantity;
+                $nextValue->save();
+            }
+            }
+        }
+
+        Purchase::findOrFail($id)->delete();
 
         PurchaseMeta::where('purchase_id', $id)->delete();
 
         SupplierPaymentDetail::where('purchase_id', $id)->delete();
 
         SupplierAccountDetail::where('purchase_id', $id)->delete();
-
-        $purchaseSummery = PurchaseSummery::where('purchase_id', $id)->get();
-        $nextPurchaseSummery = PurchaseSummery::where('purchase_id', '>', $id)->get();
-
-        foreach ($purchaseSummery as $key => $value) {
-            foreach ($nextPurchaseSummery as $nextKey => $nextValue) {
-                if ($value->purchase_sub_cat_id == $nextValue->purchase_sub_cat_id) {
-                    $nextValue->stock = $nextValue->stock - $value->quantity;
-                    $nextValue->save();
-                }
-            }
-        }
 
         PurchaseSummery::where('purchase_id', $id)->delete();
 

@@ -17,7 +17,7 @@ use DB;
 class StockDeductionController extends Controller
 {
    public function AllStockDeduction(){
-        $stock_deductions = StockDeduction::all();
+        $stock_deductions = StockDeduction::latest()->get();
         return view('admin.stock_deduction.all_stock_deduction', compact('stock_deductions'));
     }
 
@@ -165,6 +165,24 @@ class StockDeductionController extends Controller
             $purchase_summaries = PurchaseSummery::where('deduction_id', $id)
                 ->where('purchase_sub_cat_id', $detail->sub_cat_id)
                 ->get();
+
+
+                $nextPurchaseSummery = PurchaseSummery::where('purchase_sub_cat_id', $detail->sub_cat_id)
+                ->where(function ($query) use ($id, $detail) {
+                    $query->where('deduction_id', $id)
+                          ->orWhereRaw('id > (SELECT id FROM purchase_summeries WHERE deduction_id = ? AND purchase_sub_cat_id = ? LIMIT 1)', [$id, $detail->sub_cat_id]);
+                })->get();
+            
+                foreach ($purchase_summaries as $key => $value) {
+                    foreach ($nextPurchaseSummery as $nextKey => $nextValue) {
+                        if ($value->purchase_sub_cat_id == $nextValue->purchase_sub_cat_id) {
+                            $nextValue->stock = $nextValue->stock + $value->quantity;
+                            $nextValue->save();
+                        }
+                    }
+                }
+
+            
 
             foreach ($purchase_summaries as $summary) {
                 $purchase_meta = PurchaseMeta::find($summary->purchase_meta_id);
@@ -319,6 +337,27 @@ class StockDeductionController extends Controller
                 $purchase_summaries = PurchaseSummery::where('deduction_id', $id)
                     ->where('purchase_sub_cat_id', $detail->sub_cat_id)
                     ->get();
+
+                // $purchaseSummeryFirst = PurchaseSummery::where('deduction_id', $id)->where('purchase_sub_cat_id', $detail->sub_cat_id)->first();
+                
+                // $nextPurchaseSummery = PurchaseSummery::where('id', '>', $purchaseSummeryFirst->id)->where('purchase_sub_cat_id', $detail->sub_cat_id)->get();
+
+                $nextPurchaseSummery = PurchaseSummery::where('purchase_sub_cat_id', $detail->sub_cat_id)
+                ->where(function ($query) use ($id, $detail) {
+                    $query->where('deduction_id', $id)
+                          ->orWhereRaw('id > (SELECT id FROM purchase_summeries WHERE deduction_id = ? AND purchase_sub_cat_id = ? LIMIT 1)', [$id, $detail->sub_cat_id]);
+                })->get();
+            
+                foreach ($purchase_summaries as $key => $value) {
+                    foreach ($nextPurchaseSummery as $nextKey => $nextValue) {
+                        if ($value->purchase_sub_cat_id == $nextValue->purchase_sub_cat_id) {
+                            $nextValue->stock = $nextValue->stock + $value->quantity;
+                            $nextValue->save();
+                        }
+                    }
+                }
+
+                    
 
                 foreach ($purchase_summaries as $summary) {
                     $purchase_meta = PurchaseMeta::find($summary->purchase_meta_id);
