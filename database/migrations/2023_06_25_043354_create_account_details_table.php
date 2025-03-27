@@ -19,7 +19,7 @@ return new class extends Migration
             $table->double('total_amount')->nullable();
             $table->double('paid_amount')->nullable();
             $table->double('due_amount')->nullable();
-            $table->double('balance')->nullable();
+            // $table->double('balance')->nullable();
             $table->date('date')->nullable();
             $table->tinyInteger('status')->default('0');
             $table->timestamps();
