@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 
+
 class DuePaymentController extends Controller
 {
     public function AllDuePayment()
