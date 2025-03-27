@@ -66,14 +66,14 @@
                 <hr>
 
                  {{-- @if (Auth::user()->can('customer.menu')) --}}
-                 <li>
+                 {{-- <li>
                      <a href="javascript: void(0);" class="has-arrow waves-effect">
                          <i class="ri-user-3-line"></i>
                          <span>Due Payment</span>
                      </a>
 
                      <ul class="sub-menu" aria-expanded="true">
-                          {{-- @if (Auth::user()->can('corporate.list')) --}}
+                          @if (Auth::user()->can('corporate.list'))
                              <li>
                                  <a href="{{ route('all.due.payment') }}" class="waves-effect">
                                      <i class="ri-user-3-line"></i> <span>Local Due List</span>
@@ -89,28 +89,28 @@
                                      <i class="ri-user-3-line"></i> <span>Approval List</span>
                                  </a>
                              </li>
-                         {{-- @endif  --}}
+                         @endif 
                          
-                          {{-- @if (Auth::user()->can('local.list'))
+                          @if (Auth::user()->can('local.list'))
                              <li>
                                  <a href="{{ route('all.customer') }}" class="waves-effect">
                                      <i class="ri-user-3-line"></i> <span>Local</span>
                                  </a>
                              </li>
-                         @endif  --}}
+                         @endif 
                      </ul>
                  </li>
                  <hr>
-             {{-- @endif  --}}
+             @endif  --}}
 
-             <li>
+             {{-- <li>
                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                     <i class="ri-user-3-line"></i>
                     <span>Supplier Due Payment</span>
                 </a>
 
                 <ul class="sub-menu" aria-expanded="true">
-                     {{-- @if (Auth::user()->can('corporate.list')) --}}
+                     @if (Auth::user()->can('corporate.list'))
                         <li>
                             <a href="{{ route('all.supplier.due.payment') }}" class="waves-effect">
                                 <i class="ri-user-3-line"></i> <span>Due List</span>
@@ -121,18 +121,18 @@
                                 <i class="ri-user-3-line"></i> <span>Approval List</span>
                             </a>
                         </li>
-                    {{-- @endif  --}}
+                    @endif 
                     
-                     {{-- @if (Auth::user()->can('local.list'))
+                     @if (Auth::user()->can('local.list'))
                         <li>
                             <a href="{{ route('all.customer') }}" class="waves-effect">
                                 <i class="ri-user-3-line"></i> <span>Local</span>
                             </a>
                         </li>
-                    @endif  --}}
+                    @endif 
                 </ul>
             </li>
-            <hr>
+            <hr> --}}
                  
                   @if (Auth::user()->can('product.menu'))
                      <li>
