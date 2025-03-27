@@ -82,14 +82,14 @@
                                                 class="btn btn-info">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            @if ($due_amount != 0)
+                                            {{-- @if ($due_amount != 0)
                                                 <a style="margin-left: 5px;"
                                                     href="{{ route('local.company.due.payment', $item->id) }}"
                                                     class="btn btn-secondary">
                                                     <i class="fas fa-edit"></i> Due Payment
                                                 </a>
                                             @else
-                                            @endif
+                                            @endif --}}
 
                                             <a style="margin-left: 5px;"
                                                 href="{{ route('company.bill.local', $item->id) }}" class="btn btn-success text-white"

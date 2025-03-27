@@ -76,12 +76,12 @@
                                                 </a>
                                             @endif
 
-                                            @if ($due_amount != 0)
+                                            {{-- @if ($due_amount != 0)
                                                 <a style="margin-left: 5px;" href="{{ route('corporate.due.payment', $item->id) }}" class="btn btn-secondary">
                                                     <i class="fas fa-edit"></i> Due Payment
                                                 </a>
                                             @else
-                                            @endif
+                                            @endif --}}
 
                                             @if (Auth::user()->can('corporate.bill.list'))
                                                 <a style="margin-left: 5px;" href="{{ route('company.bill', $item->id) }}" class="btn btn-dark" title="Company Bill">

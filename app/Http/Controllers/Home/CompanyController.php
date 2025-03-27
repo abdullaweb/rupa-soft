@@ -697,7 +697,7 @@ class CompanyController extends Controller
 
     public function CompanyDynamicQuery(){
         $payment = Payment::where('company_id', 1)->get();
-        dd($payment->sum('total_amount'), $payment->sum('paid_amount'), $payment->sum('due_amount'));
+        // dd($payment->sum('total_amount'), $payment->sum('paid_amount'), $payment->sum('due_amount'));
         $companies = Company::get();
 
         foreach ($companies as $company) {
