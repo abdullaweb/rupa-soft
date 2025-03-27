@@ -66,6 +66,7 @@ class DuePaymentController extends Controller
         $due_payment->paid_status = $request->paid_status;
         $due_payment->status = 'pending'; // Mark as pending
         $due_payment->approved_at = null; // Not approved yet
+        $due_payment->updated_at = null;
         $due_payment->save();
 
         // Store invoices but don't update amounts yet
@@ -209,44 +210,70 @@ class DuePaymentController extends Controller
 
         
     // }
-    private function resetDuePayment($due_payment, $id)
-    {
-        DuePayment::where('id', $id)->delete();
 
-        $due_payment_details = DuePaymentDetail::where('due_payment_id', $due_payment->id)->get();
+    // private function resetDuePayment($due_payment, $id)
+    // {
+    //     DuePayment::where('id', $id)->delete();
 
-        foreach ($due_payment_details as $detail) {
-            $payment = Payment::where('invoice_id', $detail->invoice_id)->first();
-            if ($payment) {
-                $payment->paid_amount -= $due_payment->paid_amount;
-                $payment->due_amount += $due_payment->paid_amount;
-                $payment->save();
-            }
+    //     $due_payment_details = DuePaymentDetail::where('due_payment_id', $due_payment->id)->get();
 
-            $detail->delete();
-        }
+    //     foreach ($due_payment_details as $detail) {
+    //         $payment = Payment::where('invoice_id', $detail->invoice_id)->first();
+    //         if ($payment) {
+    //             $payment->paid_amount -= $due_payment->paid_amount;
+    //             $payment->due_amount += $due_payment->paid_amount;
+    //             $payment->save();
+    //         }
 
-        // AccountDetail::where('company_id', $due_payment->customer_id)
-        //     ->where('paid_amount', $due_payment->paid_amount)
-        //     ->where('date', $due_payment->date)
-        //     ->delete();
+    //         $detail->delete();
+    //     }
         
-            $accountDetail = AccountDetail::where('company_id', $due_payment->customer_id)
-            ->where('paid_amount', $due_payment->paid_amount)
-            ->where('date', $due_payment->date)
+    //         $accountDetail = AccountDetail::where('company_id', $due_payment->customer_id)
+    //         ->where('paid_amount', $due_payment->paid_amount)
+    //         ->where('date', $due_payment->date)
+    //         ->first();
+        
+    //     if ($accountDetail) {
+    //         $nextAccountDetail = AccountDetail::where('company_id', $due_payment->customer_id)
+    //             ->where('id', '>', $accountDetail->id)
+    //             ->get();
+        
+    //         foreach ($nextAccountDetail as $next) {
+    //             $next->balance = $next->balance + $due_payment->paid_amount;
+    //             $next->save();
+    //         }
+
+    //         $accountDetail->delete();
+    //     }
+        
+    // }
+
+    private function resetDuePayment($due_payment)
+    {        
+        $accountDetail = AccountDetail::where('company_id', $due_payment->customer_id)
+            ->where('due_payment_id', $due_payment->id)
             ->first();
         
         if ($accountDetail) {
-            $nextAccountDetail = AccountDetail::where('company_id', $due_payment->customer_id)
+            $nextAccountDetails = AccountDetail::where('company_id', $due_payment->customer_id)
                 ->where('id', '>', $accountDetail->id)
+                ->orderBy('id')
                 ->get();
+
+            $previous_balance = $accountDetail->balance;
         
-            foreach ($nextAccountDetail as $next) {
-                $next->balance = $next->balance + $due_payment->paid_amount;
+            foreach ($nextAccountDetails as $next) {
+                if($next->total_amount > 0){
+                    $next->balance = $next->total_amount - $next->paid_amount + $previous_balance;
+                    $next->due_amount = $next->balance;
+                }elseif($next->total_amount == 0){
+                    $next->balance = $previous_balance - $next->paid_amount;
+                    $next->due_amount = $next->balance;
+                }
                 $next->save();
+                $previous_balance = $next->balance;
             }
 
-            $accountDetail->delete();
         }
         
     }
@@ -260,13 +287,11 @@ class DuePaymentController extends Controller
                 $company_id = $due_payment->customer_id;
                 $companyInfo = Company::where('id', $company_id)->first();
 
-                $this->resetDuePayment($due_payment, $id);
-
                 $company_id = $request->company_id;
                 $companyInfo = Company::where('id', $company_id)->first();
         
                 // Save payment request without modifying any balances
-                $due_payment = new DuePayment();
+                // $due_payment = DuePayment();
                 $due_payment->customer_id = $company_id;
                 $due_payment->paid_amount = $request->paid_amount;
                 $due_payment->date = $request->date;
@@ -402,6 +427,40 @@ class DuePaymentController extends Controller
         return view('admin.due_payment.due_payment_approval', compact('dueAll'));
     }
 
+    private function updateNextAccountBalance($due_payment) {
+        $company_id = $due_payment->customer_id;
+        $account_details = AccountDetail::where('company_id', $company_id)
+            ->where('due_payment_id', $due_payment->id)
+            ->first();
+
+        $previous_balance = AccountDetail::where('id', '<', $account_details->id)
+            ->where('company_id', $company_id)
+            ->latest('id')
+            ->first()->balance ?? 0;
+
+        if ($account_details) {
+            $account_details->balance = $previous_balance - $due_payment->paid_amount;
+            $account_details->save();
+        }
+
+            if ($account_details) {
+                $nextAccountDetails = AccountDetail::where('company_id', $due_payment->customer_id)
+                    ->where('id', '>', $account_details->id)
+                    ->orderBy('id')
+                    ->get();
+
+                $previous_balance = $account_details->balance;
+            
+                foreach ($nextAccountDetails as $next) {
+
+                    $next->balance = $previous_balance - $next->paid_amount;
+                    $next->save();
+                    $previous_balance = $next->balance;
+                }
+    
+            }
+    }
+
 
     public function DuePaymentApprovalNow($id)
     {
@@ -423,14 +482,22 @@ class DuePaymentController extends Controller
         $total_paid_amount = $due_payment->paid_amount;
 
         // Get account details
-        $account_details = AccountDetail::where('company_id', $company_id)->latest('id')->first();
+        $account_details = AccountDetail::where('company_id', $company_id)
+            ->latest('id')
+            ->first();
         $due_amount = Payment::where('company_id', $company_id)->sum('due_amount');
         $account_balance = $account_details->balance ?? $due_amount;
 
+        // dd($due_payment->paid_amount);
         // Update account balance
-        $account_details = new AccountDetail();
+        if($due_payment->updated_at == null){
+            $account_details = new AccountDetail();
+        } else {
+            $account_details = AccountDetail::where('due_payment_id', $due_payment->id)->first();
+        }
         $account_details->paid_amount = $due_payment->paid_amount;
         $account_details->company_id = $company_id;
+        $account_details->due_payment_id = $due_payment->id;
         $account_details->date = $due_payment->date;
         $account_details->voucher = $due_payment->voucher;
         $account_details->balance = $account_balance - $due_payment->paid_amount;
@@ -440,6 +507,10 @@ class DuePaymentController extends Controller
             $account_details->status = '0';
         }
         $account_details->save();
+
+        // $this->resetDuePayment($due_payment);
+
+        $this->updateNextAccountBalance($due_payment);
 
         // Update payment and due amount
         foreach ($due_payment_details as $detail) { 

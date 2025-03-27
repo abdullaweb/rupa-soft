@@ -48,7 +48,7 @@
                                         <tr>
                                             <td>{{ $key + 1 }}</td>
                                             <td>
-                                                {{ $item['payment']['company']['name'] }}
+                                                {{ $item['payment']['company']['name'] ?? '' }}
                                             </td>
                                             <td>
                                                 #{{ $item->invoice_no_gen }}

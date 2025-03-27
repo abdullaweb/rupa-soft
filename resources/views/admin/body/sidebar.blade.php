@@ -65,8 +65,8 @@
                 </li>
                 <hr>
 
-                 {{-- @if (Auth::user()->can('customer.menu')) --}}
-                 {{-- <li>
+                 @if (Auth::user()->can('customer.menu'))
+                  <li>
                      <a href="javascript: void(0);" class="has-arrow waves-effect">
                          <i class="ri-user-3-line"></i>
                          <span>Due Payment</span>
@@ -101,9 +101,9 @@
                      </ul>
                  </li>
                  <hr>
-             @endif  --}}
+             @endif 
 
-             {{-- <li>
+             <li>
                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                     <i class="ri-user-3-line"></i>
                     <span>Supplier Due Payment</span>
@@ -132,7 +132,7 @@
                     @endif 
                 </ul>
             </li>
-            <hr> --}}
+            <hr>
                  
                   @if (Auth::user()->can('product.menu'))
                      <li>
