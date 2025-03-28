@@ -40,6 +40,13 @@
 
                                 <div class="mb-3">
                                     <div>
+                                        <label for="">Voucher </label>
+                                        <input type="text" class="form-control" name="voucher" id="voucher" placeholder="Enter a voucher" value="{{ $due_payment_info->voucher }}">
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div>
                                         <label for="">Date</label>
                                         <input type="text" class="form-control date_picker" name="date" id="date" placeholder="Enter Payment Date" autocomplete="off" value="{{ $due_payment_info->date }}">
                                     </div>
