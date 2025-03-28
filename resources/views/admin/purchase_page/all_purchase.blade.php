@@ -99,7 +99,7 @@
                                             <i class="fas fa-trash-alt"></i>
                                         </a>
 
-                                        @if ($dueAmount->due_amount != 0)
+                                        @if (optional($dueAmount)->due_amount != 0)
                                             <a href="{{ route('purchase.due.payment', $item->id) }}" class="btn btn-info" title="Purchase Due Payment">
                                                 Due Payment
                                             </a>

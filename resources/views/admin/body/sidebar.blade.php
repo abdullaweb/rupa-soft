@@ -90,14 +90,6 @@
                                  </a>
                              </li>
                          @endif 
-                         
-                          @if (Auth::user()->can('local.list'))
-                             <li>
-                                 <a href="{{ route('all.customer') }}" class="waves-effect">
-                                     <i class="ri-user-3-line"></i> <span>Local</span>
-                                 </a>
-                             </li>
-                         @endif 
                      </ul>
                  </li>
                  <hr>
@@ -119,14 +111,6 @@
                         <li>
                             <a href="{{ route('supplier.due.payment.approval') }}" class="waves-effect">
                                 <i class="ri-user-3-line"></i> <span>Approval List</span>
-                            </a>
-                        </li>
-                    @endif 
-                    
-                     @if (Auth::user()->can('local.list'))
-                        <li>
-                            <a href="{{ route('all.customer') }}" class="waves-effect">
-                                <i class="ri-user-3-line"></i> <span>Local</span>
                             </a>
                         </li>
                     @endif 

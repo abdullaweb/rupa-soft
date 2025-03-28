@@ -63,9 +63,12 @@
                                         </td>
                                         <td>
                                             @php
-                                                $due_amount = App\Models\Payment::where('company_id', $item->id)->sum('due_amount');
+                                                $payment_due_amount = App\Models\Payment::where('company_id', $item->id)->sum('due_amount');
+
+                                                $account_due_amount = App\Models\AccountDetail::where('company_id', $item->id)->latest()->first()->balance;
+                                                
                                             @endphp
-                                            {{ number_format($due_amount) }}
+                                            {{ number_format($account_due_amount) ?? $payment_due_amount }}
                                         </td>
 
 
