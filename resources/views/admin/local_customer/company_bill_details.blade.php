@@ -36,7 +36,7 @@
                             <div class="col-12">
                                 <h4 class="text-center">Account Details</h4>
                                 <div class="payment-details">
-                                     <table id="datatable" class="table table-bordered dt-responsive nowrap"
+                                     <table id="datatable2" class="table table-bordered dt-responsive nowrap"
                                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                         <thead>
                                             <tr>

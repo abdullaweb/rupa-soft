@@ -22,7 +22,7 @@ class DuePaymentController extends Controller
     {
         $dueAll = DuePayment::whereHas('company', function ($query) {
             $query->where('status', '0');
-        })->get();
+        })->latest()->get();
         return view('admin.due_payment.all_due', compact('dueAll'));
     }
 
@@ -30,7 +30,7 @@ class DuePaymentController extends Controller
     {
         $dueAll = DuePayment::whereHas('company', function ($query) {
             $query->where('status', '1');
-        })->get();
+        })->latest()->get();
         return view('admin.due_payment.all_corporate_due', compact('dueAll'));
     }
 
@@ -114,140 +114,6 @@ class DuePaymentController extends Controller
 
         return view('admin.due_payment.edit_due', compact('due_payment_info', 'companies', 'invoices', 'due_amount', 'companyInfo'));
     }
-
-
-    // public function UpdateDuePayment(Request $request)
-    // {
-    //     $id = $request->id;
-    //     $company_id = $request->company_id;
-    //     $due_payment = DuePayment::findOrFail($id);
-    //     $previous_paid_amount = $due_payment->paid_amount;
-        
-    //     if ($request->paid_amount > $request->due_amount + $previous_paid_amount) {
-    //         $notification = array(
-    //             'message' => 'Sorry, Paid amount cannot exceed the due amount',
-    //             'alert-type' => 'error',
-    //         );
-    //         return redirect()->back()->with($notification);
-    //     }
-
-    //     if ($request->paid_status == 'check' || $request->paid_status == 'online-banking') {
-    //         $paid_status = $request->paid_status;
-    //         $check_number = $request->check_or_banking;
-    //     } else {
-    //         $paid_status = $request->paid_status;
-    //         $check_number = null;
-    //     }
-
-    //     $account_details = AccountDetail::where('company_id', $company_id)
-    //         ->where('date', $due_payment->date)
-    //         ->first();
-
-    //     if (!$account_details) {
-    //         $account_details = new AccountDetail();
-    //         $account_details->company_id = $company_id;
-    //     }
-
-    //     $account_details->paid_amount = $request->paid_amount;
-    //     $account_details->balance = $account_details->balance - $request->paid_amount;
-    //     $account_details->voucher = $request->voucher;
-    //     $account_details->date = date('Y-m-d', strtotime($request->date));
-    //     $account_details->save();
-
-    //     $due_payment->customer_id = $company_id;
-    //     $due_payment->paid_amount = $request->paid_amount;
-    //     $due_payment->date = $request->date;
-    //     $due_payment->paid_status = $paid_status;
-    //     $due_payment->save();
-
-    //     $selectedInvoices = $request->input('invoice', []);
-    //     $new_paid_amount = $request->paid_amount;
-        
-    //     $previousInvoices = DuePaymentDetail::where('due_payment_id', $id)->get();
-    //     foreach ($previousInvoices as $prev) {
-    //         $payment = Payment::where('invoice_id', $prev->invoice_id)->first();
-    //         if ($payment) {
-    //             $payment->paid_amount = max(0, $payment->paid_amount - $previous_paid_amount);
-    //             $payment->due_amount = max(0, $payment->total_amount - $payment->paid_amount);
-    //             $payment->save();
-    //         }
-    //         $prev->delete();
-    //     }
-
-    //     foreach ($selectedInvoices as $invoice) {
-    //         $due_payment_details = new DuePaymentDetail();
-    //         $due_payment_details->due_payment_id = $due_payment->id;
-    //         $due_payment_details->invoice_id = $invoice;
-    //         $due_payment_details->save();
-
-    //         $payment = Payment::where('invoice_id', $invoice)->first();
-    //         if ($payment) {
-    //             $payment->paid_amount = min($payment->total_amount, $payment->paid_amount + $new_paid_amount);
-    //             $payment->due_amount = max(0, $payment->total_amount - $payment->paid_amount);
-    //             $payment->save();
-    //         }
-
-    //         $new_paid_amount -= $payment->paid_amount;
-    //         if ($new_paid_amount <= 0) break;
-    //     }
-
-    //     $status = Company::where('id', $company_id)->first();
-
-    //     if ($status->status == '1') {
-    //         $notification = array(
-    //             'message' => 'Due Payment Updated Successfully!',
-    //             'alert-type' => 'success',
-    //         );
-    
-    //         return redirect()->route('all.corporate.due.payment')->with($notification);
-    //     } else {
-    //         $notification = array(
-    //             'message' => 'Due Payment Updated Successfully!',
-    //             'alert-type' => 'success',
-    //         );
-    
-    //         return redirect()->route('all.due.payment')->with($notification);
-    //     }
-
-        
-    // }
-
-    // private function resetDuePayment($due_payment, $id)
-    // {
-    //     DuePayment::where('id', $id)->delete();
-
-    //     $due_payment_details = DuePaymentDetail::where('due_payment_id', $due_payment->id)->get();
-
-    //     foreach ($due_payment_details as $detail) {
-    //         $payment = Payment::where('invoice_id', $detail->invoice_id)->first();
-    //         if ($payment) {
-    //             $payment->paid_amount -= $due_payment->paid_amount;
-    //             $payment->due_amount += $due_payment->paid_amount;
-    //             $payment->save();
-    //         }
-
-    //         $detail->delete();
-    //     }
-        
-    //         $accountDetail = AccountDetail::where('company_id', $due_payment->customer_id)
-    //         ->where('paid_amount', $due_payment->paid_amount)
-    //         ->where('date', $due_payment->date)
-    //         ->first();
-        
-    //     if ($accountDetail) {
-    //         $nextAccountDetail = AccountDetail::where('company_id', $due_payment->customer_id)
-    //             ->where('id', '>', $accountDetail->id)
-    //             ->get();
-        
-    //         foreach ($nextAccountDetail as $next) {
-    //             $next->balance = $next->balance + $due_payment->paid_amount;
-    //             $next->save();
-    //         }
-
-    //         $accountDetail->delete();
-    //     }
-        
-    // }
 
     private function resetDuePayment($due_payment)
     {        

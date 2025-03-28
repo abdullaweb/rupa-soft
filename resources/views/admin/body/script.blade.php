@@ -107,3 +107,20 @@
 
 <!-- Datatable init js -->
 <script src="{{ asset('backend/assets/js/pages/datatables.init.js') }}"></script>
+<script>
+$(document).ready(function() {
+    // Check if DataTable is already initialized
+    if ($.fn.dataTable.isDataTable('#datatable2')) {
+        $('#datatable2').DataTable().destroy(); // Destroy the existing instance
+    }
+
+    // Initialize DataTable with pagination disabled
+    var table = $('#datatable2').DataTable({
+        pageLength: -1,
+        "lengthMenu": [
+            [100, 5000, 10000, -1],
+            [100, 5000, 10000, "All"]
+        ],
+    });
+});
+</script>
