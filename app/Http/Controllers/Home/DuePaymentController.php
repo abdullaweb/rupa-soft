@@ -65,6 +65,7 @@ class DuePaymentController extends Controller
         $due_payment = new DuePayment();
         $due_payment->customer_id = $company_id;
         $due_payment->code = $request->code;
+        $due_payment->voucher = $request->voucher;
         $due_payment->paid_amount = $request->paid_amount;
         $due_payment->date = $request->date;
         $due_payment->paid_status = $request->paid_status;
@@ -164,6 +165,7 @@ class DuePaymentController extends Controller
                 // $due_payment = DuePayment();
                 $due_payment->customer_id = $company_id;
                 $due_payment->code = $request->code;
+                $due_payment->voucher = $request->voucher;
                 $due_payment->paid_amount = $request->paid_amount;
                 $due_payment->date = $request->date;
                 $due_payment->paid_status = $request->paid_status;
@@ -221,7 +223,6 @@ class DuePaymentController extends Controller
                 $payment->due_amount += $due_payment->paid_amount;
                 $payment->save();
             }
-
             $detail->delete();
         }
 

@@ -21,4 +21,10 @@ class AccountDetail extends Model
     {
         return $this->belongsTo(Company::class, 'company_id', 'id');
     }
+
+
+    public function due_payment()
+    {
+        return $this->belongsTo(DuePayment::class, 'due_payment_id', 'id');
+    }
 }

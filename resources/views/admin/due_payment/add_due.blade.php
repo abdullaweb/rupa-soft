@@ -8,7 +8,7 @@
                 <div class="col-xl-12 mx-auto">
                     <div class="card">
                         <div class="card-body">
-                            <form method="POST" class="custom-validation" action="{{ route('submit.due.payment') }}" novalidate="">
+                            <form method="POST" class="custom-validation" action="{{ route('submit.due.payment') }}" novalidate="" autocomplete="off">
                                 @csrf
                                 <input type="hidden" name="status" value="local">
                                 <div class="mb-3 mt-3">
@@ -31,15 +31,22 @@
 
                                 <div class="mb-3">
                                     <div>
-                                        <label for="">Due Payment</label>
-                                        <input type="text" class="form-control" name="paid_amount" id="paid_amount" placeholder="Enter a due payment amount" required="" placeholder="" data-parsley-required-message="Pay due Amount is required" autocomplete="off">
+                                        <label for="">Due Payment </label>
+                                        <input type="text" class="form-control" name="paid_amount" id="paid_amount" placeholder="Enter a due payment amount" required="" placeholder="" data-parsley-required-message="Pay due Amount is required">
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div>
+                                        <label for="">Voucher </label>
+                                        <input type="text" class="form-control" name="voucher" id="voucher" placeholder="Enter a voucher">
                                     </div>
                                 </div>
 
                                 <div class="mb-3">
                                     <div>
                                         <label for="">Date</label>
-                                        <input type="text" class="form-control date_picker" name="date" id="date" placeholder="Enter Payment Date" autocomplete="off">
+                                        <input type="text" class="form-control date_picker" name="date" id="date" placeholder="Enter Payment Date">
                                     </div>
                                 </div>
 

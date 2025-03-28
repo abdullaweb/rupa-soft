@@ -86,7 +86,7 @@
                                                         @elseif ($details->invoice_id == null && $details->status == '1')
                                                             Opening Balance
                                                         @elseif ($details->invoice_id == null && $details->status == '0')
-                                                            Cash Payment
+                                                           {{ $details->due_payment->code ?? 'Cash Payment' }} 
                                                         @elseif ($details->invoice_id != null && $details->status == '1')
                                                             #{{$details->invoice_id}}
                                                         @endif
