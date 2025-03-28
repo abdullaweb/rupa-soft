@@ -26,10 +26,10 @@
                                 </div>
                                 <div class="col-md-2">
                                     <div class="md-3">
-                                        <label for="example-text-input" class="col-sm-12 col-form-label">Company Name</label>
+                                        <label for="example-text-input" class="col-sm-12 col-form-label">Company
+                                            Name</label>
                                         <select name="company_id" id="company_id" class="form-control form-select select2">
                                             <option value="">Select Company Name</option>
-                                            <option value="new_company">Add Company</option>
                                             @foreach ($companies as $company)
                                                 <option value="{{ $company->id }}">
                                                     {{ $company->name }}
@@ -38,13 +38,14 @@
                                         </select>
                                     </div>
                                 </div>
-                                
                                 <div class="col-md-2">
                                     <div class="md-3">
-                                        <label for="example-text-input" class="col-sm-12 col-form-label">Product Name</label>
+                                        <label for="example-text-input" class="col-sm-12 col-form-label">Product
+                                            Name</label>
                                         <input type="text" class="form-control" id="product_name" name="product_name"
                                             placeholder="Product Name" required=""
                                             data-parsley-required-message="Product Name is required">
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
@@ -90,32 +91,6 @@
                             <form method="POST" action="{{ route('invoice.store.local') }}" novalidate=""
                                 id="invoiceForm" autocomplete="off">
                                 @csrf
-                                <div class="row mb-4" id="new_company" style="display: none;">
-                                    <div class="col-md-4">
-                                        <div class="md-3">
-                                            <label for="example-text-input" class="col-sm-12 col-form-label">Customer Name</label>
-                                            <input type="text" class="form-control" id="name" name="name"
-                                                placeholder="Customer Name" required=""
-                                                data-parsley-required-message="Customer Name is required">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="md-3">
-                                            <label for="example-text-input" class="col-sm-12 col-form-label">Customer Phone</label>
-                                            <input type="text" class="form-control" id="phone" name="phone"
-                                                placeholder="Customer Phone" required=""
-                                                data-parsley-required-message="Customer Phone is required">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="md-3">
-                                            <label for="example-text-input" class="col-sm-12 col-form-label">Customer Address</label>
-                                            <input type="text" class="form-control" id="name" name="address"
-                                                placeholder="Customer Address" required=""
-                                                data-parsley-required-message="Customer Address is required">
-                                        </div>
-                                    </div>
-                                </div>
                                 <table class="table table-sm table-bordered" width="100%" style="border-color: #ddd;">
                                     <thead>
                                         <tr>
@@ -455,21 +430,6 @@
                     $('#check_or_banking').show();
                 } else {
                     $('#check_or_banking').hide();
-                }
-            });
-        });
-    </script>
-
-    {{-- New Company --}}
-
-    <script>
-        $(document).ready(function() {
-            $('#company_id').on('change', function() {
-                let company_id = $(this).val();
-                if (company_id == 'new_company') {
-                    $('#new_company').show();
-                } else {
-                    $('#new_company').hide();
                 }
             });
         });
