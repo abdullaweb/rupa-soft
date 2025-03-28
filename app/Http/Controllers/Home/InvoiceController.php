@@ -371,7 +371,6 @@ class InvoiceController extends Controller
 
                         $previousBalance = AccountDetail::where('id', '<', $account_details->id)->where('company_id', $invoice_details->company_id)->latest('id')->first();
 
-                        // dd($previousBalance);
 
                         if ($request->vat_tax_field == '0') {
 
@@ -391,9 +390,6 @@ class InvoiceController extends Controller
                                 $account_details->due_amount = '0';
 
                                 $account_details->balance = $previousBalance->balance ?? 0;
-
-                                // dd($account_details->balance);
-
 
                                 if($updateBalance != NULL){
                                     $previous_balance = $account_details->balance ?? 0;

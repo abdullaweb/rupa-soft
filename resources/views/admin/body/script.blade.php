@@ -124,3 +124,24 @@ $(document).ready(function() {
     });
 });
 </script>
+
+<script>
+    $(document).ready(function() {
+        var form = $('.custom-validation'); // Select the form by class
+        var submitButton = form.find('button[type=submit]');
+
+        form.parsley().on('form:validate', function() {
+            if (!form.parsley().isValid()) {
+                submitButton.prop('disabled', false).text(
+                'Submit'); // Re-enable if validation fails
+            }
+        });
+
+        form.on('submit', function(e) {
+            if (form.parsley().isValid()) {
+                submitButton.prop('disabled', true).html(
+                    '<span class="spinner-border spinner-border-sm"></span> Submitting...');
+            }
+        });
+    });
+</script>

@@ -122,7 +122,7 @@
 
                         <div class="card-body">
                             <form method="POST" action="{{ route('invoice.store') }}" novalidate="" id="invoiceForm"
-                                autocomplete="off">
+                                autocomplete="off" class="custom-validation">
                                 @csrf
                                 <table class="table table-sm table-bordered" width="100%" style="border-color: #ddd;">
                                     <thead>

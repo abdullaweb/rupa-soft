@@ -71,7 +71,7 @@
 
                         <div class="card-body">
                             <form method="POST" action="{{ route('update.purchase') }}" novalidate=""
-                                id="purchaseForm" autocomplete="off" >
+                                id="purchaseForm" autocomplete="off" class="custom-validation">
                                 @csrf
                                 <table class="table table-sm table-bordered" width="100%" style="border-color: #ddd;">
                                     <thead>
