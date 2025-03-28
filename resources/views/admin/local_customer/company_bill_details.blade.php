@@ -92,9 +92,8 @@
                                                         @endif
                                                     </td>
 
-                                                    <td>
+                                                    {{-- <td>
                                                         @php
-                                                            // Decode the JSON data
                                                             $invoices = json_decode($details->voucher, true);
                                                         @endphp
                                                     
@@ -113,7 +112,9 @@
                                                         @else
                                                             No invoice.
                                                         @endif
-                                                    </td>
+                                                    </td> --}}
+
+                                                    <td>{{ $details->voucher ?? 'N/A' }}</td>
                                                     
                                                     
                                                     <td>{{ number_format($details->total_amount) }}/-</td>

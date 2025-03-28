@@ -16,7 +16,7 @@
                                     <input type="text" class="form-control" name="code" id="code" readonly value="{{ $code }}">
                                 </div>
                                 <div class="mb-3 mt-3">
-                                    <select name="company_id" id="company_id" class="form-control select2" required="">
+                                    <select name="company_id" id="company_id" class="form-control select2" required="" data-parsley-required-message="Company is required">
                                         <option value="" selected disabled>Select Company</option>
                                         @foreach ($companies as $company)
                                             <option value="{{ $company->id }}">{{ $company->name }}</option>
