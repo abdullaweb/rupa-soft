@@ -65,10 +65,12 @@
                                             @php
                                                 $payment_due_amount = App\Models\Payment::where('company_id', $item->id)->sum('due_amount');
 
-                                                $account_due_amount = App\Models\AccountDetail::where('company_id', $item->id)->latest()->first()->balance ?? 0;
+                                                $account_due_amount = App\Models\AccountDetail::where('company_id', $item->id)->latest()->first();
+
+                                                $due_amount = $account_due_amount->balance ??$payment_due_amount;
                                                 
                                             @endphp
-                                            {{ number_format($account_due_amount) ?? $payment_due_amount }}
+                                            {{ number_format($due_amount) }}
                                         </td>
                                         <td>
                                             @if (Auth::user()->can('company.edit'))
