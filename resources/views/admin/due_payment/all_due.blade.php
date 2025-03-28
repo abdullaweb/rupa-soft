@@ -21,6 +21,7 @@
                             <thead>
                                 <tr>
                                     <th>Sl</th>
+                                    <th>Code</th>
                                     <th>Customer Name</th>
                                     <th>Date</th>
                                     <th>Paid Amount</th>
@@ -30,6 +31,7 @@
                             <tfoot>
                                 <tr>
                                     <th>Sl</th>
+                                    <th>Code</th>
                                     <th>Customer Name</th>
                                     <th>Date</th>
                                     <th>Paid Amount</th>
@@ -40,6 +42,9 @@
                                 @foreach ($dueAll as $key => $item)
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
+                                        <td>
+                                            {{ $item->code }}
+                                        </td>
                                         <td>
                                             {{ $item->company->name }}
                                         </td>

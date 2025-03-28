@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('due_payments', function (Blueprint $table) {
             $table->id();
+            $table->string('code')->nullable();
             $table->integer('customer_id')->nullable();
             $table->date('date')->nullable();
             $table->string('paid_amount')->nullable();

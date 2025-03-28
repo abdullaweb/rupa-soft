@@ -13,6 +13,10 @@
 
                                 <input type="hidden" name="id" value="{{ $due_payment_info->id }}">
                                 <div class="mb-3 mt-3">
+                                    <Label>Code</Label>
+                                    <input type="text" class="form-control" name="code" id="code" readonly value="{{ $due_payment_info->code }}">
+                                </div>
+                                <div class="mb-3 mt-3">
                                     <label for="">Select Company</label>
                                     <select name="company_id" id="company_id" class="form-control select2" required="">
                                         <option value="" selected disabled>Select Company</option>

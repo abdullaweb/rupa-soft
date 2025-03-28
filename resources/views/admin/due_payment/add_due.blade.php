@@ -12,6 +12,10 @@
                                 @csrf
                                 <input type="hidden" name="status" value="local">
                                 <div class="mb-3 mt-3">
+                                    <Label>Code</Label>
+                                    <input type="text" class="form-control" name="code" id="code" readonly value="{{ $code }}">
+                                </div>
+                                <div class="mb-3 mt-3">
                                     <select name="company_id" id="company_id" class="form-control select2" required="">
                                         <option value="" selected disabled>Select Company</option>
                                         @foreach ($companies as $company)

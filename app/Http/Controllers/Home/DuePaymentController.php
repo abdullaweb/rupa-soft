@@ -13,6 +13,7 @@ use App\Models\DuePaymentDetail;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 
 
@@ -38,7 +39,8 @@ class DuePaymentController extends Controller
     public function AddDuePayment()
     {
         $companies = Company::where('status', '0')->get();
-        return view('admin.due_payment.add_due', compact('companies'));
+        $code = $this->UniqueNumberForDuePayment();
+        return view('admin.due_payment.add_due', compact('companies', 'code'));
     }
 
     public function AddCorporateDuePayment()
@@ -62,6 +64,7 @@ class DuePaymentController extends Controller
         // Save payment request without modifying any balances
         $due_payment = new DuePayment();
         $due_payment->customer_id = $company_id;
+        $due_payment->code = $request->code;
         $due_payment->paid_amount = $request->paid_amount;
         $due_payment->date = $request->date;
         $due_payment->paid_status = $request->paid_status;
@@ -160,6 +163,7 @@ class DuePaymentController extends Controller
                 // Save payment request without modifying any balances
                 // $due_payment = DuePayment();
                 $due_payment->customer_id = $company_id;
+                $due_payment->code = $request->code;
                 $due_payment->paid_amount = $request->paid_amount;
                 $due_payment->date = $request->date;
                 $due_payment->paid_status = $request->paid_status;
@@ -415,6 +419,12 @@ class DuePaymentController extends Controller
 
         return redirect()->route('all.due.payment')->with($notification);
       }
+    }
+
+    public function UniqueNumberForDuePayment()
+    {
+        $code = 'DP-' . date('Y-m') . '-' . Str::random(6);
+        return $code;
     }
 
 }
