@@ -11,6 +11,7 @@ use App\Models\PaySalary;
 use App\Models\PaySalaryDetail;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SalaryController extends Controller
 {
@@ -46,6 +47,56 @@ class SalaryController extends Controller
             ->where('paid_type', 'Salary')
             ->get();
 
+            // $currentMonth = date('n'); 
+            // $currentYear = date('Y');
+            // $monthlySalary = $employee->salary; 
+            
+            // $salaryPayments = PaySalaryDetail::select('paid_month', DB::raw('SUM(paid_amount) as total_paid'))
+            //     ->where('employee_id', $employee->id)
+            //     ->where('paid_year', $currentYear)
+            //     ->where('paid_type', 'Salary')
+            //     ->groupBy('paid_month')
+            //     ->get()
+            //     ->keyBy('paid_month');
+            
+            // $totalExpected = $monthlySalary * $currentMonth;
+            // $totalPaid = $salaryPayments->sum('total_paid');
+            // $totalDue = $totalExpected - $totalPaid;
+            
+            // $isCurrentMonthMissing = !$salaryPayments->has($currentMonth);
+            
+            // if ($totalDue > 0) {
+            //     $due_salary = $totalDue - $monthlySalary;
+            // } else {
+            //     $due_salary = 0;
+            // }
+
+            // $underpaidMonths = [];
+
+            // foreach ($salaryPayments as $record) {
+            //     if ($record->total_paid < $monthlySalary) {
+            //         $underpaidMonths[] = $record->paid_month;
+            //     }
+            // }
+
+            // $undpaid_months = PaySalaryDetail::select('paid_month', DB::raw('SUM(paid_amount) as total_paid'))
+            //     ->where('employee_id', $employee->id)
+            //     ->where('paid_year', $currentYear)
+            //     ->where('paid_type', 'Salary')
+            //     ->groupBy('paid_month')
+            //     ->get()
+            //     ->keyBy('paid_month');
+            // $undpaid_months = $undpaid_months->filter(function ($record) use ($monthlySalary) {
+            //     return $record->total_paid < $monthlySalary;
+            // })->map(function ($record) {
+            //     return [
+            //         'month' => $record->paid_month,
+            //         'total_paid' => $record->total_paid,
+            //     ];
+            // })->values()->all();
+
+            // dd($undpaid_months);
+
 
         // check total salary
         if ($pay_salary->isEmpty()) {
@@ -72,7 +123,7 @@ class SalaryController extends Controller
 
 
 
-        return view('admin.salary.pay_salary.pay_salary_add', compact('employee', 'total_salary', 'advanced_amount','voucher_no'));
+        return view('admin.salary.pay_salary.pay_salary_add', compact('employee', 'total_salary', 'advanced_amount','voucher_no', 'due_salary'));
     }
 
     public function StorePaySalary(Request $request)

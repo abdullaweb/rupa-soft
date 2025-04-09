@@ -23,6 +23,7 @@ use App\Http\Controllers\Home\PurchaseSubCategoryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\WastesSaleController;
+use App\Http\Controllers\LedgerController;
 use App\Http\Controllers\Home\StockDeductionController;
 use App\Models\WastesSale;
 use Illuminate\Support\Facades\Route;
@@ -117,6 +118,16 @@ Route::middleware('auth', 'role:admin')->group(function () {
         Route::post('/get/due-payment', 'GetDuePayment')->name('get.due.amount');
         Route::get('/due-payment/approval', 'DuePaymentApproval')->name('due.payment.approval');
         Route::get('/due-payment/approval/{id}', 'DuePaymentApprovalNow')->name('due.payment.approval.now');
+    });
+
+     // Ledger Controller All Route
+
+     Route::controller(LedgerController::class)->group(function () {
+        Route::get('/customer-ledger', 'CustomerLedger')->name('customer.ledger.index');
+        Route::post('/customer-ledger/fetch',  'CustomerfetchLedger')->name('customer.ledger.fetch');
+        Route::post('/customer-ledger/download',  'CustomerdownloadLedger')->name('customer.ledger.download');
+        Route::post('/customer-ledger/download-excel', 'CustomerdownloadLedgerExcel')->name('customer.ledger.download.excel');
+        Route::get('/pdf/view', 'PdfView');
     });
 
 

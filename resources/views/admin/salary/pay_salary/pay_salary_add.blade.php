@@ -38,6 +38,13 @@
                                                 value="{{ $advanced_amount }}" class="form-control" readonly>
                                         </div>
                                     </div>
+                                    {{-- <div class="col-md-4 mt-3">
+                                        <div class="mb-2">
+                                            <label for="" class="mb-2 mt-2"><b>Previous Due Salary</b></label>
+                                            <input type="text" name="previous_due" id="previous_due"
+                                                value="{{ $due_salary }}" class="form-control" readonly>
+                                        </div>
+                                    </div> --}}
 
                                     <div class="col-md-12 mt-3">
                                         <div class="mb-2">

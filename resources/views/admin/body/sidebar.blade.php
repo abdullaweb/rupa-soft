@@ -535,6 +535,11 @@
                             <a href="{{ route('purchase.report') }}">
                                 <i class="ri-arrow-right-line"></i>Stock Report</a>
                         </li>
+
+                        <li>
+                            <a href="{{ route('customer.ledger.index') }}">
+                                <i class="ri-arrow-right-line"></i>Customer Ledger</a>
+                        </li>
                      </ul>
                  </li>
                  <hr>
