@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Expense;
+use App\Models\Invoice;
 use App\Models\Payment;
 use App\Models\Purchase;
 use App\Models\DuePayment;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Hash;
 use PDO;
 use Spatie\Permission\Models\Role;
 
+
 class AdminController extends Controller
 {
     public function AdminDashboard()
@@ -28,7 +30,13 @@ class AdminController extends Controller
         $dueAmount = $payment->sum('due_amount');
         $pending_due_payment = DuePayment::where('status', 'pending')->get();
         $supplier_pending_due_payment = SupplierDuePayment::where('status', 'pending')->get();
-        return view('admin.index', compact('purchase', 'expense', 'dueAmount', 'payment', 'pending_due_payment', 'supplier_pending_due_payment'));
+
+        $date = Carbon::today()->toDateString();
+        $allInvoice = Invoice::whereDate('date', $date)->latest()->get();
+
+        // dd($allInvoice, $date);
+
+        return view('admin.index', compact('purchase', 'expense', 'dueAmount', 'payment', 'pending_due_payment', 'supplier_pending_due_payment', 'allInvoice'));
     }
 
     public function RedirectDashboard()

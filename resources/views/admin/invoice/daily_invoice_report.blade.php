@@ -15,12 +15,10 @@
                                 <div class="col-md-4 form-group ">
                                     <input type="date" class="form-control ml-2 date_picker" name="start_date"
                                         id="start_date" required data-parsley-required-message="Please select start Date">
-
                                 </div>
                                 <div class="col-md-4 form-group ">
                                     <input type="date" class="form-control ml-2 date_picker" name="end_date"
                                         id="end_date" required data-parsley-required-message="Please select end Date">
-
                                 </div>
                                 <div class="col-md-4 form-group ">
                                     <button class="btn btn-primary submit_btn ml-2" type="submit">Search</button>

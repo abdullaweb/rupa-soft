@@ -37,7 +37,7 @@
                     <div class="card">
                         <div class="card-body">
 
-                            <div class="row">
+                            <div class="row mb-3">
                                 <div class="col-12">
                                     <div class="row">
                                         <div class="col-12 mt-4">
@@ -61,29 +61,39 @@
                                                             <td class=""><strong>Customer Name</strong></td>
                                                             <td class=""><strong>Invoice No</strong></td>
                                                             <td class=""><strong>Date</strong></td>
-                                                            <td class=""><strong>Amount</strong></td>
+                                                            <td class=""><strong>Paid Amount</strong></td>
+                                                            <td class=""><strong>Due Amount</strong></td>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         <!-- foreach ($order->lineItems as $line) or some such thing here -->
                                                         @php
-                                                            $total_amount = '0';
+                                                            $paid_amount = '0';
+                                                            $due_amount = '0';
                                                         @endphp
                                                         @foreach ($allData as $key => $item)
+                                                        @php
+                                                            $account_details = App\Models\AccountDetail::where('invoice_id', $item->id)->get();
+                                                        @endphp
                                                             <tr>
                                                                 <td>{{ $key + 1 }}</td>
                                                                 <td class="">
-                                                                    {{ $item['payment']['company']['name'] }}</td>
+                                                                    {{ $item['payment']['company']['name'] ?? 'N/A' }}</td>
                                                                 <td class="">#{{ $item->invoice_no_gen }}</td>
                                                                 <td class="">
                                                                     {{ date('Y-m-d', strtotime($item->date)) }}</td>
                                                                 <td class="">
-                                                                    {{ number_format($item['payment']['total_amount']) }}/-
+                                                                    {{ number_format($account_details->sum('paid_amount')) }}/-
+                                                                </td>
+                                                                <td class="">
+                                                                    {{ number_format($account_details->sum('due_amount')) }}/-
                                                                 </td>
                                                             </tr>
 
                                                             @php
-                                                                $total_amount += $item['payment']['total_amount'];
+                                                                $paid_amount += $account_details->sum('paid_amount');
+
+                                                                $due_amount += $account_details->sum('due_amount');
                                                             @endphp
                                                         @endforeach
 
@@ -94,13 +104,16 @@
                                                             <td class="thick-line text-center">
                                                                 <strong>Grand Total</strong>
                                                             </td>
-                                                            <td class="thick-line text-center">
-                                                                <h4 class="m-0">{{ number_format($total_amount) }}/-</h4>
+                                                            <td class="thick-line">
+                                                                <h4 class="m-0">{{ number_format($paid_amount) }}/-</h4>
+                                                            </td>
+                                                            <td class="thick-line">
+                                                                <h4 class="m-0">{{ number_format($due_amount) }}/-</h4>
                                                             </td>
                                                         </tr>
                                                     </tbody>
-                                                    <h4 class="text-muted text-center mb-4">Total Amount:
-                                                        {{ number_format($total_amount) }}/-</h4>
+                                                    {{-- <h4 class="text-muted text-center mb-4">Total Amount:
+                                                        {{ number_format($total_amount) }}/-</h4> --}}
                                                 </table>
                                             </div>
                                         </div>

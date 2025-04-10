@@ -196,6 +196,55 @@
                     </div><!-- end card -->
                     <!-- end row -->
                 </div>
+                <div class="col-xl-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title text-center mb-3">Daily Sale</h4>
+                            <div class="table-responsive">
+                                <table id="" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>Sl</th>
+                                            <th>Customer Name</th>
+                                            <th>Bill No</th>
+                                            <th>Date</th>
+                                            <th>Paid Amount</th>
+                                            <th>Due Amount</th>
+                                            <th>Paid By</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($allInvoice as $key => $invoice)
+                                            <tr>
+                                                <td>{{ $key + 1 }}</td>
+                                                <td>
+                                                    {{ $invoice->company->name ?? '' }}
+                                                </td>
+                                                <td>
+                                                    {{ $invoice->invoice_no_gen }}
+                                                </td>
+                                                <td>
+                                                    {{ $invoice->date }}
+                                                </td>
+
+                                                <td>
+                                                    {{ number_format($invoice->accountDetails->paid_amount, 2) }}     
+                                                </td>
+                                                <td>
+                                                    {{ number_format($invoice->accountDetails->due_amount, 2) }}
+                                                </td>
+                                                <td>
+                                                    {{ $invoice->payment->paid_source ?? 'N/A' }} 
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div><!-- end card -->
+                    <!-- end row -->
+                </div>
 
             </div>
             <!-- End Page-content -->

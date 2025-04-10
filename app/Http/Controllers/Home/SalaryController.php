@@ -71,32 +71,15 @@ class SalaryController extends Controller
             //     $due_salary = 0;
             // }
 
-            // $underpaidMonths = [];
-
-            // foreach ($salaryPayments as $record) {
-            //     if ($record->total_paid < $monthlySalary) {
-            //         $underpaidMonths[] = $record->paid_month;
+            // $unpaid_months = [];
+            // for ($i = 1; $i <= $currentMonth; $i++) {
+            //     if (!$salaryPayments->has($i)) {
+            //         $unpaid_months[] = date('F', mktime(0, 0, 0, $i, 1));
             //     }
             // }
-
-            // $undpaid_months = PaySalaryDetail::select('paid_month', DB::raw('SUM(paid_amount) as total_paid'))
-            //     ->where('employee_id', $employee->id)
-            //     ->where('paid_year', $currentYear)
-            //     ->where('paid_type', 'Salary')
-            //     ->groupBy('paid_month')
-            //     ->get()
-            //     ->keyBy('paid_month');
-            // $undpaid_months = $undpaid_months->filter(function ($record) use ($monthlySalary) {
-            //     return $record->total_paid < $monthlySalary;
-            // })->map(function ($record) {
-            //     return [
-            //         'month' => $record->paid_month,
-            //         'total_paid' => $record->total_paid,
-            //     ];
-            // })->values()->all();
-
-            // dd($undpaid_months);
-
+            // $unpaid_months = implode(', ', $unpaid_months);
+            // $unpaid_months = $unpaid_months ? $unpaid_months : 'No Unpaid Month';
+            // dd($unpaid_months);
 
         // check total salary
         if ($pay_salary->isEmpty()) {
@@ -180,6 +163,13 @@ class SalaryController extends Controller
 
 
         if ($payment_type == 'salary') {
+            if($due_salary > 0){
+                $notification = array(
+                    'message' => 'Salary Already Paid for this month',
+                    'alert-type' => 'error'
+                );
+                return redirect()->back()->with($notification);
+            }
             if ($request->paid_amount > $request->total_salary) {
                 $notification = array(
                     'message' => 'Paid Amount must be less than to total Salary',
