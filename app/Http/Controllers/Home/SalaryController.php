@@ -123,7 +123,7 @@ class SalaryController extends Controller
 
 
 
-        return view('admin.salary.pay_salary.pay_salary_add', compact('employee', 'total_salary', 'advanced_amount','voucher_no', 'due_salary'));
+        return view('admin.salary.pay_salary.pay_salary_add', compact('employee', 'total_salary', 'advanced_amount','voucher_no'));
     }
 
     public function StorePaySalary(Request $request)
