@@ -1,8 +1,5 @@
 @extends('admin.admin_master')
 @section('admin')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
     <div class="page-content">
         <div class="row">
             <div class="col-lg-12">
@@ -75,8 +72,6 @@
     </div>
 
 
-    {{-- js --}}
-    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
     {{--  add more purchase   --}}
     <script>
         $(document).ready(function() {

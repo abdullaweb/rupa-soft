@@ -86,7 +86,4 @@
             </div>
         </div>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
-    <script src="{{ asset('backend/assets/js/code.js') }}"></script>
 @endsection

@@ -5,7 +5,6 @@
             padding: 0 !important;
         }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <!-- Begin Page Content -->
     <div class="page-content">
         <div class="col-12">

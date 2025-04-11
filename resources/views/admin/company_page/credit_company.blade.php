@@ -1,7 +1,5 @@
 @extends('admin.admin_master')
 @section('admin')
-    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
-
     <div class="page-content">
         <!--breadcrumb-->
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
@@ -78,6 +76,4 @@
                 </div>
             </div> <!-- end col -->
         </div> <!-- end row -->
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script src="{{ asset('backend/assets/js/code.js') }}"></script>
     @endsection

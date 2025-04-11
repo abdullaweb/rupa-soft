@@ -1,8 +1,5 @@
 @extends('admin.admin_master')
 @section('admin')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
     <!-- Begin Page Content -->
     <div class="page-content">
         <!--breadcrumb-->

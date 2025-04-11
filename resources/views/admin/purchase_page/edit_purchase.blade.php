@@ -1,5 +1,4 @@
 @extends('admin.admin_master')
-<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
 @section('admin')
     <div class="page-content">
         <div class="container-fluid">
@@ -455,7 +454,6 @@
             });
         });
     </script>
-    <script src="{{ asset('backend/assets/libs/parsleyjs/parsley.min.js') }}"></script>
 
     <script>
         $('#purchaseForm').parsley();

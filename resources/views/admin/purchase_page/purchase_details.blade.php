@@ -3,7 +3,6 @@
 @endphp
 @extends('admin.admin_master')
 @section('admin')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <!-- Begin Page Content -->
     <div class="page-content">
         <!-- DataTales Example -->

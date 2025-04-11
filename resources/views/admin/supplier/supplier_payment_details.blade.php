@@ -1,6 +1,5 @@
 @extends('admin.admin_master')
 @section('admin')
-    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
     <div class="page-content">
         <div class="container-fluid">
             <div class="row">
