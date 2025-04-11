@@ -9,66 +9,11 @@
                     <div class="col-12 py-3 d-flex justify-content-center align-items-center">
                         <h6 class="m-0 font-weight-bold text-primary text-center">Category Wise Daily Sales Report</h6>
                         <h6 class="m-0 font-weight-bold text-primary">
-                            {{-- <a href="{{ route('add.opening.balance') }}">
-                                <button class="btn btn-info">Add Balance</button>
-                            </a> --}}
                         </h6>
                     </div>
                 </div>
             </div>
             <div class="card-body">
-                {{-- <div class="table-responsive">
-                    <table id="datatable" class="table table-bordered dt-responsive nowrap"
-                        style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                        <thead>
-                            <tr class="text-center">
-                                <th colspan="2">Date</th>
-                                <th colspan="{{ count($categories) }}">Category</th>
-                            </tr>
-                            <tr>
-                                <td>Date</td>
-                                <td>Bill No</td>
-                                @foreach ($categories as $key => $item)
-                                    <td>{{ $item->name }}</td>
-                                @endforeach
-                            </tr>
-                        </thead>
-                        <tfoot>
-                            <tr class="text-center">
-                                <th colspan="2">Date</th>
-                                <th colspan="{{ count($categories) }}">Category</th>
-                            </tr>
-                        </tfoot>
-                        <tbody>
-                            @foreach ($invoice as $key => $item)
-                                <tr>
-                                    <td>{{ $item->date }}</td>
-                                    <td>{{ $item->invoice_no_gen }}</td>
-
-                                    @php
-                                        $invoice_details = App\Models\InvoiceDetail::where('invoice_id', $item->id)->get();
-                                    @endphp
-
-                                    @foreach ($invoice_details as $invoice_info)
-                                        @if ($item->id == $invoice_info->invoice_id)
-                                            @foreach ($categories as $key => $cat)
-                                                @if ($invoice_info->category_id == $cat->id)
-                                                    <td>
-                                                        {{ $invoice_info['category']['name'] }}
-                                                        -
-                                                        {{ $invoice_info->selling_price }}
-                                                    </td>
-                                                @else
-                                                    <td></td>
-                                                @endif
-                                            @endforeach
-                                        @endif
-                                    @endforeach
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div> --}}
             </div>
             <div class="card-body">
                 <form action="{{ route('get.cat.report') }}" method="POST" autocomplete="off">
@@ -94,22 +39,15 @@
                     <table id="datatable" class="table table-bordered dt-responsive nowrap"
                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
-                            {{-- <tr class="text-center">
-                                <th colspan="2">Date</th>
-                                <th colspan="{{ count($categories) }}">Category</th>
-                            </tr> --}}
-                            <tr class="text-center">
+                            <tr class="">
                                 <th>Date</th>
                                 <th>Bill No</th>
                                 <th>Category</th>
                                 <th>Amount</th>
-                                {{-- @foreach ($categories as $key => $item)
-                                    <td>{{ $item->name }}</td>
-                                @endforeach --}}
                             </tr>
                         </thead>
                         <tfoot>
-                            <tr class="text-center">
+                            <tr class="">
                                 <th>Date</th>
                                 <th>Bill No</th>
                                 <th>Category</th>
@@ -121,7 +59,7 @@
                                 $cat_info = App\Models\InvoiceDetail::get();
                             @endphp
                             @foreach ($cat_info as $key => $info)
-                                <tr class="text-center">
+                                <tr class="">
                                     <td>{{ $info->date }}</td>
                                     <td>{{ $info->invoice_no_gen }}</td>
                                     <td> {{ $info['category']['name'] }} </td>

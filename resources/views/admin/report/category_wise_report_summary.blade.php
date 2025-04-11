@@ -32,13 +32,13 @@
                     <table id="datatable" class="table table-bordered dt-responsive nowrap"
                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
-                            <tr class="text-center">
+                            <tr class="">
                                 <th>Category</th>
                                 <th>Amount</th>
                             </tr>
                         </thead>
                         <tfoot>
-                            <tr class="text-center">
+                            <tr class="">
                                 <th>Category</th>
                                 <th>Amount</th>
                             </tr>
@@ -46,7 +46,7 @@
                         <tbody>
 
                             @foreach ($categories as $key => $category)
-                                <tr class="text-center">
+                                <tr class="">
                                     <td> {{ $category->name }} </td>
                                     @php
                                         $sellingAmount = App\Models\InvoiceDetail::where('category_id', $category->id)->sum('selling_price');

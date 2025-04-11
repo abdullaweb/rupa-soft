@@ -34,7 +34,7 @@
                     <table id="" class="table table-bordered dt-responsive nowrap"
                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
-                            <tr class="text-center">
+                            <tr class="">
                                 <th>Date</th>
                                 <th>Bill No</th>
                                 <th>Category</th>
@@ -42,7 +42,7 @@
                             </tr>
                         </thead>
                         <tfoot>
-                            <tr class="text-center">
+                            <tr class="">
                                 <th>Date</th>
                                 <th>Bill No</th>
                                 <th>Category</th>
@@ -52,7 +52,7 @@
                         <tbody>
 
                             @foreach ($allSearchResult as $key => $info)
-                                <tr class="text-center">
+                                <tr class="">
                                     <td>{{ $info->date }}</td>
                                     <td>{{ $info->invoice_no_gen }}</td>
                                     <td> {{ $info['category']['name'] }} </td>

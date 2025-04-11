@@ -33,7 +33,7 @@
                             <div class="col-12 py-3">
                                 <h4 class="text-center mb-5">Invoice Report from {{ $start_date }} to {{ $end_date }}</h4>
                                 <div class="payment-details">
-                                    <table class="table text-center text-dark" id="" width="100%">
+                                    <table class="table text-dark" id="" width="100%">
                                         <thead>
                                             <tr>
                                                 <th>
@@ -51,10 +51,10 @@
                                                     <h6 class="fw-bold">Total Amount</h6>
                                                 </th>
                                                 <th>
-                                                    <h6 class="fw-bold">Due Amount</h6>
+                                                    <h6 class="fw-bold">Paid Amount</h6>
                                                 </th>
                                                 <th>
-                                                    <h6 class="fw-bold">Payment Amount</h6>
+                                                    <h6 class="fw-bold">Due Amount</h6>
                                                 </th>
                                             </tr>
                                         </thead>

@@ -26,7 +26,7 @@
                             <div class="col-12 py-3">
                                 {{-- <h4 class="text-center mb-3">Account details from {{ $start_date }} to {{ $end_date }}</h4> --}}
                                 <div class="payment-details">
-                                    <table class="table text-center text-dark" id="datatable" width="100%">
+                                    <table class="table text-dark" id="datatable" width="100%">
                                         <thead>
                                             <tr>
                                                 <th>Sl</th>

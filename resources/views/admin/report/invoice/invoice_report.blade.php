@@ -50,7 +50,7 @@
                             <div class="col-12 py-3">
                                 {{-- <h4 class="text-center mb-3">Account details from {{ $start_date }} to {{ $end_date }}</h4> --}}
                                 <div class="payment-details">
-                                    <table class="table text-center text-dark" id="datatable" width="100%">
+                                    <table class="table text-dark" id="datatable" width="100%">
                                         <thead>
                                             <tr>
                                                 <th>
@@ -68,10 +68,10 @@
                                                     <h6 class="fw-bold">Total Amount</h6>
                                                 </th>
                                                 <th>
-                                                    <h6 class="fw-bold">Due Amount</h6>
+                                                    <h6 class="fw-bold">Paid Amount</h6>
                                                 </th>
                                                 <th>
-                                                    <h6 class="fw-bold">Payment Amount</h6>
+                                                    <h6 class="fw-bold">Due Amount</h6>
                                                 </th>
                                             </tr>
                                         </thead>
@@ -91,10 +91,10 @@
                                                             #{{ $invoice->invoice_no_gen }}
                                                         </td>
                                                         <td>{{ number_format($payment->total_amount) }}/-</td>
-                                                        <td>{{ number_format($payment->due_amount) }}/-</td>
                                                         <td>
                                                             {{ ($payment->paid_amount) }}/-
                                                         </td>
+                                                        <td>{{ number_format($payment->due_amount) }}/-</td>
                                                     </tr>
                                                 @endforeach
                                             
