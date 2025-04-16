@@ -36,6 +36,13 @@
                                     </div>
                                 </div>
 
+                                <div class="mb-3">
+                                    <div>
+                                        <label for="">Voucher</label>
+                                        <input type="text" class="form-control" name="voucher" id="voucher" placeholder="Enter Voucher Number" autocomplete="off">
+                                    </div>
+                                </div>
+
                                 {{-- <div class="mb-3">
                                     <div>
                                         <select class="form-select form-control" id="purchase" name="purchase[]" multiple>

@@ -60,6 +60,7 @@ class SupplierDuePaymentController extends Controller
             $due_payment->supplier_id = $request->supplier_id;
             $due_payment->paid_amount = $request->paid_amount;
             $due_payment->date = $request->date;
+            $due_payment->voucher = $request->voucher;
             $due_payment->paid_status = $request->paid_status;
             $due_payment->status = 'pending';
             $due_payment->save();
@@ -173,6 +174,7 @@ class SupplierDuePaymentController extends Controller
                     $due_payment->supplier_id = $request->supplier_id;
                     $due_payment->paid_amount = $request->paid_amount;
                     $due_payment->date = $request->date;
+                    $due_payment->voucher = $request->voucher;
                     $due_payment->paid_status = $request->paid_status;
                     $due_payment->status = 'pending';
                     $due_payment->save();                    
@@ -268,6 +270,7 @@ class SupplierDuePaymentController extends Controller
         $account_details->paid_amount = $due_payment->paid_amount;
         $account_details->supplier_id = $supplier_id;
         $account_details->date = $due_payment->date;
+        $account_details->voucher = $due_payment->voucher;
         $account_details->balance = $account_balance - $due_payment->paid_amount;
         $account_details->save();
         

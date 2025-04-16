@@ -31,7 +31,7 @@ class PurchaseController extends Controller
 
     public function StorePurchase(Request $request)
     {
-        // dd($request->all());
+        dd($request->all());
         DB::beginTransaction();
         try {
             $purchase = new Purchase();
@@ -84,6 +84,7 @@ class PurchaseController extends Controller
             $supplier_account_details = new SupplierAccountDetail();
             $supplier_account_details->supplier_id = $request->supplier_id;
             $supplier_account_details->purchase_id = $purchase->id;
+            $supplier_account_details->voucher = $request->voucher;
             $supplier_account_details->date = date('Y-m-d', strtotime($request->date));
             $supplier_account_details->total_amount = $request->estimated_amount;
             $supplier_account_details->balance = $latest_account_balance + ($request->estimated_amount - $request->paid_amount);
@@ -226,6 +227,7 @@ class PurchaseController extends Controller
             $supplier_account_details = new SupplierAccountDetail();
             $supplier_account_details->supplier_id = $request->supplier_id;
             $supplier_account_details->purchase_id = $purchase->id;
+            $supplier_account_details->voucher = $request->voucher;
             $supplier_account_details->date = date('Y-m-d', strtotime($request->date));
             $supplier_account_details->total_amount = $request->estimated_amount;
             $supplier_account_details->balance = $request->estimated_amount - $request->paid_amount;

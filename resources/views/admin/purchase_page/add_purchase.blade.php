@@ -21,6 +21,13 @@
                                             name="date" id="date" required="">
                                     </div>
                                 </div>
+                                <div class="col-md-2">
+                                    <div class="md-3">
+                                        <label for="example-text-input" class="col-sm-12 col-form-label">Voucher</label>
+                                        <input type="text" class="form-control"
+                                            name="voucher" id="voucher" placeholder="Voucher No">
+                                    </div>
+                                </div>
                                 
                                 <div class="col-md-2">
                                     <div class="md-3">
@@ -159,6 +166,7 @@
     <script id="document-template" type="text/x-handlebars-template">
         <tr class="delete_add_more_item" id="delete_add_more_item">
             <input type="hidden" name="date" value="@{{ date }}">
+            <input type="hidden" name="voucher" value="@{{ voucher }}">
             <td hidden>
                 <input type="hidden" name="supplier_id" value="@{{ supplier_id }}">
                 <span class="supplier_id">@{{ supplier_id }}</span>
@@ -203,6 +211,7 @@
             $(document).on("click", "#addEventMore", function() {
 
                 let date = $("#date").val();
+                let voucher = $("#voucher").val();
                 let supplier_id = $("#supplier_id").val();
                 let category_id = $("#category_id").val();
                 let category_name = $("#category_id").find('option:selected').text();
@@ -246,6 +255,7 @@
 
                 let data = {
                     date: date,
+                    voucher: voucher,
                     supplier_id: supplier_id,
                     category_id: category_id,
                     category_name: category_name,

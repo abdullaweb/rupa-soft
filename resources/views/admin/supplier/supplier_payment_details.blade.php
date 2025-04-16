@@ -31,6 +31,9 @@
                                                     <h6 class="fw-bold">Date</h6>
                                                 </th>
                                                 <th>
+                                                    <h6 class="fw-bold">Voucher No</h6>
+                                                </th>
+                                                <th>
                                                     <h6 class="fw-bold">Total Amount</h6>
                                                 </th>
                                                 <th>
@@ -53,7 +56,10 @@
                                                 <tr>
                                                     <td>{{ $key + 1 }}</td>
                                                     <td>{{ date('d-m-Y', strtotime($details->date)) }}</td>
-                                                    
+
+                                                    <td>
+                                                        {{ $details->voucher ?? 'N/A' }}
+                                                    </td>
                                                     
                                                     <td>{{ number_format($details->total_amount) }}/-</td>
                                                     <td>{{ number_format($details->due_amount) }}/-</td>
