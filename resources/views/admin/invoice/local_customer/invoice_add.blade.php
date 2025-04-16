@@ -29,12 +29,33 @@
                                             Name</label>
                                         <select name="company_id" id="company_id" class="form-control form-select select2">
                                             <option value="">Select Company Name</option>
+                                            <option value="0">New Company</option>
                                             @foreach ($companies as $company)
                                                 <option value="{{ $company->id }}">
                                                     {{ $company->name }}
                                                 </option>
                                             @endforeach
                                         </select>
+                                    </div>
+                                </div>
+                                <div class="row mt-3" id="customer-info" style="display: none;">
+                                    <div class="col-md-4">
+                                        <div class="md-3">
+                                            <label for="customer_name" class="col-sm-12 col-form-label">Customer Name</label>
+                                            <input type="text" class="form-control" name="customer_name" id="customer_name" placeholder="Customer Name">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="md-3">
+                                            <label for="customer_email" class="col-sm-12 col-form-label">Customer Email</label>
+                                            <input type="email" class="form-control" name="customer_email" id="customer_email" placeholder="Customer Email">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="md-3">
+                                            <label for="customer_phone" class="col-sm-12 col-form-label">Customer Phone</label>
+                                            <input type="tel" class="form-control" name="customer_phone" id="customer_phone" placeholder="Customer Phone">
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-2">
@@ -172,6 +193,30 @@
     </div>
 
 
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#company_id').on('change', function() {
+                let customerId = $(this).val();
+                console.log(customerId);
+                if (customerId == '0') {
+                    $('#customer-info').show();
+                } else {
+                    $('#customer-info').hide();
+                }
+            });
+        });
+    </script>
+
+    {{-- <script>
+        $(document).ready(function() {
+            $('#company_id').on('change', function() {
+                let companyId = $(this).val();
+                if (companyId == 'new_company') {
+                    window.location.href = "{{ route('add.company') }}";
+                }
+            });
+        });
+    </script> --}}
 
 
 
@@ -179,6 +224,9 @@
         <tr class="delete_add_more_item" id="delete_add_more_item">
             <input type="hidden" name="date" value="@{{ date }}">
             <input type="hidden" name="invoice_no" value="@{{ invoice_no }}">
+            <input type="hidden" class="form-control" name="customer_name" value="@{{ customer_name }}">
+            <input type="hidden" class="form-control" name="customer_phone" value="@{{ customer_phone }}">
+            <input type="hidden" class="form-control" name="customer_email" value="@{{ customer_email }}">
             <td hidden>
                 <input type="hidden" name="company_id[]" value="@{{ company_id }}">
                 @{{ company_name }}
@@ -195,6 +243,7 @@
                 <input type="hidden" name="sub_cat_id[]" value="@{{ sub_cat_id }}">
                      <span class="sub_cat_name">@{{ sub_cat_name }}</span>
             </td>
+            
             <td>
                 <input type="text" class="form-control" placeholder="Write Description"  name="description[]">
             </td>
@@ -236,6 +285,9 @@
             $(document).on("click", "#addEventMore", function() {
 
                 let date = $("#date").val();
+                let customer_name = $("#customer_name").val();  
+                let customer_email = $("#customer_email").val();
+                let customer_phone = $("#customer_phone").val();
                 let invoice_no = $("#invoice_no").val();
                 let product_name = $("#product_name").val();
                 let company_id = $("#company_id").val();
@@ -289,6 +341,9 @@
 
                 let data = {
                     date: date,
+                    customer_name: customer_name,
+                    customer_email: customer_email,
+                    customer_phone: customer_phone,
                     invoice_no: invoice_no,
                     company_id: company_id,
                     company_name: company_name,

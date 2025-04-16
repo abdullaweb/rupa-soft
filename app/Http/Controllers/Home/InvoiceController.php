@@ -619,11 +619,11 @@ class InvoiceController extends Controller
                 for ($i = 0; $i < $count_com; $i++) {
                     // $get_company_id = $request->company_id[$i];
 
-                    if ($request->company_id[$i] == 'new_company') {
+                    if ($request->company_id[$i] == '0') {
                         $company = new Company();
-                        $company->name = $request->name;
-                        $company->phone = $request->phone;
-                        $company->address = $request->address;
+                        $company->name = $request->customer_name;
+                        $company->phone = $request->customer_phone;
+                        $company->email = $request->customer_email;
                         $company->status = '0';
                         // $company->company_id = $request->company_id;
                         $company->save();
