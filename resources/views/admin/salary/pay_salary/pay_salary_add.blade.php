@@ -21,27 +21,27 @@
                                                 value="{{ $employee->id }}" class="form-control" readonly>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-3">
+                                    <div class="col-md-4 mt-3">
                                         <div class="mb-2">
                                             <label for="" class="mb-2 mt-2"><b>Total Due Salary</b></label>
                                             <input type="text" name="total_salary" id="total_salary"
                                                 value="{{ $total_salary }}" class="form-control" readonly>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-3">
+                                    <div class="col-md-4 mt-3">
                                         <div class="mb-2">
                                             <label for="" class="mb-2 mt-2"><b>Total Advanced</b></label>
                                             <input type="text" name="advanced_amount" id="advanced_amount"
                                                 value="{{ $advanced_amount }}" class="form-control" readonly>
                                         </div>
                                     </div>
-                                    {{-- <div class="col-md-4 mt-3">
+                                    <div class="col-md-4 mt-3">
                                         <div class="mb-2">
                                             <label for="" class="mb-2 mt-2"><b>Previous Due Salary</b></label>
                                             <input type="text" name="previous_due" id="previous_due"
                                                 value="{{ $due_salary }}" class="form-control" readonly>
                                         </div>
-                                    </div> --}}
+                                    </div>
 
                                     <div class="col-md-12 mt-3">
                                         <div class="mb-2">
@@ -62,6 +62,8 @@
                                             Salary
                                             <input type="radio" name="payment_type" value="advanced"
                                                 style="margin-left: 20px;"> Advanced
+                                            <input type="radio" name="payment_type" value="previous_due"
+                                                style="margin-left: 20px;"> Previous Due
                                         </div>
                                     </div>
 

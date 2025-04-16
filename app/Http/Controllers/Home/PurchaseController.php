@@ -69,19 +69,24 @@ class PurchaseController extends Controller
                 $purchase_summery->save();
             }
 
+            // latest balance
+            $latest_balance = SupplierPaymentDetail::where('supplier_id', $request->supplier_id)->latest('id')->first()->balance ?? '0';
+
             $supplier_payment = new SupplierPaymentDetail();
             $supplier_payment->supplier_id = $request->supplier_id;
             $supplier_payment->purchase_id = $purchase->id;
             $supplier_payment->date = date('Y-m-d', strtotime($request->date));
             $supplier_payment->total_amount = $request->estimated_amount;
-            $supplier_payment->balance = $request->estimated_amount - $request->paid_amount;
+            $supplier_payment->balance = $latest_balance + ($request->estimated_amount - $request->paid_amount);
+
+            $latest_account_balance = SupplierAccountDetail::where('supplier_id', $request->supplier_id)->latest('id')->first()->balance ?? '0';
 
             $supplier_account_details = new SupplierAccountDetail();
             $supplier_account_details->supplier_id = $request->supplier_id;
             $supplier_account_details->purchase_id = $purchase->id;
             $supplier_account_details->date = date('Y-m-d', strtotime($request->date));
             $supplier_account_details->total_amount = $request->estimated_amount;
-            $supplier_account_details->balance = $request->estimated_amount - $request->paid_amount;
+            $supplier_account_details->balance = $latest_account_balance + ($request->estimated_amount - $request->paid_amount);
 
 
 

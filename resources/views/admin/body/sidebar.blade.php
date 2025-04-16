@@ -306,6 +306,17 @@
                          <span>Manage Salary</span>
                      </a>
                      <ul class="sub-menu" aria-expanded="true">
+                         <li>
+                             <a href="{{ route('payroll') }}">
+                                 <i class="ri-arrow-right-line"></i> Payroll
+                             </a>
+                         </li>
+                         <li>
+                             <a href="{{ route('get.payroll') }}">
+                                 <i class="ri-arrow-right-line"></i> Payroll
+                             </a>
+                         </li>
+
                          @if (Auth::user()->can('advanced.salary.list'))
                          <li>
                              <a href="{{ route('all.advanced.salary') }}">

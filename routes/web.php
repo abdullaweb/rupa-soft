@@ -14,6 +14,7 @@ use App\Http\Controllers\Home\UnitController;
 use App\Http\Controllers\Home\AdvancedController;
 use App\Http\Controllers\Home\DefaultController;
 use App\Http\Controllers\Home\DuePaymentController;
+use App\Http\Controllers\Home\PayrollManagerController;
 use App\Http\Controllers\Home\TaxController;
 use App\Http\Controllers\Home\RoleController;
 use App\Http\Controllers\Home\SupplierController;
@@ -414,6 +415,14 @@ Route::middleware('auth', 'role:admin')->group(function () {
 
         // payment details
         Route::get('/payment/details/{id}', 'EmployeePaymentDetails')->name('employee.payment.details');
+    });
+
+    // Payroll all route
+    Route::controller(PayrollManagerController::class)->group(function () {
+        Route::get('/payroll', 'Payroll')->name('payroll');
+        Route::post('/get/payroll', 'GetPayroll')->name('get.payroll');
+        Route::get('/payroll/pdf', 'PayrollPdf')->name('payroll.pdf');
+        Route::post('/payroll/excel', 'PayrollExcel')->name('payroll.excel');
     });
 
     // category report method

@@ -115,6 +115,7 @@ class SalaryController extends Controller
         $payment_type = $request->payment_type;
         $employee = Employee::findOrFail($employee_id);
 
+
         $pay_salary_table = PaySalary::where('employee_id', $employee_id)
             ->where('paid_month', date('F', strtotime('-1 month')))
             ->where('paid_year', date('Y'))
