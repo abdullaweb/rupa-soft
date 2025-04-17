@@ -310,7 +310,7 @@
                          <span>Manage Salary</span>
                      </a>
                      <ul class="sub-menu" aria-expanded="true">
-                         <li>
+                         {{-- <li>
                              <a href="{{ route('payroll') }}">
                                  <i class="ri-arrow-right-line"></i> Payroll
                              </a>
@@ -319,7 +319,7 @@
                              <a href="{{ route('get.payroll') }}">
                                  <i class="ri-arrow-right-line"></i> Payroll
                              </a>
-                         </li>
+                         </li> --}}
 
                          @if (Auth::user()->can('advanced.salary.list'))
                          <li>
