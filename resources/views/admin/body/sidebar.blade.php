@@ -84,11 +84,13 @@
                                      <i class="ri-user-3-line"></i> <span>Corporate Due List</span>
                                  </a>
                              </li>
+                             @if (Auth::user()->can('pending.due.list'))
                              <li>
                                  <a href="{{ route('due.payment.approval') }}" class="waves-effect">
                                      <i class="ri-user-3-line"></i> <span>Approval List</span>
                                  </a>
                              </li>
+                             @endif
                          @endif 
                      </ul>
                  </li>
@@ -108,11 +110,13 @@
                                 <i class="ri-user-3-line"></i> <span>Due List</span>
                             </a>
                         </li>
+                        @if (Auth::user()->can('pending.supplier.due.list'))
                         <li>
                             <a href="{{ route('supplier.due.payment.approval') }}" class="waves-effect">
                                 <i class="ri-user-3-line"></i> <span>Approval List</span>
                             </a>
                         </li>
+                        @endif
                     @endif 
                 </ul>
             </li>

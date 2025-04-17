@@ -94,6 +94,7 @@
 
             {{-- Due Payment Approve List --}}
             <div class="row">
+                @if (Auth::user()->can('pending.due.list'))
                 <div class="col-xl-6">
                     <div class="card">
                         <div class="card-body">
@@ -145,6 +146,10 @@
                     </div><!-- end card -->
                     <!-- end row -->
                 </div>
+                @endif
+
+                {{-- Supplier Due Payment Approve List --}}
+                @if (Auth::user()->can('pending.supplier.due.list'))
                 <div class="col-xl-6">
                     <div class="card">
                         <div class="card-body">
@@ -196,6 +201,9 @@
                     </div><!-- end card -->
                     <!-- end row -->
                 </div>
+                @endif
+
+                
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">

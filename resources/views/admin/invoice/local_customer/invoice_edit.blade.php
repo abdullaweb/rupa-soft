@@ -432,7 +432,7 @@
 
                     if (cat_name == 'Foyle Print' || cat_name == 'Paper' || cat_name == 'Pasting' || cat_name ==
                         'Printing Item' || cat_name == 'Carton' || cat_name == 'Paper Cutting' || cat_name ==
-                        'Garments Printing Item' || cat_name == 'Dise') {
+                        'Garments Printing Item' || cat_name == 'Dise' || cat_name == 'Lamination Flim') {
                         let total = Math.round(unit_price * selling_qty);
                         $(this).closest("tr").find('input.selling_price').val(total);
                         $("#discount_amount").trigger('keyup');

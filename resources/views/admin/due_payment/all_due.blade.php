@@ -56,22 +56,24 @@
                                         </td>
 
                                         <td>
-                                            {{-- @if (Auth::user()->can('due.payment.edit')) --}}
+                                            @if (Auth::user()->can('edit.local.due'))
                                                 <a style="margin-left: 5px;" href="{{ route('edit.due.payment', $item->id) }}" class="btn btn-info">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-                                            {{-- @endif --}}
+                                            @endif
 
-                                            {{-- @if (Auth::user()->can('due.payment.delete')) --}}
+                                            @if (Auth::user()->can('delete.local.due'))
                                                 <a style="margin-left: 5px;" href="{{ route('delete.due.payment', $item->id) }}" class="btn btn-danger" title="Delete" id="delete">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </a>
-                                            {{-- @endif --}}
+                                            @endif
 
+                                            @if (Auth::user()->can('approval.local.due'))
                                             @if($item->status == 'pending')
                                                 <a style="margin-left: 5px;" href="{{ route('due.payment.approval.now', $item->id) }}" class="btn btn-success" id="approve" title="Approve">
                                                     <i class="fas fa-check"></i>
                                                 </a>
+                                            @endif
                                             @endif
                                         </td>
                                     </tr>
