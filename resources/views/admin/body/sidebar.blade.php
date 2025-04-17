@@ -499,7 +499,11 @@
                                  <ul class="sub-menu" aria-expanded="true">
                                          <li>
                                              <a href="{{ route('all.opening.balance') }}"><i class="ri-arrow-right-line"></i>
-                                                 Opening Balance</a>
+                                                 Customer Opening</a>
+                                         </li>
+                                         <li>
+                                             <a href="{{ route('all.supplier.opening.balance') }}"><i class="ri-arrow-right-line"></i>
+                                                 Supplier Opening </a>
                                          </li>
                                  </ul>
                              </li>

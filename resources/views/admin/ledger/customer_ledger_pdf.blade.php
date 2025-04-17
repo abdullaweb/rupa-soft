@@ -38,16 +38,10 @@
                     <td>{{ $key + 1 }}</td>
                     <td>{{ $entry->date ?? null }}</td>
                     <td>
-                        @if ($entry->status == '1')
-                           @if($entry->paid_source == NULL)
-                                Sales
-                           @else
-                                Sales {{ ' - (' . $entry->paid_source . ')' }}
-                            @endif
-                        @elseif($entry->status == '0')
-                            Due Payment
-                        @elseif($entry->status == '2')
-                            Opening Balance
+                        @if ($entry->invoice_id == null)
+                           Due Payment ({{ $entry->paid_status ?? null }})
+                        @else
+                            Sales ({{ $entry->paid_status ?? null }})
                         @endif
                     </td>
                     <td>{{ $entry->total_amount ?? '0.00' }}</td>

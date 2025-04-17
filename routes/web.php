@@ -358,6 +358,14 @@ Route::middleware('auth', 'role:admin')->group(function () {
         Route::get('edit/opening/balance/{id}', 'EditOpeningBalance')->name('edit.opening.balance');
         Route::get('delete/opening/balance/{id}', 'DeleteOpeningBalance')->name('delete.opening.balance');
         Route::post('update/opening/balance', 'UpdateOpeningBalance')->name('update.opening.balance');
+
+        // supplier opening balance
+        Route::get('all/supplier/opening/balance', 'AllSupplierOpeningBalance')->name('all.supplier.opening.balance');
+        Route::get('add/supplier/opening/balance', 'AddSupplierOpeningBalance')->name('add.supplier.opening.balance');
+        Route::post('store/supplier/opening/balance', 'StoreSupplierOpeningBalance')->name('store.supplier.opening.balance');
+        Route::get('edit/supplier/opening/balance/{id}', 'EditSupplierOpeningBalance')->name('edit.supplier.opening.balance');
+        Route::get('delete/supplier/opening/balance/{id}', 'DeleteSupplierOpeningBalance')->name('delete.supplier.opening.balance');
+        Route::post('update/supplier/opening/balance', 'UpdateSupplierOpeningBalance')->name('update.supplier.opening.balance');
     });
     
      // Tax all route

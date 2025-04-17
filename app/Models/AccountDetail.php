@@ -27,4 +27,6 @@ class AccountDetail extends Model
     {
         return $this->belongsTo(DuePayment::class, 'due_payment_id', 'id');
     }
+
+    
 }

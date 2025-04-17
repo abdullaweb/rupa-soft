@@ -86,9 +86,8 @@
                                 <tr>
                                     <td> ${serial++}</td>
                                     <td>${ledger.date}</td>
-                                    <td>${ledger.status == 0 ? `<span>Due Payment</span>` : (ledger.status == 1 ? `<span>Sales</span>` : 'Opening')}
-                                    ${ledger.paid_source ? ' (' + ledger.paid_source.toUpperCase() + ')' : ''}
-                                        </td>
+                                    <td>${ledger.invoice_id == null ? `<span>Due Payment</span>` - ${ledger.paid_status} : `<span>Sales</span>` - ${ledger.paid_status}}
+                                    </td>
                                     <td>${ledger.total_amount ? ledger.total_amount : '0.00'}</td>
                                     <td>${ledger.paid_amount || '0.00'}</td>
                                     <td>${ledger.balance || '0.00'}</td>

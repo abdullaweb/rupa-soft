@@ -9,8 +9,9 @@ use App\Models\OverTime;
 use App\Models\Payment;
 use App\Models\Purchase;
 use App\Models\AccountDetail;
+use App\Models\SupplierAccountDetail;
 use App\Models\WastesSale;
-use App\Models\Company;
+use App\Models\Supplier;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -308,5 +309,167 @@ class AccountController extends Controller
         }
         return view('admin.report.account_detials_report', compact('billDetails', 'start_date', 'end_date', 'company_id'));
     }
+
+
+    // Supplier Openning balance
+    public function AllSupplierOpeningBalance()
+    {
+        $allOpening = SupplierAccountDetail::where('status', 'opening')->get();
+        return view('admin.supplier.opening_balance.all_opening', compact('allOpening'));
+    }
+    public function AddSupplierOpeningBalance()
+    {
+        $suppliers = Supplier::get();
+        return view('admin.supplier.opening_balance.add_opening', compact('suppliers'));
+    }
+    
+
+    public function StoreSupplierOpeningBalance(Request $request)
+    {
+        $latestBalance = SupplierAccountDetail::where('supplier_id', $request->supplier_id)->latest('id')->first()->balance ?? 0;
+
+        if ($request->opening_type == 'opening_balance') {
+            $account_details = new SupplierAccountDetail();
+            $account_details->total_amount = $request->total_amount;
+            $account_details->paid_amount = $request->paid_amount;
+            $account_details->due_amount = $request->total_amount - $request->paid_amount;
+            $account_details->balance = $latestBalance + ($request->total_amount - $request->paid_amount);
+            $account_details->supplier_id = $request->supplier_id;
+            $account_details->date = date('Y-m-d', strtotime($request->date));
+            $account_details->status = 'opening';
+            $account_details->save();
+
+            $notification = array(
+                'message' => 'Opening Balance Added Successfully!',
+                'alert_type' => 'success',
+            );
+        } elseif ($request->opening_type == 'purchasewise_balance') {
+            $account_details = new SupplierAccountDetail();
+            $account_details->purchase_id = $request->purchase_no;
+            $account_details->total_amount = $request->total_amount;
+            $account_details->paid_amount = $request->paid_amount;
+            $account_details->due_amount = $request->total_amount - $request->paid_amount;
+            $account_details->balance = $latestBalance + ($request->total_amount - $request->paid_amount);
+            $account_details->supplier_id = $request->supplier_id;
+            $account_details->date = date('Y-m-d', strtotime($request->date));
+            $account_details->status = 'opening';
+            $account_details->save();
+
+            $notification = array(
+                'message' => 'Opening Bill Added Successfully!',
+                'alert_type' => 'success',
+            );
+        }
+
+        return redirect()->route('all.supplier.opening.balance')->with($notification);
+    }
+
+
+    public function EditSupplierOpeningBalance($id)
+    {
+        $accountInfo = SupplierAccountDetail::findOrFail($id);
+        $suppliers = Supplier::get();
+        return view('admin.supplier.opening_balance.edit_opening', compact('accountInfo', 'suppliers'));
+    }
+
+
+    public function UpdateSupplierOpeningBalance(Request $request)
+    {
+
+        $accountId = $request->id;
+        $accountBalance = SupplierAccountDetail::findOrFail($accountId);
+        $latestBalance = SupplierAccountDetail::where('supplier_id', $request->supplier_id)->where('id', '<', $accountId)->latest('id')->first()->balance ?? 0;
+
+        if($accountBalance->balance > ($request->total_amount - $request->paid_amount)){
+            $nextBalance = SupplierAccountDetail::where('supplier_id', $request->supplier_id)->where('id', '>', $accountId)->get();
+
+            foreach ($nextBalance as $balance) {
+                $balance->balance = $balance->balance - ($accountBalance->balance - ($request->total_amount - $request->paid_amount));
+                $balance->save();
+            }
+        } else {
+            $nextBalance = SupplierAccountDetail::where('supplier_id', $request->supplier_id)->where('id', '>', $accountId)->get();
+
+            foreach ($nextBalance as $balance) {
+                $balance->balance = $balance->balance + ($request->total_amount - $request->paid_amount - $accountBalance->balance);
+                $balance->save();
+            }
+        }
+
+        if ($request->opening_type == 'opening_balance') {
+            SupplierAccountDetail::findOrFail($accountId)->update([
+                'purchase_id' => null,
+                'total_amount' => $request->total_amount,
+                'paid_amount' => $request->paid_amount,
+                'supplier_id' => $request->supplier_id,
+                'due_amount' => $request->total_amount - $request->paid_amount,
+                'balance' => $latestBalance + ($request->total_amount - $request->paid_amount),
+                'date' => date('Y-m-d', strtotime($request->date)),
+                'status' => 'opening',
+            ]);
+            $notification = array(
+                'message' => 'Balance Updated Successfully',
+                'alert_type' => 'success'
+            );
+        } elseif ($request->opening_type == 'purchasewise_balance') {
+
+            SupplierAccountDetail::findOrFail($accountId)->update([
+                'purchase_id' => $request->purchase_no,
+                'total_amount' => $request->total_amount,
+                'paid_amount' => $request->paid_amount,
+                'supplier_id' => $request->supplier_id,
+                'due_amount' => $request->total_amount - $request->paid_amount,
+                'balance' => $latestBalance + ($request->total_amount - $request->paid_amount),
+                'date' => date('Y-m-d', strtotime($request->date)),
+                'status' => 'opening',
+            ]);
+            $notification = array(
+                'message' => 'Bill Updated Successfully',
+                'alert_type' => 'success'
+            );
+        }
+
+        return redirect()->route('all.supplier.opening.balance')->with($notification);
+    }
+
+
+    public function DeleteSupplierOpeningBalance($id)
+    {
+        $accountBalance = SupplierAccountDetail::findOrFail($id);
+        $nextBalance = SupplierAccountDetail::where('id', '>', $id)->get();
+        foreach ($nextBalance as $balance) {
+            $balance->balance -= $accountBalance->balance;
+            $balance->save();
+        }
+
+        SupplierAccountDetail::findOrFail($id)->delete();
+
+        $notification = array(
+            'message' => 'Balance Deleted Successfully',
+            'alert-type' => 'success'
+        );
+        return redirect()->route('all.supplier.opening.balance')->with($notification);
+    }
+    
+    // account details filtering method
+    // public function GetSupplierAccountDetails(Request $request)
+    // {
+
+    //     $start_date = $request->start_date;
+    //     $end_date = $request->end_date;
+    //     $company_id = $request->company_id;
+
+    //     if ($start_date == null && $end_date == null) {
+    //         $billDetails = AccountDetail::all();
+    //     }
+
+    //     if ($start_date && $end_date) {
+    //         $startDate = Carbon::parse($start_date)->toDateTimeString();
+    //         $endDate = Carbon::parse($end_date)->toDateTimeString();
+    //         $billDetails = AccountDetail::whereBetween('created_at', [$start_date, Carbon::parse($end_date)->endOfDay()])->where('company_id', $request->company_id)
+    //             ->get();
+    //     }
+    //     return view('admin.report.account_detials_report', compact('billDetails', 'start_date', 'end_date', 'company_id'));
+    // }
 
 }
