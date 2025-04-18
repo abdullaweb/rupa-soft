@@ -27,8 +27,20 @@ class SupplierController extends Controller
         $supplier->email = $request->email;
         $supplier->phone = $request->phone;
         $supplier->address = $request->address;
+        $supplier->opening_balance = $request->opening_balance;
         $supplier->status = 'active';
         $supplier->save();
+
+        // Insert opening balance into supplier account details
+        if($request->opening_balance){
+            $supplierAccountDetail = new SupplierAccountDetail();
+            $supplierAccountDetail->supplier_id = $supplier->id;
+            $supplierAccountDetail->date = date('Y-m-d');
+            $supplierAccountDetail->balance = $request->opening_balance;
+            $supplierAccountDetail->status = 'opening';
+            $supplierAccountDetail->save();
+        }
+        
 
         $notification = array(
             'message' => 'Supplier Inserted Successfully',
@@ -50,8 +62,26 @@ class SupplierController extends Controller
         $supplier->email = $request->email;
         $supplier->phone = $request->phone;
         $supplier->address = $request->address;
+        $supplier->opening_balance = $request->opening_balance;
         $supplier->status = 'active';
         $supplier->save();
+
+
+        // update opening balance into supplier account details
+        if($request->opening_balance){
+            $supplierAccountDetail = SupplierAccountDetail::where('supplier_id', $request->id)->where('status', 'opening')->first() ?? new SupplierAccountDetail();
+            
+            $supplierAccountDetail->supplier_id = $request->id;
+            $supplierAccountDetail->date = date('Y-m-d');
+            $supplierAccountDetail->status = 'opening';
+            $supplierAccountDetail->balance = $request->opening_balance;
+            $supplierAccountDetail->save();
+        }
+
+        // If the opening balance is not provided, delete the existing opening balance record
+        if($request->opening_balance == null){
+            SupplierAccountDetail::where('supplier_id', $request->id)->where('status', 'opening')->delete();
+        }
 
         $notification = array(
             'message' => 'Supplier Updated Successfully',
@@ -63,6 +93,8 @@ class SupplierController extends Controller
     public function DeleteSupplier($id)
     {
         $supplier = Supplier::findOrFail($id);
+        // Delete the supplier account details associated with this supplier
+        SupplierAccountDetail::where('supplier_id', $id)->delete();
         $supplier->delete();
 
 

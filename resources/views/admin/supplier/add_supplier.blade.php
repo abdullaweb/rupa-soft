@@ -32,6 +32,12 @@
 
                                 <div class="mb-3">
                                     <div>
+                                        <input type="text" id="opening_balance" name="opening_balance" class="form-control"
+                                             placeholder="Opening Balance">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div>
                                         <textarea required="" data-parsley-required-message="Address is required." name="address" id="address"
                                             class="form-control" rows="5" placeholder="Enter Your Supplier Address"></textarea>
                                     </div>

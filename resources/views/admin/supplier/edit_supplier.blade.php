@@ -31,6 +31,13 @@
                                     </div>
                                 </div>
 
+                                <div class="mb-3">
+                                    <div>
+                                        <input type="text" id="opening_balance" name="opening_balance" value="{{ $supplier->opening_balance }}" class="form-control"
+                                             placeholder="Opening Balance">
+                                    </div>
+                                </div>
+
 
                                 <div class="mb-3">
                                     <div>
