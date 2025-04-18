@@ -62,6 +62,7 @@
                               Local Bill</i>
                         </a>
                   </div>
+                  
                   <div class="dropdown d-none d-lg-inline-block ms-1">
                       <button type="button" class="btn header-item noti-icon waves-effect" data-toggle="fullscreen">
                           <i class="ri-fullscreen-line"></i>
@@ -85,6 +86,7 @@
                           <i class="ri-fullscreen-line"></i>
                       </button>
                   </div>
+
               @else
                   <div>
                       <a href="{{ route('add.salary') }}">
@@ -104,12 +106,23 @@
                               Local Bill</i>
                       </a>
                   </div>
-                  <div class="dropdown d-none d-lg-inline-block ms-1">
-                      <button type="button" class="btn header-item noti-icon waves-effect" data-toggle="fullscreen">
-                          <i class="ri-fullscreen-line"></i>
-                      </button>
-                  </div>
+                  
               @endif
+
+              @if (Request::routeIs('add.purchase') == false)
+                <div>
+                    <a href="{{ route('add.purchase') }}" style="margin-left: 10px;">
+                        <i class="btn btn-info btn wave-effect wave-light fas fa-plus-circle">
+                            Add Purchase</i>
+                    </a>
+                </div>
+              @endif
+
+            <div class="dropdown d-none d-lg-inline-block ms-1">
+                <button type="button" class="btn header-item noti-icon waves-effect" data-toggle="fullscreen">
+                    <i class="ri-fullscreen-line"></i>
+                </button>
+            </div>
 
               @php
                   $id = Auth::user()->id;
