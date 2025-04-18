@@ -62,8 +62,7 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>
-                                        <img src="{{ asset($employee->image) }}" class="rounded-circle" width="46"
-                                            height="40" alt="" />
+                                        <img src="{{ !empty($employee->image) ? asset($employee->image) : url('upload/no-image.jpg') class="rounded-circle" width="46" height="40" alt="" />
                                     </td>
                                     <td class="text-capitalize">
                                         {{ $employee->name }}
