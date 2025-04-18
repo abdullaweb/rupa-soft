@@ -24,6 +24,7 @@
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th>Phone</th>
+                                    <th>Opening Balance</th>
                                     <th>Address</th>
                                     <th>Action</th>
                                 </tr>
@@ -34,6 +35,7 @@
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th>Phone</th>
+                                    <th>Opening Balance</th>
                                     <th>Address</th>
                                     <th>Action</th>
                                 </tr>
@@ -50,6 +52,9 @@
                                         </td>
                                         <td>
                                             {{ $item->phone }}
+                                        </td>
+                                        <td>
+                                            {{ $item->opening_balance ?? '0.00' }}
                                         </td>
                                         <td>
                                             {{ $item->address }}
