@@ -516,6 +516,8 @@ class PurchaseController extends Controller
         $start_date = $request->start_date;
         $end_date = $request->end_date;
 
+        $id = $request->purchase_id;
+
         if ($start_date == null && $end_date == null) {
            $supplier_payment = SupplierPaymentDetail::where('purchase_id', $id)->get();
         }
