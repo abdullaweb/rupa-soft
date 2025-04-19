@@ -57,6 +57,7 @@
         $('#fetchLedger').on('click', function() {
             let customerId = $('#customer').val();
             clearPreviousResults();
+
             if (customerId) {
                 $.ajax({
                     url: '{{ route('customer.ledger.fetch') }}',
@@ -86,8 +87,7 @@
                                 <tr>
                                     <td> ${serial++}</td>
                                     <td>${ledger.date}</td>
-                                    <td>${ledger.invoice_id == null ? `<span>Due Payment</span>` - ${ledger.paid_status} : `<span>Sales</span>` - ${ledger.paid_status}}
-                                    </td>
+                                    <td>${ledger.invoice_id == null ? `Due Payment ${ledger.paid_source ? `(${ledger.paid_source})` : ''}` : `Sales ${ledger.paid_source ? `(${ledger.paid_source})` : ''}`}</td>
                                     <td>${ledger.total_amount ? ledger.total_amount : '0.00'}</td>
                                     <td>${ledger.paid_amount || '0.00'}</td>
                                     <td>${ledger.balance || '0.00'}</td>
@@ -130,30 +130,3 @@
         });
     });
 </script>
-
-{{-- <script>
-    $(document).ready(function() {
-        $('#downloadLedger').on('click', function() {
-            let customerId = $('#customer').val();
-            if (customerId) {
-                $.ajax({
-                    url: '{{ route('customer.ledger.download') }}',
-                    type: 'POST',
-                    data: {
-                        _token: $('meta[name="csrf-token"]').attr('content'),
-                        customer_id: customerId
-                    },
-                    xhrFields: {
-                        responseType: 'blob'
-                    },
-                    success: function(blob) {
-                        let link = document.createElement('a');
-                        link.href = window.URL.createObjectURL(blob);
-                        link.download = 'customer_ledger.pdf';
-                        link.click();
-                    }
-                });
-            }
-        });
-    });
-</script> --}}

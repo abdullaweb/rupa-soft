@@ -383,6 +383,7 @@ class DuePaymentController extends Controller
         $account_details->date = $due_payment->date;
         $account_details->voucher = $due_payment->voucher;
         $account_details->balance = $account_balance - $due_payment->paid_amount;
+        $account_details->paid_source = $due_payment->paid_status;
         if ($companyInfo->status == '1') {
             $account_details->status = '1';
         } elseif ($companyInfo->status == '0') {

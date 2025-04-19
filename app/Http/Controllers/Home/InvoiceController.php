@@ -786,6 +786,7 @@ class InvoiceController extends Controller
                         $account_details->company_id = $invoice_details->company_id;
                         $account_details->total_amount = $request->estimated_amount;
                         $account_details->date = date('Y-m-d', strtotime($request->date));
+                        $account_details->paid_source = $request->paid_source;
 
                          // transaction
                          $transaction = new Transaction();
@@ -959,6 +960,7 @@ class InvoiceController extends Controller
                         $account_details->company_id = $invoice_details->company_id;
                         $account_details->total_amount = $request->estimated_amount;
                         $account_details->date = date('Y-m-d', strtotime($request->date));
+                        $account_details->paid_source = $request->paid_source;
 
                         $updateBalance = AccountDetail::where('id', '>', $account_details->id)->where('company_id', $invoice_details->company_id)->get();
 

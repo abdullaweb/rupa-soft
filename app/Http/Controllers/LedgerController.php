@@ -51,17 +51,7 @@ class LedgerController extends Controller
               return $pdf->download('admin.ledger.customer_ledger_pdf');
           }
   
-          // Eager load transactions for PDF generation
-  
-          // $customerId = $request->customer_id;
-          // $customerInfo = Company::findOrFail($customerId);
-          // $ledger = LedgerEntry::where('customer_id', $customerId)
-          //     ->with('transaction')
-          //     ->get();
-          // $customer = Company::find($customerId);
-  
-          // $pdf = PDF::loadView('admin.ledger.report.customer.customer_ledger_pdf', compact('ledger', 'customer'));
-          // return $pdf->download('customer_ledger_' . $customer->name . '.pdf');
+          
       }
   
       public function CustomerdownloadLedgerExcel(Request $request)

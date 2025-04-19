@@ -39,9 +39,10 @@
                     <td>{{ $entry->date ?? null }}</td>
                     <td>
                         @if ($entry->invoice_id == null)
-                           Due Payment ({{ $entry->paid_status ?? null }})
+                           Due Payment {{ $entry->paid_source != null ? " ({$entry->paid_source})" : '' }}
                         @else
-                            Sales ({{ $entry->paid_status ?? null }})
+                            {{-- Sales ({{ $entry->paid_status ?? null }}) --}}
+                            Sales {{ $entry->paid_source != null ? " ({$entry->paid_source})" : '' }}
                         @endif
                     </td>
                     <td>{{ $entry->total_amount ?? '0.00' }}</td>
