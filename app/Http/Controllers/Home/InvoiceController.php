@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Home;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\Company;
 use App\Models\Invoice;
@@ -70,6 +71,7 @@ class InvoiceController extends Controller
   
     public function InvoiceStore(Request $request)
     {
+        // dd($request->all());
         if ($request->company_id == null) {
             $notification = array(
                 'message' => 'Sorry, you do not any company',
@@ -125,7 +127,7 @@ class InvoiceController extends Controller
                 $invoice->status = '1';
                 $invoice->created_by = Auth::user()->id;
 
-
+                
 
                 
                 // dd($latestBalance);
@@ -172,6 +174,16 @@ class InvoiceController extends Controller
                          $account_details->total_amount = $request->estimated_amount;
                          $account_details->date = date('Y-m-d', strtotime($request->date));
 
+                         // transaction
+                        $transaction = new Transaction();
+                        $transaction->date = date('Y-m-d', strtotime($request->date));
+                        $transaction->invoice_id = $invoice->id;
+                        $transaction->party_name = Company::findOrFail($invoice->company_id)->name;
+                        $transaction->bill_no = $invoice->invoice_no_gen;
+                        $transaction->paid_by = $request->paid_source;
+                        $transaction->type = 'sales';
+                        $transaction->updated_at = NULL;
+
                         
                         if ($request->vat_tax_field == '0') {
 
@@ -184,6 +196,10 @@ class InvoiceController extends Controller
                                 $payment->due_amount = '0';
                                 $payment_details->current_paid_amount = $request->estimated_amount;
 
+                                // transaction
+                                $transaction->paid_amount = $request->estimated_amount;
+                                $transaction->due_amount = '0';
+
                                 // account details
                                 $account_details->paid_amount = $request->estimated_amount;
                                 $account_details->due_amount = '0';
@@ -192,6 +208,10 @@ class InvoiceController extends Controller
                                 $payment->paid_amount = '0';
                                 $payment->due_amount = $request->estimated_amount;
                                 $payment_details->current_paid_amount = '0';
+
+                                // transaction
+                                $transaction->paid_amount = '0';
+                                $transaction->due_amount = $request->estimated_amount;
 
                                 //account details
                                 $account_details->paid_amount = '0';
@@ -203,6 +223,10 @@ class InvoiceController extends Controller
                                 $payment->paid_amount = $request->paid_amount;
                                 $payment->due_amount = $request->estimated_amount - $request->paid_amount;
                                 $payment_details->current_paid_amount = $request->paid_amount;
+
+                                // transaction
+                                $transaction->paid_amount = $request->paid_amount;
+                                $transaction->due_amount = $request->estimated_amount - $request->paid_amount;
 
                                //account details
                                $account_details->paid_amount = $request->paid_amount;
@@ -230,6 +254,10 @@ class InvoiceController extends Controller
                                 $payment->due_amount = '0';
                                 $payment_details->current_paid_amount = $request->estimated_amount;
 
+                                // transaction
+                                $transaction->paid_amount = $request->estimated_amount;
+                                $transaction->due_amount = '0';
+
                                 // account details
                                 $account_details->paid_amount = $request->estimated_amount;
                                 $account_details->due_amount = '0';
@@ -241,6 +269,10 @@ class InvoiceController extends Controller
 
                                 // dd('dhukse with tax');
 
+                                // transaction
+                                $transaction->paid_amount = '0';
+                                $transaction->due_amount = $request->estimated_amount;
+
                                  //account details
                                  $account_details->paid_amount = '0';
                                  $account_details->due_amount = $request->estimated_amount;
@@ -249,6 +281,10 @@ class InvoiceController extends Controller
                                 $payment->paid_amount = $request->paid_amount;
                                 $payment->due_amount = $request->estimated_amount - $request->paid_amount;
                                 $payment_details->current_paid_amount = $request->paid_amount;
+
+                                // transaction
+                                $transaction->paid_amount = $request->paid_amount;
+                                $transaction->due_amount = $request->estimated_amount - $request->paid_amount;
 
                                 //account details
                                 $account_details->paid_amount = $request->paid_amount;
@@ -270,6 +306,7 @@ class InvoiceController extends Controller
                         $payment_details->date = date('Y-m-d', strtotime($request->date));
                         $payment_details->save();
                         $account_details->save();
+                        $transaction->save();
                     }
                 });
             } //end else
@@ -371,6 +408,16 @@ class InvoiceController extends Controller
 
                         $previousBalance = AccountDetail::where('id', '<', $account_details->id)->where('company_id', $invoice_details->company_id)->latest('id')->first();
 
+                        // transaction
+                        $transaction = Transaction::where('invoice_id', $invoice->id)->first();
+                        if ($transaction) {
+                            $transaction->date = date('Y-m-d', strtotime($request->date));
+                            $transaction->invoice_id = $invoice->id;
+                            $transaction->party_name = Company::findOrFail($request->company_id)->name;
+                            $transaction->paid_by = $request->paid_source;
+                            $transaction->type = 'sales';
+                        }
+
 
                         if ($request->vat_tax_field == '0') {
 
@@ -384,6 +431,9 @@ class InvoiceController extends Controller
                                 $payment->paid_amount = $request->estimated_amount;
                                 $payment->due_amount = '0';
                                 $payment_details->current_paid_amount = $request->estimated_amount;
+
+                                $transaction->paid_amount = $request->estimated_amount;
+                                $transaction->due_amount = '0';
 
                                  // account details
                                 $account_details->paid_amount = $request->estimated_amount;
@@ -405,6 +455,10 @@ class InvoiceController extends Controller
                                 $payment->due_amount = $request->estimated_amount;
                                 $payment_details->current_paid_amount = '0';
 
+                                //transaction
+                                $transaction->paid_amount = '0';
+                                $transaction->due_amount = $request->estimated_amount;
+
                                  // account details
                                 $account_details->paid_amount = '0';
                                 $account_details->due_amount = $request->estimated_amount;
@@ -423,9 +477,11 @@ class InvoiceController extends Controller
                                 $payment->due_amount = $request->estimated_amount - $request->paid_amount;
                                 $payment_details->current_paid_amount = $request->paid_amount;
 
-                                // account details
+                                // transaction
+                                $transaction->paid_amount = $request->paid_amount;
+                                $transaction->due_amount = $request->estimated_amount - $request->paid_amount;
 
-                                
+                                // account details
                                 $account_details->paid_amount = $request->paid_amount;
                                 $account_details->due_amount = $request->estimated_amount - $request->paid_amount;
                                 $account_details->balance = $previousBalance->balance + ($request->estimated_amount - $request->paid_amount);
@@ -469,6 +525,10 @@ class InvoiceController extends Controller
                                 $payment->due_amount = '0';
                                 $payment_details->current_paid_amount = $request->estimated_amount;
 
+                                // transaction
+                                $transaction->paid_amount = $request->estimated_amount;
+                                $transaction->due_amount = '0';
+
                                   // account details
                                   $account_details->paid_amount = $request->estimated_amount;
                                   $account_details->due_amount = '0';
@@ -483,6 +543,10 @@ class InvoiceController extends Controller
                                 $payment->due_amount = $request->estimated_amount;
                                 $payment_details->current_paid_amount = '0';
 
+                                //transaction
+                                $transaction->paid_amount = '0';
+                                $transaction->due_amount = $request->estimated_amount;
+
                                  // account details
                                  $account_details->paid_amount = '0';
                                  $account_details->due_amount = $request->estimated_amount;
@@ -496,6 +560,10 @@ class InvoiceController extends Controller
                                 $payment->paid_amount = $request->paid_amount;
                                 $payment->due_amount = $request->estimated_amount - $request->paid_amount;
                                 $payment_details->current_paid_amount = $request->paid_amount;
+
+                                // transaction
+                                $transaction->paid_amount = $request->paid_amount;
+                                $transaction->due_amount = $request->estimated_amount - $request->paid_amount;
 
                                  // account details
                                  $account_details->paid_amount = $request->paid_amount;
@@ -517,6 +585,7 @@ class InvoiceController extends Controller
                         $payment_details->date = date('Y-m-d', strtotime($request->date));
                         $payment_details->update();
                         $account_details->save();
+                        $transaction->save();
                     }
                 });
             } //end else
@@ -540,6 +609,7 @@ class InvoiceController extends Controller
         InvoiceDetail::where('invoice_id', $invoice->id)->delete();
         Payment::where('invoice_id', $invoice->id)->delete();
         PaymentDetail::where('invoice_id', $invoice->id)->delete();
+        Transaction::where('invoice_id', $invoice->id)->delete();
 
         $notification = array(
             'message' => 'Invoice Data Deleted Successfully',
@@ -717,12 +787,26 @@ class InvoiceController extends Controller
                         $account_details->total_amount = $request->estimated_amount;
                         $account_details->date = date('Y-m-d', strtotime($request->date));
 
+                         // transaction
+                         $transaction = new Transaction();
+                         $transaction->date = date('Y-m-d', strtotime($request->date));
+                         $transaction->invoice_id = $invoice->id;
+                         $transaction->party_name = Company::findOrFail($invoice->company_id)->name;
+                         $transaction->bill_no = $invoice->invoice_no_gen;
+                         $transaction->paid_by = $request->paid_source;
+                         $transaction->type = 'sales';
+                         $transaction->updated_at = NULL;
+
+
+
                         if ($request->paid_status == 'full_paid') {
                             $payment->paid_amount = $request->estimated_amount;
                             $payment->due_amount = '0';
                             $payment_details->current_paid_amount = $request->estimated_amount;
 
-
+                            // transaction
+                            $transaction->paid_amount = $request->estimated_amount; 
+                            $transaction->due_amount = '0';
 
                             // account details
                             $account_details->paid_amount = $request->estimated_amount;
@@ -733,6 +817,10 @@ class InvoiceController extends Controller
                             $payment->due_amount = $request->estimated_amount;
                             $payment_details->current_paid_amount = 0;
 
+                            // transaction
+                            $transaction->paid_amount = 0;  
+                            $transaction->due_amount = $request->estimated_amount;
+
 
                             //account details
                             $account_details->paid_amount = 0;
@@ -742,6 +830,10 @@ class InvoiceController extends Controller
                             $payment->paid_amount = $request->paid_amount;
                             $payment->due_amount = $request->estimated_amount - $request->paid_amount;
                             $payment_details->current_paid_amount = $request->paid_amount;
+
+                            // transaction
+                            $transaction->paid_amount = $request->paid_amount;  
+                            $transaction->due_amount = $request->estimated_amount - $request->paid_amount;
 
 
                             //account details
@@ -763,6 +855,7 @@ class InvoiceController extends Controller
                         $payment_details->date = date('Y-m-d', strtotime($request->date));
                         $payment_details->save();
                         $account_details->save();
+                        $transaction->save();
                     }
                 });
             } //end else
@@ -852,6 +945,16 @@ class InvoiceController extends Controller
                         $payment->sub_total = $request->sub_total;
                         $payment->total_amount = $request->estimated_amount;
 
+                        // transaction
+                        $transaction = Transaction::where('invoice_id', $invoice->id)->first();
+                        if ($transaction) {
+                            $transaction->date = date('Y-m-d', strtotime($request->date));
+                            $transaction->invoice_id = $invoice->id;
+                            $transaction->party_name = Company::findOrFail($request->company_id)->name;
+                            $transaction->paid_by = $request->paid_source;
+                            $transaction->type = 'sales';
+                        }
+
 
                         $account_details->company_id = $invoice_details->company_id;
                         $account_details->total_amount = $request->estimated_amount;
@@ -866,6 +969,10 @@ class InvoiceController extends Controller
                             $payment->paid_amount = $request->estimated_amount;
                             $payment->due_amount = '0';
                             $payment_details->current_paid_amount = $request->estimated_amount;
+
+                            // transaction
+                            $transaction->paid_amount = $request->estimated_amount;
+                            $transaction->due_amount = '0';
 
                              // account details
                              $account_details->paid_amount = $request->estimated_amount;
@@ -889,6 +996,10 @@ class InvoiceController extends Controller
                             $payment->due_amount = $request->estimated_amount;
                             $payment_details->current_paid_amount = '0';
 
+                            //transaction
+                            $transaction->paid_amount = '0';
+                            $transaction->due_amount = $request->estimated_amount;
+
 
                             // account details
                             $account_details->paid_amount = '0';
@@ -906,6 +1017,10 @@ class InvoiceController extends Controller
                             $payment->paid_amount = $request->paid_amount;
                             $payment->due_amount = $request->estimated_amount - $request->paid_amount;
                             $payment_details->current_paid_amount = $request->paid_amount;
+
+                            // transaction
+                            $transaction->paid_amount = $request->paid_amount;
+                            $transaction->due_amount = $request->estimated_amount - $request->paid_amount;
 
 
                             // account details
@@ -935,6 +1050,7 @@ class InvoiceController extends Controller
                         $payment_details->date = date('Y-m-d', strtotime($request->date));
                         $payment_details->save();
                         $account_details->save();
+                        $transaction->save();
                     }
                 });
             } //end else

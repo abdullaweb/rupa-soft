@@ -207,13 +207,14 @@
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title text-center mb-3">Daily Sale</h4>
+                            <h4 class="card-title text-center mb-3">Daily Transaction</h4>
                             <div class="table-responsive">
                                 <table id="" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                     <thead>
                                         <tr>
                                             <th>Sl</th>
                                             <th>Customer Name</th>
+                                            <th>Purpose</th>
                                             <th>Bill No</th>
                                             <th>Date</th>
                                             <th>Paid Amount</th>
@@ -222,27 +223,41 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($allInvoice as $key => $invoice)
+                                        @foreach ($allTransaction as $key => $transaction)
                                             <tr>
                                                 <td>{{ $key + 1 }}</td>
                                                 <td>
-                                                    {{ $invoice->company->name ?? '' }}
+                                                    {{ $transaction->party_name }}
                                                 </td>
                                                 <td>
-                                                    {{ $invoice->invoice_no_gen }}
+                                                    {{ $transaction->type }}
                                                 </td>
                                                 <td>
-                                                    {{ $invoice->date }}
+                                                    @if ($transaction->type == 'sales')
+                                                    <a href="{{ route('invoice.print', $transaction->invoice_id) }}" target="_blank">
+                                                        {{ $transaction->bill_no }}
+                                                    </a>
+                                                    @elseif ($transaction->type == 'customer due payment')
+                                                    <a href="{{ route('edit.due.payment', $transaction->customer_due_id) }}" target="_blank">
+                                                        {{ $transaction->bill_no }}
+                                                    </a>
+                                                    @else
+                                                        {{ $transaction->bill_no }}
+                                                    @endif
+                                                    
+                                                </td>
+                                                <td>
+                                                    {{ $transaction->date }}
                                                 </td>
 
                                                 <td>
-                                                    {{ number_format($invoice->accountDetails->paid_amount, 2) }}     
+                                                    {{ number_format($transaction-> paid_amount, 2) }}     
                                                 </td>
                                                 <td>
-                                                    {{ number_format($invoice->accountDetails->due_amount, 2) }}
+                                                    {{ number_format($transaction->due_amount, 2) }}
                                                 </td>
                                                 <td>
-                                                    {{ $invoice->payment->paid_source ?? 'N/A' }} 
+                                                    {{ $transaction->paid_by ?? 'N/A' }} 
                                                 </td>
                                             </tr>
                                         @endforeach

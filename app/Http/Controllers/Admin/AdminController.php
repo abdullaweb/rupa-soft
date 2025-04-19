@@ -9,6 +9,7 @@ use App\Models\Payment;
 use App\Models\Purchase;
 use App\Models\DuePayment;
 use App\Models\SupplierDuePayment;
+use App\Models\Transaction;
 use App\Models\User;
 use App\Models\WastesSale;
 use Carbon\Carbon;
@@ -32,11 +33,11 @@ class AdminController extends Controller
         $supplier_pending_due_payment = SupplierDuePayment::where('status', 'pending')->get();
 
         $date = Carbon::today()->toDateString();
-        $allInvoice = Invoice::whereDate('date', $date)->latest()->get();
+        $allTransaction = Transaction::whereDate('date', $date)->latest()->get();
 
         // dd($allInvoice, $date);
 
-        return view('admin.index', compact('purchase', 'expense', 'dueAmount', 'payment', 'pending_due_payment', 'supplier_pending_due_payment', 'allInvoice'));
+        return view('admin.index', compact('purchase', 'expense', 'dueAmount', 'payment', 'pending_due_payment', 'supplier_pending_due_payment', 'allTransaction'));
     }
 
     public function RedirectDashboard()

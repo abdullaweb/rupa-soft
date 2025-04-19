@@ -10,6 +10,7 @@ use App\Models\SupplierPaymentDetail;
 use App\Models\SupplierAccountDetail;
 use App\Models\PurchaseCategory;
 use App\Models\PurchaseSummery;
+use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -89,17 +90,32 @@ class PurchaseController extends Controller
             $supplier_account_details->total_amount = $request->estimated_amount;
             $supplier_account_details->balance = $latest_account_balance + ($request->estimated_amount - $request->paid_amount);
 
+            // transaction
+            $transaction = new Transaction();
+            $transaction->date = date('Y-m-d', strtotime($request->date));
+            $transaction->purchase_id = $purchase->id;
+            $transaction->party_name = Supplier::findOrFail($request->supplier_id)->name;
+            $transaction->bill_no = $purchase->purchase_no;
+            $transaction->paid_by = $request->paid_source;
+            $transaction->type = 'purchase';
+            $transaction->updated_at = NULL;
 
 
             if ($request->paid_status == 'full_paid') {
                 $supplier_payment->paid_amount = $request->estimated_amount;
-                $supplier_payment->due_amount = '0';
+                $supplier_payment->due_amount = 0;
+
+                $transaction->paid_amount = $request->estimated_amount;
+                $transaction->due_amount = 0;
 
                 $supplier_account_details->paid_amount = $request->estimated_amount;
                 $supplier_account_details->due_amount = '0';
             } elseif ($request->paid_status == 'full_due') {
-                $supplier_payment->paid_amount = '0';
+                $supplier_payment->paid_amount = 0;
                 $supplier_payment->due_amount = $request->estimated_amount;
+
+                $transaction->paid_amount = 0;
+                $transaction->due_amount = $request->estimated_amount;
 
                 $supplier_account_details->paid_amount = '0';
                 $supplier_account_details->due_amount = $request->estimated_amount;
@@ -107,12 +123,16 @@ class PurchaseController extends Controller
                 $supplier_payment->paid_amount = $request->paid_amount;
                 $supplier_payment->due_amount = $request->estimated_amount - $request->paid_amount;
 
+                $transaction->paid_amount = $request->paid_amount;
+                $transaction->due_amount = $request->estimated_amount - $request->paid_amount;
+
                 $supplier_account_details->paid_amount = $request->paid_amount;
                 $supplier_account_details->due_amount = $request->estimated_amount - $request->paid_amount;
             }
 
             $supplier_payment->save();
             $supplier_account_details->save();
+            $transaction->save();
 
             DB::commit();
 
@@ -232,9 +252,23 @@ class PurchaseController extends Controller
             $supplier_account_details->total_amount = $request->estimated_amount;
             $supplier_account_details->balance = $request->estimated_amount - $request->paid_amount;
 
+            // transaction
+            $transaction = Transaction::where('purchase_id', $purchaseId)->first();
+            if ($transaction) {
+                $transaction->date = date('Y-m-d', strtotime($request->date));
+                $transaction->purchase_id = $purchase->id;
+                $transaction->party_name = Supplier::findOrFail($request->supplier_id)->name;
+                $transaction->paid_by = $request->paid_source;
+                $transaction->type = 'purchase';
+            }
+
+
             if ($request->paid_status == 'full_paid') {
                 $supplier_payment->paid_amount = $request->estimated_amount;
                 $supplier_payment->due_amount = '0';
+
+                $transaction->paid_amount = $request->estimated_amount;
+                $transaction->due_amount = '0';
 
                 $supplier_account_details->paid_amount = $request->estimated_amount;
                 $supplier_account_details->due_amount = '0';
@@ -242,11 +276,17 @@ class PurchaseController extends Controller
                 $supplier_payment->paid_amount = '0';
                 $supplier_payment->due_amount = $request->estimated_amount;
 
+                $transaction->paid_amount = '0';
+                $transaction->due_amount = $request->estimated_amount;
+
                 $supplier_account_details->paid_amount = '0';
                 $supplier_account_details->due_amount = $request->estimated_amount;
             } elseif ($request->paid_status == 'partial_paid') {
                 $supplier_payment->paid_amount = $request->paid_amount;
                 $supplier_payment->due_amount = $request->estimated_amount - $request->paid_amount;
+
+                $transaction->paid_amount = $request->paid_amount;
+                $transaction->due_amount = $request->estimated_amount - $request->paid_amount;
 
                 $supplier_account_details->paid_amount = $request->paid_amount;
                 $supplier_account_details->due_amount = $request->estimated_amount - $request->paid_amount;
@@ -254,6 +294,7 @@ class PurchaseController extends Controller
 
             $supplier_payment->save();
             $supplier_account_details->save();
+            $transaction->save();
 
             DB::commit();
 
@@ -386,6 +427,8 @@ class PurchaseController extends Controller
         SupplierAccountDetail::where('purchase_id', $id)->delete();
 
         PurchaseSummery::where('purchase_id', $id)->delete();
+
+        Transaction::where('purchase_id', $id)->delete();
 
         DB::commit();
 

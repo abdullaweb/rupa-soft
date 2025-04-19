@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Home;
 
 use App\Http\Controllers\Controller;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\DuePayment;
 use App\Models\Company;
@@ -46,11 +47,13 @@ class DuePaymentController extends Controller
     public function AddCorporateDuePayment()
     {
         $companies = Company::where('status', '1')->get();
-        return view('admin.due_payment.add_corporate_due', compact('companies'));
+        $code = $this->UniqueNumberForDuePayment();
+        return view('admin.due_payment.add_corporate_due', compact('companies', 'code'));
     }
 
     public function StoreDuePayment(Request $request)
     {
+        // dd($request->all());
         $company_id = $request->company_id;
         $companyInfo = Company::where('id', $company_id)->first();
 
@@ -246,6 +249,11 @@ class DuePaymentController extends Controller
 
         $due_payment->delete();
 
+        $transaction = Transaction::where('customer_due_id', $due_payment->id)->first();
+        if ($transaction) {
+            $transaction->delete();
+        }
+
         if ($companyInfo->status == '1') {
             $notification = array(
                 'message' => 'Due Payment Successfully Deleted!',
@@ -364,8 +372,10 @@ class DuePaymentController extends Controller
         // Update account balance
         if($due_payment->updated_at == null){
             $account_details = new AccountDetail();
+            $transaction = new Transaction();
         } else {
             $account_details = AccountDetail::where('due_payment_id', $due_payment->id)->first();
+            $transaction = Transaction::where('customer_due_id', $due_payment->id)->first();
         }
         $account_details->paid_amount = $due_payment->paid_amount;
         $account_details->company_id = $company_id;
@@ -379,6 +389,16 @@ class DuePaymentController extends Controller
             $account_details->status = '0';
         }
         $account_details->save();
+
+        // transaction
+        $transaction->date = date('Y-m-d', strtotime($due_payment->date));
+        $transaction->customer_due_id = $due_payment->id;
+        $transaction->party_name = Company::findOrFail($company_id)->name;
+        $transaction->bill_no = $due_payment->code;
+        $transaction->paid_by = $due_payment->paid_status;
+        $transaction->paid_amount = $due_payment->paid_amount;
+        $transaction->type = 'customer due payment';
+        $transaction->updated_at = NULL;
 
         // $this->resetDuePayment($due_payment);
 
@@ -403,6 +423,7 @@ class DuePaymentController extends Controller
         $due_payment->approved_at = now();
         $due_payment->status = 'approved';
         $due_payment->save();
+        $transaction->save();
 
         if ($companyInfo->status == '1') {
             $notification = array(
