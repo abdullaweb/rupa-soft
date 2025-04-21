@@ -266,9 +266,9 @@ class SupplierDuePaymentController extends Controller
         $total_paid_amount = $due_payment->paid_amount;
 
         // Get account details
-        // $account_details = SupplierAccountDetail::where('supplier_id', $supplier_id)->latest('id')->first();
+        $latest_account_details = SupplierAccountDetail::where('supplier_id', $supplier_id)->latest('id')->first();
         $due_amount = SupplierPaymentDetail::where('supplier_id', $supplier_id)->sum('due_amount');
-        $account_balance = $account_details->balance ?? $due_amount;
+        $account_balance = $latest_account_details->balance ?? $due_amount;
 
         if($due_payment->updated_at == null){ 
             $account_details = new SupplierAccountDetail();
@@ -288,8 +288,10 @@ class SupplierDuePaymentController extends Controller
         $account_details->balance = $account_balance - $due_payment->paid_amount;
         $account_details->save();
 
+        // dd($transaction);
+
         // transaction
-        $transaction->date = date('Y-m-d', strtotime($due_payment->date));
+        $transaction->date = date('Y-m-d', strtotime($due_payment->date)) ?? date('Y-m-d');
         $transaction->supplier_due_id = $due_payment->id;
         $transaction->party_name = Supplier::findOrFail($supplier_id)->name;
         // $transaction->bill_no = $due_payment->code;
