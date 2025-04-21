@@ -51,7 +51,7 @@
 
               @if (Route::current()->getName() == 'invoice.add')
                   <div style="margin-left: 10px;">
-                      <a href="{{ route('add.salary') }}">
+                      <a href="" >
                           <i class="btn btn-info btn wave-effect wave-light fas fa-plus-circle">
                               Add Salary</i>
                       </a>
@@ -62,15 +62,9 @@
                               Local Bill</i>
                         </a>
                   </div>
-                  
-                  <div class="dropdown d-none d-lg-inline-block ms-1">
-                      <button type="button" class="btn header-item noti-icon waves-effect" data-toggle="fullscreen">
-                          <i class="ri-fullscreen-line"></i>
-                      </button>
-                  </div>
               @elseif(Route::current()->getName() == 'invoice.add.local')
                   <div>
-                      <a href="{{ route('add.salary') }}">
+                      <a href="">
                           <i class="btn btn-info btn wave-effect wave-light fas fa-plus-circle">
                               Add Salary</i>
                       </a>
@@ -81,15 +75,10 @@
                                Corporate Bill</i>
                       </a>
                   </div>
-                  <div class="dropdown d-none d-lg-inline-block ms-1">
-                      <button type="button" class="btn header-item noti-icon waves-effect" data-toggle="fullscreen">
-                          <i class="ri-fullscreen-line"></i>
-                      </button>
-                  </div>
 
               @else
                   <div>
-                      <a href="{{ route('add.salary') }}">
+                      <a href="">
                           <i class="btn btn-info btn wave-effect wave-light fas fa-plus-circle">
                               Add Salary</i>
                       </a>
