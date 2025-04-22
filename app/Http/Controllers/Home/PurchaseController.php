@@ -89,6 +89,7 @@ class PurchaseController extends Controller
             $supplier_account_details->date = date('Y-m-d', strtotime($request->date));
             $supplier_account_details->total_amount = $request->estimated_amount;
             $supplier_account_details->balance = $latest_account_balance + ($request->estimated_amount - $request->paid_amount);
+            $supplier_account_details->approval_status = 'pending';
 
             // transaction
             $transaction = new Transaction();
@@ -97,8 +98,10 @@ class PurchaseController extends Controller
             $transaction->party_name = Supplier::findOrFail($request->supplier_id)->name;
             $transaction->bill_no = $purchase->purchase_no;
             $transaction->paid_by = $request->paid_source;
+            $transaction->approval_status = 'pending'; 
             $transaction->type = 'purchase';
             $transaction->updated_at = NULL;
+
 
 
             if ($request->paid_status == 'full_paid') {
@@ -530,5 +533,39 @@ class PurchaseController extends Controller
         }
 
         return view('admin.purchase_page.search_purchase_due_payment_history', compact('supplier_payment', 'start_date', 'end_date',));
+    }
+
+    public function PurchaseApprove($id)
+    {
+        $accountPurchase = SupplierAccountDetail::where('purchase_id', $id)->first();
+
+        $nextaccountPurchase = SupplierAccountDetail::where('company_id', $accountPurchase->supplier_id)->where('approval_status', 'approved')->where('id', '>', $accountPurchase->id)->get();
+
+        if (!$nextaccountPurchase->isEmpty()) {
+            $currentBalance = $accountPurchase->balance;
+            foreach ($nextaccountPurchase as $value) {
+                $value->balance = $value->due_amount + $currentBalance - $value->paid_amount;
+                $value->save();
+                $currentBalance = $value->balance;
+            }
+        }
+
+        $transaction = Transaction::where('purchase_id', $id)->first();
+
+        if ($accountPurchase != null) {
+            $accountPurchase->approval_status = 'approved';
+            $accountPurchase->save();
+        }
+
+        if ($transaction != null) {
+            $transaction->approval_status = 'approved';
+            $transaction->save();
+        }
+
+        $notification = array(
+            'message' => 'Purchase Approved Successfully',
+            'alert-type' => 'success',
+        );
+        return redirect()->back()->with($notification);
     }
 }

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('bill_no')->nullable();
             $table->string('paid_amount')->nullable();
             $table->string('due_amount')->nullable();
+            $table->string('approval_status')->nullable();
             $table->string('paid_by')->nullable();
             $table->timestamps();
         });

@@ -140,21 +140,21 @@
                                     </tbody>
                                     <tbody>
                                         <tr>
-                                            <td colspan="6">Sub Total</td>
+                                            <td colspan="5">Sub Total</td>
                                             <td width="12%">
                                                 <input type="number" name="sub_total" id="sub_total"
                                                     class="form-control sub_total" placeholder="Sub Total" readonly>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="6">Discount Amount</td>
+                                            <td colspan="5">Discount Amount</td>
                                             <td width="12%">
                                                 <input type="number" name="discount_amount" id="discount_amount"
                                                     class="form-control discount_amount" placeholder="Discount Amount">
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="6">Vat Amount</td>
+                                            <td colspan="5">Vat Amount</td>
                                             <td width="12%">
                                                 <input type="number" name="vat_amount" id="vat_amount"
                                                     class="form-control vat_amount" placeholder="Vat Amount"
@@ -162,7 +162,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="6">Grand Total</td>
+                                            <td colspan="5">Grand Total</td>
                                             <td>
                                                 <input type="text" name="estimated_amount" id="estimated_amount"
                                                     class="form-control estimated_amount" style="background:#ddd;"

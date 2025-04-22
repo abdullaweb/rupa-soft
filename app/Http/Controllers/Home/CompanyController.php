@@ -10,6 +10,7 @@ use App\Models\InvoiceDetail;
 use App\Models\Payment;
 use App\Models\PaymentDetail;
 use App\Models\AccountDetail;
+use App\Models\SupplierAccountDetail;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -582,14 +583,14 @@ class CompanyController extends Controller
     
     public function CompanyBillLocalDetails($id)
     {
-        $billDetails = AccountDetail::where('company_id', $id)->get();
+        $billDetails = AccountDetail::where('approval_status', 'approved')->where('company_id', $id)->get();
         $companyInfo = Company::where('id', $id)->first();
         return view('admin.local_customer.company_bill_details', compact('billDetails','companyInfo'));
     }
 
     public function CorporateBillDetails($id)
     {
-        $billDetails = AccountDetail::where('company_id', $id)->get();
+        $billDetails = AccountDetail::where('approval_status', 'approved')->where('company_id', $id)->get();
         $companyInfo = Company::where('id', $id)->first();
         return view('admin.local_customer.company_bill_details', compact('billDetails','companyInfo'));
     }
@@ -696,6 +697,29 @@ class CompanyController extends Controller
     }
 
     public function CompanyDynamicQuery(){
+
+        $billDetails = AccountDetail::get();
+        if($billDetails->isEmpty()) {
+            dd('No data found');
+        } else {
+            foreach ($billDetails as $key => $item) {
+                $item->approval_status = 'approved';
+                $item->save();
+            }
+        }
+
+        $supplierbillDetails = SupplierAccountDetail::get();
+        if($supplierbillDetails->isEmpty()) {
+            dd('No data found');
+        } else {
+            foreach ($supplierbillDetails as $key => $details) {
+                $details->approval_status = 'approved';
+                $details->save();
+            }
+        }
+
+        dd('done');
+
         $payment = Payment::where('company_id', 1)->get();
         // dd($payment->sum('total_amount'), $payment->sum('paid_amount'), $payment->sum('due_amount'));
         $companies = Company::where('id', 20)->get();

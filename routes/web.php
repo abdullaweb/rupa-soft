@@ -86,7 +86,6 @@ Route::middleware('auth', 'role:admin')->group(function () {
         Route::get('customer/invoice/details/{invoice_id}', 'CustomerInvoiceDetails')->name('customer.invoice.details');
 
 
-
         // all local customer route
         Route::get('/local-customer/all', 'CustomerAll')->name('all.customer');
         Route::post('/customer/store', 'CustomerStore')->name('store.customer');
@@ -230,6 +229,10 @@ Route::middleware('auth', 'role:admin')->group(function () {
         // invoice report
         Route::get('daily/invoice/report', 'DailyInvoiceReport')->name('daily.invoice.report');
         Route::get('daily/invoice/pdf', 'DailyInvoiceReportPdf')->name('daily.invoice.pdf');
+
+        //invoice approve
+
+        Route::get('/invoice/approve/{id}', 'InvoiceApprove')->name('invoice.approve');
     });
 
 
@@ -255,6 +258,9 @@ Route::middleware('auth', 'role:admin')->group(function () {
         // stock deduct
         Route::get('/stock/deduct', 'StockDeduct')->name('deduct.stock');
         Route::post('/update/deduct/purchase', 'StockDeductUpdate')->name('update.deduct.stock');
+
+        //purchase approve
+        Route::get('/purchase/approve/{id}', 'PurchaseApprove')->name('purchase.approve');
     });
 
     //Supplier Due Payment

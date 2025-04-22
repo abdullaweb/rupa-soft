@@ -7,6 +7,7 @@ use App\Models\Employee;
 use App\Models\Expense;
 use App\Models\OverTime;
 use App\Models\Payment;
+use App\Models\Company;
 use App\Models\Purchase;
 use App\Models\AccountDetail;
 use App\Models\SupplierAccountDetail;

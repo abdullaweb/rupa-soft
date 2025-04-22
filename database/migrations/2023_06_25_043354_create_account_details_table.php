@@ -22,6 +22,7 @@ return new class extends Migration
             // $table->double('balance')->nullable();
             $table->date('date')->nullable();
             $table->tinyInteger('status')->default('0');
+            $table->string('approval_status')->nullable();
             $table->timestamps();
         });
     }

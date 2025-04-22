@@ -277,7 +277,7 @@ class DuePaymentController extends Controller
     {
         $companyInfo = Company::where('id', $request->company_id)->first();
         if($companyInfo->status == '1') {
-            $accountBill = AccountDetail::where('company_id', $companyInfo->id)->latest('id')->first();
+            $accountBill = AccountDetail::where('company_id', $companyInfo->id)->where('approval_status', 'approved')->latest('id')->first();
             $payment_due_amount = Payment::where('company_id', $request->company_id)->sum('due_amount');
 
             $due_amount = $accountBill->balance ?? $payment_due_amount;
@@ -286,7 +286,7 @@ class DuePaymentController extends Controller
                 $query->where('due_amount', '!=', 0);
             })->get();
         } elseif($companyInfo->status == '0') {
-            $accountBill = AccountDetail::where('company_id', $companyInfo->id)->latest('id')->first();
+            $accountBill = AccountDetail::where('company_id', $companyInfo->id)->where('approval_status', 'approved')->latest('id')->first();
             $due_amount = $accountBill->balance ?? 0;
 
             $invoiceAll = NULL;
@@ -310,10 +310,12 @@ class DuePaymentController extends Controller
     private function updateNextAccountBalance($due_payment) {
         $company_id = $due_payment->customer_id;
         $account_details = AccountDetail::where('company_id', $company_id)
+        ->where('approval_status', 'approved')
             ->where('due_payment_id', $due_payment->id)
             ->first();
 
         $previous_balance = AccountDetail::where('id', '<', $account_details->id)
+            ->where('approval_status', 'approved')
             ->where('company_id', $company_id)
             ->latest('id')
             ->first()->balance ?? 0;
@@ -325,6 +327,7 @@ class DuePaymentController extends Controller
 
             if ($account_details) {
                 $nextAccountDetails = AccountDetail::where('company_id', $due_payment->customer_id)
+                    ->where('approval_status', 'approved')
                     ->where('id', '>', $account_details->id)
                     ->orderBy('id')
                     ->get();
@@ -363,10 +366,13 @@ class DuePaymentController extends Controller
 
         // Get account details
         $account_details = AccountDetail::where('company_id', $company_id)
+            ->where('approval_status', 'approved')
             ->latest('id')
             ->first();
         $due_amount = Payment::where('company_id', $company_id)->sum('due_amount');
         $account_balance = $account_details->balance ?? $due_amount;
+
+        // dd($account_balance);
 
         // dd($due_payment->paid_amount);
         // Update account balance
@@ -377,18 +383,23 @@ class DuePaymentController extends Controller
             $account_details = AccountDetail::where('due_payment_id', $due_payment->id)->first();
             $transaction = Transaction::where('customer_due_id', $due_payment->id)->first();
         }
+
         $account_details->paid_amount = $due_payment->paid_amount;
         $account_details->company_id = $company_id;
         $account_details->due_payment_id = $due_payment->id;
         $account_details->date = $due_payment->date;
         $account_details->voucher = $due_payment->voucher;
         $account_details->balance = $account_balance - $due_payment->paid_amount;
+        // dd($account_details->balance);
+        $account_details->approval_status = 'approved';
         $account_details->paid_source = $due_payment->paid_status;
         if ($companyInfo->status == '1') {
             $account_details->status = '1';
         } elseif ($companyInfo->status == '0') {
             $account_details->status = '0';
         }
+
+        // dd($account_details->balance);
         $account_details->save();
 
         // transaction
@@ -400,6 +411,7 @@ class DuePaymentController extends Controller
         $transaction->paid_amount = $due_payment->paid_amount;
         $transaction->type = 'customer due payment';
         $transaction->updated_at = NULL;
+        $transaction->approval_status = 'approved';
 
         // $this->resetDuePayment($due_payment);
 

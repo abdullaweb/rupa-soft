@@ -12,7 +12,9 @@
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Rupa</a></li>
-                                <li class="breadcrumb-item active">Dashboard</li>
+                                <li class="breadcrumb-item active">
+                                    Dashboard
+                                </li>
                             </ol>
                         </div>
 
@@ -220,6 +222,7 @@
                                             <th>Paid Amount</th>
                                             <th>Due Amount</th>
                                             <th>Paid By</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -258,6 +261,33 @@
                                                 </td>
                                                 <td>
                                                     {{ $transaction->paid_by ?? 'N/A' }} 
+                                                </td>
+                                                <td>
+
+                                                    @if (Auth::user()->can('invoice.approval.status'))
+                                                    @if ($transaction->approval_status == 'pending' && $transaction->type == 'sales')
+                                                        <a href="{{ route('invoice.approve', $transaction->invoice_id) }}" class="btn btn-info" id="approve">
+                                                            Approve
+                                                        </a>
+
+                                                        <a href="{{ route('invoice.delete', $transaction->invoice_id) }}" class="btn btn-danger" id="decline">
+                                                            Decline
+                                                        </a>
+                                                    @endif
+                                                    @endif
+
+                                                    @if (Auth::user()->can('purchase.approval.status'))
+                                                    @if ($transaction->approval_status == 'pending' && $transaction->type == 'purchase')
+                                                        <a href="{{ route('purchase.approve', $transaction->purchase_id) }}" class="btn btn-info" id="approve">
+                                                            Approve
+                                                        </a>
+
+                                                        <a href="{{ route('delete.purchase', $transaction->purchase_id) }}" class="btn btn-danger" id="decline">
+                                                            Decline
+                                                        </a>
+                                                    @endif
+                                                    @endif
+                                                   
                                                 </td>
                                             </tr>
                                         @endforeach

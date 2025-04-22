@@ -126,9 +126,6 @@ class InvoiceController extends Controller
                 $invoice->po_number = $request->po_number;
                 $invoice->status = '1';
                 $invoice->created_by = Auth::user()->id;
-
-                
-
                 
                 // dd($latestBalance);
 
@@ -173,6 +170,7 @@ class InvoiceController extends Controller
                          $account_details->company_id = $invoice_details->company_id;
                          $account_details->total_amount = $request->estimated_amount;
                          $account_details->date = date('Y-m-d', strtotime($request->date));
+                        $account_details->approval_status = 'pending';
 
                          // transaction
                         $transaction = new Transaction();
@@ -182,6 +180,7 @@ class InvoiceController extends Controller
                         $transaction->bill_no = $invoice->invoice_no_gen;
                         $transaction->paid_by = $request->paid_source;
                         $transaction->type = 'sales';
+                        $transaction->approval_status = 'pending';
                         $transaction->updated_at = NULL;
 
                         
@@ -767,8 +766,6 @@ class InvoiceController extends Controller
                         }
 
 
-
-
                         $payment = new Payment();
                         $payment_details = new PaymentDetail();
                         $account_details = new AccountDetail();
@@ -787,6 +784,7 @@ class InvoiceController extends Controller
                         $account_details->total_amount = $request->estimated_amount;
                         $account_details->date = date('Y-m-d', strtotime($request->date));
                         $account_details->paid_source = $request->paid_source;
+                        $account_details->approval_status = 'pending';
 
                          // transaction
                          $transaction = new Transaction();
@@ -795,10 +793,9 @@ class InvoiceController extends Controller
                          $transaction->party_name = Company::findOrFail($invoice->company_id)->name;
                          $transaction->bill_no = $invoice->invoice_no_gen;
                          $transaction->paid_by = $request->paid_source;
+                         $transaction->approval_status = 'pending';
                          $transaction->type = 'sales';
                          $transaction->updated_at = NULL;
-
-
 
                         if ($request->paid_status == 'full_paid') {
                             $payment->paid_amount = $request->estimated_amount;
@@ -954,6 +951,7 @@ class InvoiceController extends Controller
                             $transaction->party_name = Company::findOrFail($request->company_id)->name;
                             $transaction->paid_by = $request->paid_source;
                             $transaction->type = 'sales';
+
                         }
 
 
@@ -1091,6 +1089,42 @@ class InvoiceController extends Controller
         $allData = Invoice::whereBetween('date', [$sdate, $edate])->get();
         return view('admin.pdf.daily_invoice_report_pdf', compact('allData', 'sdate', 'edate'));
         // dd($allData);
+    }
+
+    public function InvoiceApprove($id)
+    {
+        $invoice = Invoice::findOrFail($id);
+
+        $accountInvoice = AccountDetail::where('invoice_id', $invoice->id)->first();
+
+        $nextaccountInvoice = AccountDetail::where('company_id', $accountInvoice->company_id)->where('approval_status', 'approved')->where('id', '>', $accountInvoice->id)->get();
+
+        if (!$nextaccountInvoice->isEmpty()) {
+            $currentBalance = $accountInvoice->balance;
+            foreach ($nextaccountInvoice as $value) {
+                $value->balance = $value->due_amount + $currentBalance - $value->paid_amount;
+                $value->save();
+                $currentBalance = $value->balance;
+            }
+        }
+
+        $transaction = Transaction::where('invoice_id', $invoice->id)->first();
+
+        if ($accountInvoice != null) {
+            $accountInvoice->approval_status = 'approved';
+            $accountInvoice->save();
+        }
+
+        if ($transaction != null) {
+            $transaction->approval_status = 'approved';
+            $transaction->save();
+        }
+
+        $notification = array(
+            'message' => 'Invoice Approved Successfully',
+            'alert-type' => 'success',
+        );
+        return redirect()->back()->with($notification);
     }
 
     public function UniqueNumber()

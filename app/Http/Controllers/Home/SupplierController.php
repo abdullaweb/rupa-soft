@@ -109,7 +109,7 @@ class SupplierController extends Controller
     public function SupplierPaymentDetails($id)
     {
         $supplierInfo = Supplier::findOrFail($id);
-        $billDetails = SupplierAccountDetail::where('supplier_id', $id)->get();
+        $billDetails = SupplierAccountDetail::where('approval_status', 'approved')->where('supplier_id', $id)->get();
         return view('admin.supplier.supplier_payment_details', compact('supplierInfo', 'billDetails'));
     }
 
