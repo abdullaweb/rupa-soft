@@ -11,6 +11,7 @@ use App\Models\Payment;
 use App\Models\PaymentDetail;
 use App\Models\AccountDetail;
 use App\Models\SupplierAccountDetail;
+use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -698,6 +699,19 @@ class CompanyController extends Controller
 
     public function CompanyDynamicQuery(){
 
+
+        $billDetails = Transaction::get();
+        if($billDetails->isEmpty()) {
+            dd('No data found');
+        } else {
+            foreach ($billDetails as $key => $item) {
+                $item->approval_status = 'approved';
+                $item->save();
+            }
+        }
+
+        dd('done');
+
         $billDetails = AccountDetail::get();
         if($billDetails->isEmpty()) {
             dd('No data found');
@@ -718,7 +732,7 @@ class CompanyController extends Controller
             }
         }
 
-        dd('done');
+       
 
         $payment = Payment::where('company_id', 1)->get();
         // dd($payment->sum('total_amount'), $payment->sum('paid_amount'), $payment->sum('due_amount'));
