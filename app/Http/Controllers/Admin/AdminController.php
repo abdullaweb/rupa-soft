@@ -94,7 +94,7 @@ class AdminController extends Controller
             $file = $request->file('photo');
             @unlink(public_path('upload/admin_images/' . $data->photo));
             $fileName = date('YmdHi') . $file->getClientOriginalName();
-            $file->move(('upload/admin_images'), $fileName);
+            $file->move(public_path('upload/admin_images'), $fileName);
             $data['photo'] = $fileName;
         }
         $data->save();
