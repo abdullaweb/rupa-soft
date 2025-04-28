@@ -46,7 +46,7 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td class="text-capitalize">
-                                        {{ $item->product_name ?? 'N/A' }}
+                                        {{ $item->subCategory->name ?? 'N/A' }}
                                     </td>
                                     <td class="text-capitalize">
                                         {{ $item->quantity }}

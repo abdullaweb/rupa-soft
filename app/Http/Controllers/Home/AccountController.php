@@ -198,6 +198,7 @@ class AccountController extends Controller
 
     public function StoreOpeningBalance(Request $request)
     {
+        $latestAccount = AccountDetail::where('company_id', $request->company_id)->latest('id')->first();
 
         if ($request->opening_type == 'opening_balance') {
             $account_details = new AccountDetail();
@@ -206,7 +207,13 @@ class AccountController extends Controller
             $account_details->due_amount = $request->total_amount - $request->paid_amount;
             $account_details->company_id = $request->company_id;
             $account_details->date = date('Y-m-d', strtotime($request->date));
+            if ($latestAccount) {
+                $account_details->balance = $latestAccount->balance + ($request->total_amount - $request->paid_amount);
+            } else {
+                $account_details->balance = $request->total_amount - $request->paid_amount;
+            }
             $account_details->status = '1';
+            $account_details->approval_status = 'approved';
             $account_details->save();
 
             $notification = array(
@@ -222,6 +229,7 @@ class AccountController extends Controller
             $account_details->company_id = $request->company_id;
             $account_details->date = date('Y-m-d', strtotime($request->date));
             $account_details->status = '1';
+            $account_details->approval_status = 'approved';
             $account_details->save();
 
             $notification = array(
@@ -246,12 +254,14 @@ class AccountController extends Controller
     {
 
         $accountId = $request->id;
+        $previousAccount = AccountDetail::where('company_id', $request->company_id)->where('id', '<', $accountId)->latest('id')->first();
         if ($request->opening_type == 'opening_balance') {
             AccountDetail::findOrFail($accountId)->update([
                 'invoice_id' => null,
                 'total_amount' => $request->total_amount,
                 'paid_amount' => $request->paid_amount,
                 'company_id' => $request->company_id,
+                'balance' => $previousAccount ? $previousAccount->balance + ($request->total_amount - $request->paid_amount) : ($request->total_amount - $request->paid_amount),
                 'due_amount' => $request->total_amount - $request->paid_amount,
                 'date' => date('Y-m-d', strtotime($request->date)),
             ]);
@@ -327,6 +337,7 @@ class AccountController extends Controller
 
     public function StoreSupplierOpeningBalance(Request $request)
     {
+        // dd($request->all());
         $latestBalance = SupplierAccountDetail::where('supplier_id', $request->supplier_id)->latest('id')->first()->balance ?? 0;
 
         if ($request->opening_type == 'opening_balance') {
@@ -338,6 +349,7 @@ class AccountController extends Controller
             $account_details->supplier_id = $request->supplier_id;
             $account_details->date = date('Y-m-d', strtotime($request->date));
             $account_details->status = 'opening';
+            $account_details->approval_status = 'approved';
             $account_details->save();
 
             $notification = array(
@@ -345,6 +357,9 @@ class AccountController extends Controller
                 'alert_type' => 'success',
             );
         } elseif ($request->opening_type == 'purchasewise_balance') {
+
+            // $account_details = SupplierAccountDetail::where('supplier_id', $request->supplier_id)->where('purchase_id', $request->purchase_no)->first();
+
             $account_details = new SupplierAccountDetail();
             $account_details->purchase_id = $request->purchase_no;
             $account_details->total_amount = $request->total_amount;
@@ -354,6 +369,7 @@ class AccountController extends Controller
             $account_details->supplier_id = $request->supplier_id;
             $account_details->date = date('Y-m-d', strtotime($request->date));
             $account_details->status = 'opening';
+            $account_details->approval_status = 'approved';
             $account_details->save();
 
             $notification = array(

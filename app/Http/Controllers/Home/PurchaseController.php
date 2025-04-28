@@ -49,6 +49,7 @@ class PurchaseController extends Controller
             foreach ($request->category_id as $key => $value) {
                 $purchase_meta = new PurchaseMeta();
                 $purchase_meta->purchase_id = $purchase->id;
+                // $purchase_meta->product_name = $request->product_name[$key];
                 $purchase_meta->category_id = $request->category_id[$key];
                 $purchase_meta->sub_cat_id = $request->sub_cat_id[$key];
                 $purchase_meta->description = $request->description[$key];
@@ -219,6 +220,7 @@ class PurchaseController extends Controller
             foreach ($request->category_id as $key => $value) {
                 $purchase_meta = new PurchaseMeta();
                 $purchase_meta->purchase_id = $purchase->id;
+                // $purchase_meta->product_name = $request->product_name[$key];
                 $purchase_meta->category_id = $request->category_id[$key];
                 $purchase_meta->sub_cat_id = $request->sub_cat_id[$key];
                 $purchase_meta->description = $request->description[$key];

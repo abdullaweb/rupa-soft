@@ -38,6 +38,7 @@ class SupplierController extends Controller
             $supplierAccountDetail->date = date('Y-m-d');
             $supplierAccountDetail->balance = $request->opening_balance;
             $supplierAccountDetail->status = 'opening';
+            $supplierAccountDetail->approval_status = 'approved';
             $supplierAccountDetail->save();
         }
         
@@ -75,6 +76,7 @@ class SupplierController extends Controller
             $supplierAccountDetail->date = date('Y-m-d');
             $supplierAccountDetail->status = 'opening';
             $supplierAccountDetail->balance = $request->opening_balance;
+            $supplierAccountDetail->approval_status = 'approved';
             $supplierAccountDetail->save();
         }
 

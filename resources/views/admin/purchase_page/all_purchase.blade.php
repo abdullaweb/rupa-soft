@@ -67,6 +67,9 @@
                                         $paidAmount = App\Models\SupplierPaymentDetail::where('purchase_id', $item->id)->sum('paid_amount');
 
                                         $dueAmount = App\Models\SupplierPaymentDetail::where('purchase_id', $item->id)->latest()->first();
+
+
+                                        $transaction = App\Models\Transaction::where('purchase_id', $item->id)->where('type', 'purchase')->latest()->first();
                                     @endphp
                                     <td>{{ $key + 1 }}</td>
                                     <td class="text-capitalize">
@@ -98,7 +101,23 @@
                                             <i class="fas fa-trash-alt"></i>
                                         </a>
 
-                                        @if (optional($dueAmount)->due_amount != 0)
+                                        @if (Auth::user()->can('purchase.approval.status'))
+                                        @if($transaction)
+                                        @if ($transaction->approval_status == 'pending' && $transaction->type == 'purchase')
+                                            <a href="{{ route('purchase.approve', $transaction->purchase_id) }}" class="btn btn-info" id="approve">
+                                                Approve
+                                            </a>
+
+                                            <a href="{{ route('delete.purchase', $transaction->purchase_id) }}" class="btn btn-danger" id="decline">
+                                                Decline
+                                            </a>
+                                        @endif
+                                        @endif
+                                        @endif
+
+                                        
+
+                                        {{-- @if (optional($dueAmount)->due_amount != 0)
                                             <a href="{{ route('purchase.due.payment', $item->id) }}" class="btn btn-info" title="Purchase Due Payment">
                                                 Due Payment
                                             </a>
@@ -106,7 +125,7 @@
 
                                         <a href="{{ route('purchase.due.payment.history', $item->id) }}" class="btn btn-info" title="Purchase Due  Payment History">
                                             Payment History
-                                        </a>
+                                        </a> --}}
                                     </td>
                                 </tr>
                             @endforeach

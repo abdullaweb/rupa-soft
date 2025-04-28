@@ -29,11 +29,8 @@
                             <tr>
                                 <th>Sl</th>
                                 <th>Name</th>
-                                <th>Purchase No</th>
                                 <th>Phone</th>
-                                <th>Total Amount</th>
-                                <th>Total Payment</th>
-                                <th>Total Due</th>
+                                <th>Balance</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -41,11 +38,8 @@
                             <tr>
                                 <th>Sl</th>
                                 <th>Name</th>
-                                <th>Purchase No</th>
                                 <th>Phone</th>
-                                <th>Total Amount</th>
-                                <th>Total Payment</th>
-                                <th>Total Due</th>
+                                <th>Balance</th>
                                 <th>Action</th>
                             </tr>
                         </tfoot>
@@ -57,26 +51,11 @@
                                     <td class="text-capitalize">
                                         {{ $item['supplier']['name'] }}
                                     </td>
-                                    <td>
-                                        @if ($item->purchase_id == null && $item->status == '1')
-                                            Opening Balance
-                                        @elseif ($item->purchase_id == null && $item->total_amount == null && $item->status == '1')
-                                            Cash Payment
-                                        @elseif ($item->purchase_id != null && $item->status == '1')
-                                            #{{ $item->purchase_id }}
-                                        @endif
-                                    </td>
                                     <td class="text-capitalize">
                                         {{ $item['supplier']['phone'] }}
                                     </td>
-                                    <td class="text-capitalize">
-                                        {{ $item->total_amount }}
-                                    </td>
-                                    <td class="text-capitalize">
-                                        {{ $item->paid_amount }}
-                                    </td>
-                                    <td class="text-capitalize">
-                                        {{ $item->due_amount }}
+                                    <td>
+                                        {{ ($item->total_amount - $item->paid_amount) == 0 ? $item->balance : $item->total_amount - $item->paid_amount }}
                                     </td>
                                     <td style="display:flex;">
                                         <a title="Edit Balance" href="{{ route('edit.supplier.opening.balance', $item->id) }}"
