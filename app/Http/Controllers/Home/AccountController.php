@@ -338,14 +338,18 @@ class AccountController extends Controller
     public function StoreSupplierOpeningBalance(Request $request)
     {
         // dd($request->all());
-        $latestBalance = SupplierAccountDetail::where('supplier_id', $request->supplier_id)->latest('id')->first()->balance ?? 0;
+        $latestAccount = SupplierAccountDetail::where('supplier_id', $request->supplier_id)->latest('id')->first();
 
         if ($request->opening_type == 'opening_balance') {
             $account_details = new SupplierAccountDetail();
             $account_details->total_amount = $request->total_amount;
             $account_details->paid_amount = $request->paid_amount;
             $account_details->due_amount = $request->total_amount - $request->paid_amount;
-            $account_details->balance = $latestBalance + ($request->total_amount - $request->paid_amount);
+            if ($latestAccount) {
+                $account_details->balance = $latestAccount->balance + ($request->total_amount - $request->paid_amount);
+            } else {
+                $account_details->balance = $request->total_amount - $request->paid_amount;
+            }
             $account_details->supplier_id = $request->supplier_id;
             $account_details->date = date('Y-m-d', strtotime($request->date));
             $account_details->status = 'opening';
@@ -365,7 +369,6 @@ class AccountController extends Controller
             $account_details->total_amount = $request->total_amount;
             $account_details->paid_amount = $request->paid_amount;
             $account_details->due_amount = $request->total_amount - $request->paid_amount;
-            $account_details->balance = $latestBalance + ($request->total_amount - $request->paid_amount);
             $account_details->supplier_id = $request->supplier_id;
             $account_details->date = date('Y-m-d', strtotime($request->date));
             $account_details->status = 'opening';
