@@ -287,6 +287,10 @@
                                                         </a>
                                                     @endif
                                                     @endif
+
+                                                    @if($transaction->approval_status == 'approved')
+                                                        <h6 class="text-success">Approved</h6>
+                                                    @endif
                                                    
                                                 </td>
                                             </tr>
