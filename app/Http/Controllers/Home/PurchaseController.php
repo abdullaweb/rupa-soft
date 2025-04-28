@@ -13,6 +13,7 @@ use App\Models\PurchaseSummery;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 class PurchaseController extends Controller
@@ -445,7 +446,7 @@ class PurchaseController extends Controller
         return redirect()->back()->with($notification);
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::error('Error deleting purchase: ' . $e->getMessage());
+            Log::error('Error deleting purchase: ' . $e->getMessage());
 
             $notification = array(
                 'message' => 'Purchase Delete Failed ' . $e->getMessage(),
@@ -539,35 +540,50 @@ class PurchaseController extends Controller
 
     public function PurchaseApprove($id)
     {
-        $accountPurchase = SupplierAccountDetail::where('purchase_id', $id)->first();
+        DB::beginTransaction();
+        try{
+            $accountPurchase = SupplierAccountDetail::where('purchase_id', $id)->first();
 
-        $nextaccountPurchase = SupplierAccountDetail::where('company_id', $accountPurchase->supplier_id)->where('approval_status', 'approved')->where('id', '>', $accountPurchase->id)->get();
-
-        if (!$nextaccountPurchase->isEmpty()) {
-            $currentBalance = $accountPurchase->balance;
-            foreach ($nextaccountPurchase as $value) {
-                $value->balance = $value->due_amount + $currentBalance - $value->paid_amount;
-                $value->save();
-                $currentBalance = $value->balance;
+            $nextaccountPurchase = SupplierAccountDetail::where('supplier_id', $accountPurchase->supplier_id)->where('approval_status', 'approved')->where('id', '>', $accountPurchase->id)->get();
+    
+            if (!$nextaccountPurchase->isEmpty()) {
+                $currentBalance = $accountPurchase->balance;
+                foreach ($nextaccountPurchase as $value) {
+                    $value->balance = $value->due_amount + $currentBalance - $value->paid_amount;
+                    $value->save();
+                    $currentBalance = $value->balance;
+                }
             }
+    
+            $transaction = Transaction::where('purchase_id', $id)->first();
+    
+            if ($accountPurchase != null) {
+                $accountPurchase->approval_status = 'approved';
+                $accountPurchase->save();
+            }
+    
+            if ($transaction != null) {
+                $transaction->approval_status = 'approved';
+                $transaction->save();
+            }
+
+            DB::commit();
+    
+            $notification = array(
+                'message' => 'Purchase Approved Successfully',
+                'alert-type' => 'success',
+            );
+            return redirect()->back()->with($notification);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error approving purchase: ' . $e->getMessage());
+
+            $notification = array(
+                'message' => 'Purchase Approve Failed ' . $e->getMessage(),
+                'alert-type' => 'error'
+            );
+
+            return redirect()->back()->with($notification);
         }
-
-        $transaction = Transaction::where('purchase_id', $id)->first();
-
-        if ($accountPurchase != null) {
-            $accountPurchase->approval_status = 'approved';
-            $accountPurchase->save();
-        }
-
-        if ($transaction != null) {
-            $transaction->approval_status = 'approved';
-            $transaction->save();
-        }
-
-        $notification = array(
-            'message' => 'Purchase Approved Successfully',
-            'alert-type' => 'success',
-        );
-        return redirect()->back()->with($notification);
     }
 }

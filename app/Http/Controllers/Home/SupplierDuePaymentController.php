@@ -286,6 +286,7 @@ class SupplierDuePaymentController extends Controller
         $account_details->date = $due_payment->date;
         $account_details->voucher = $due_payment->voucher;
         $account_details->balance = $account_balance - $due_payment->paid_amount;
+        $account_details->approval_status = 'approved';
         $account_details->save();
 
         // dd($transaction);
