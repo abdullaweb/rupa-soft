@@ -204,6 +204,152 @@
                     <!-- end row -->
                 </div>
                 @endif
+                @if (Auth::user()->can(abilities: 'pending.due.list'))
+                <div class="col-xl-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title text-center mb-3">Pending Purchase List</h4>
+                            <div class="table-responsive">
+                                <table id="" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>Sl</th>
+                                            <th>Supplier</th>
+                                            <th>Purchase No</th>
+                                            <th>Date</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($allPurchase as $key => $transaction)
+                                        <tr>
+                                            <td>{{ $key + 1 }}</td>
+                                            <td>
+                                                {{ $transaction->party_name }}
+                                            </td>
+                                            <td>
+                                                <a href="{{ route('purchase.details', $transaction->purchase_id) }}" target="_blank">
+                                                    {{ $transaction->bill_no }}
+                                                </a>
+                                            </td>
+                                            <td>
+                                                {{ $transaction->date }}
+                                            </td>
+                                            <td>
+
+                                                @if (Auth::user()->can('invoice.approval.status'))
+                                                @if ($transaction->approval_status == 'pending' && $transaction->type == 'sales')
+                                                    <a href="{{ route('invoice.approve', $transaction->invoice_id) }}" class="btn btn-info" id="approve">
+                                                        Approve
+                                                    </a>
+
+                                                    <a href="{{ route('invoice.delete', $transaction->invoice_id) }}" class="btn btn-danger" id="decline">
+                                                        Decline
+                                                    </a>
+                                                @endif
+                                                @endif
+
+                                                @if (Auth::user()->can('purchase.approval.status'))
+                                                @if ($transaction->approval_status == 'pending' && $transaction->type == 'purchase')
+                                                    <a href="{{ route('purchase.approve', $transaction->purchase_id) }}" class="btn btn-info" id="approve">
+                                                        Approve
+                                                    </a>
+
+                                                    <a href="{{ route('delete.purchase', $transaction->purchase_id) }}" class="btn btn-danger" id="decline">
+                                                        Decline
+                                                    </a>
+                                                @endif
+                                                @endif
+
+                                                @if($transaction->approval_status == 'approved')
+                                                    <h6 class="text-success">Approved</h6>
+                                                @endif
+                                               
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div><!-- end card -->
+                    <!-- end row -->
+                </div>
+                @endif
+
+                {{-- Supplier Due Payment Approve List --}}
+                @if (Auth::user()->can('pending.supplier.due.list'))
+                <div class="col-xl-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title text-center mb-3">Pending Sales List</h4>
+                            <div class="table-responsive">
+                                <table id="" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>Sl</th>
+                                            <th width="20%">Customer</th>
+                                            <th>Invoice No</th>
+                                            <th>Date</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($allSales as $key => $transaction)
+                                        <tr>
+                                            <td>{{ $key + 1 }}</td>
+                                            <td>
+                                                {{ $transaction->party_name }}
+                                            </td>
+                                            <td>
+                                                <a href="{{ route('invoice.print', $transaction->invoice_id) }}" target="_blank">
+                                                    {{ $transaction->bill_no }}
+                                                </a>
+                                            </td>
+                                            <td>
+                                                {{ $transaction->date }}
+                                            </td>
+                                            <td>
+
+                                                @if (Auth::user()->can('invoice.approval.status'))
+                                                @if ($transaction->approval_status == 'pending' && $transaction->type == 'sales')
+                                                    <a href="{{ route('invoice.approve', $transaction->invoice_id) }}" class="btn btn-info" id="approve">
+                                                        Approve
+                                                    </a>
+
+                                                    <a href="{{ route('invoice.delete', $transaction->invoice_id) }}" class="btn btn-danger" id="decline">
+                                                        Decline
+                                                    </a>
+                                                @endif
+                                                @endif
+
+                                                @if (Auth::user()->can('purchase.approval.status'))
+                                                @if ($transaction->approval_status == 'pending' && $transaction->type == 'purchase')
+                                                    <a href="{{ route('purchase.approve', $transaction->purchase_id) }}" class="btn btn-info" id="approve">
+                                                        Approve
+                                                    </a>
+
+                                                    <a href="{{ route('delete.purchase', $transaction->purchase_id) }}" class="btn btn-danger" id="decline">
+                                                        Decline
+                                                    </a>
+                                                @endif
+                                                @endif
+
+                                                @if($transaction->approval_status == 'approved')
+                                                    <h6 class="text-success">Approved</h6>
+                                                @endif
+                                               
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div><!-- end card -->
+                    <!-- end row -->
+                </div>
+                @endif
 
                 
                 <div class="col-xl-12">

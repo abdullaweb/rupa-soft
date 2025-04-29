@@ -285,7 +285,7 @@
 
                 let total = unit_price * selling_qty;
 
-                $(this).closest("tr").find('input.selling_price').val(total);
+                $(this).closest("tr").find('input.selling_price').val(total.toFixed(2));
                 $("#discount_amount").trigger('keyup');
 
             });
@@ -306,7 +306,7 @@
                         subTotal += parseFloat(value);
                     }
                 });
-                $("#sub_total").val(subTotal);
+                $("#sub_total").val(subTotal.toFixed(2));
 
 
                 let discount_amount = parseFloat($('#discount_amount').val());
@@ -314,7 +314,7 @@
                     sum -= parseFloat(discount_amount);
                 }
 
-                $("#estimated_amount").val(sum);
+                $("#estimated_amount").val(sum.toFixed(2));
             }
 
         });
