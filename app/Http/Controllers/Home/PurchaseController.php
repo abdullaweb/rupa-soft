@@ -20,7 +20,7 @@ class PurchaseController extends Controller
 {
     public function AllPurchase()
     {
-        $allPurchase = Purchase::latest()->get();
+        $allPurchase = Purchase::latest()->paginate(20); 
         return view('admin.purchase_page.all_purchase', compact('allPurchase'));
     }
 

@@ -24,7 +24,7 @@ class InvoiceController extends Controller
     public function InvoiceAll()
     {
         // $allData = Invoice::orderBy('date', 'desc')->where('status', '1')->get();
-        $allData = Invoice::latest()->where('status', '1')->get();
+        $allData = Invoice::latest()->where('status', '1')->paginate(20);
         // dd($allData);
         return view('admin.invoice.invoice_all', compact('allData'));
     }
@@ -637,7 +637,7 @@ class InvoiceController extends Controller
     // local customer invoice all method
     public function InvoiceAllLocal()
     {
-        $allData = Invoice::orderBy('date', 'desc')->orderBy('invoice_no', 'desc')->where('status', '0')->get();
+        $allData = Invoice::orderBy('date', 'desc')->orderBy('invoice_no', 'desc')->where('status', '0')->paginate(20);
         return view('admin.invoice.local_customer.invoice_all', compact('allData'));
     }
 

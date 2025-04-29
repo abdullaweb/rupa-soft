@@ -33,9 +33,9 @@
 
             </div>
             <div class="card-body">
-                <h4 class="text-muted text-center">Total Purchase Amount {{ $total }}</h4>
+                {{-- <h4 class="text-muted text-center">Total Purchase Amount {{ $total }}</h4> --}}
                 <div class="table-responsive">
-                    <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                    <table id="datatable2" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                             <tr>
                                 <th>Sl</th>
@@ -114,23 +114,12 @@
                                         @endif
                                         @endif
                                         @endif
-
-                                        
-
-                                        {{-- @if (optional($dueAmount)->due_amount != 0)
-                                            <a href="{{ route('purchase.due.payment', $item->id) }}" class="btn btn-info" title="Purchase Due Payment">
-                                                Due Payment
-                                            </a>
-                                        @endif
-
-                                        <a href="{{ route('purchase.due.payment.history', $item->id) }}" class="btn btn-info" title="Purchase Due  Payment History">
-                                            Payment History
-                                        </a> --}}
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
+                    {{ $allPurchase->links() }}
                 </div>
             </div>
 

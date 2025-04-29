@@ -15,12 +15,10 @@
                             <h4 class="card-title">Add Invoice </h4><br><br>
                             <div class="row mt-3">
                                 <div class="col-md-2">
-                                    <input class="form-control" type="hidden" name="invoice_no" value="{{ $invoice_no }}"
-                                        id="invoice_no" readonly style="background: #ddd;">
+                                    <input class="form-control" type="hidden" name="invoice_no" value="{{ $invoice_no }}" id="invoice_no" readonly style="background: #ddd;">
                                     <div class="md-3">
                                         <label for="example-text-input" class="col-sm-12 col-form-label">Date</label>
-                                        <input type="date" value="{{ $date }}" class="form-control"
-                                            name="date" id="date">
+                                        <input type="date" value="{{ $date }}" class="form-control" name="date" id="date">
                                     </div>
                                 </div>
                                 <div class="col-md-2">
@@ -38,33 +36,11 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="row mt-3" id="customer-info" style="display: none;">
-                                    <div class="col-md-4">
-                                        <div class="md-3">
-                                            <label for="customer_name" class="col-sm-12 col-form-label">Customer Name</label>
-                                            <input type="text" class="form-control" name="customer_name" id="customer_name" placeholder="Customer Name">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="md-3">
-                                            <label for="customer_email" class="col-sm-12 col-form-label">Customer Email</label>
-                                            <input type="email" class="form-control" name="customer_email" id="customer_email" placeholder="Customer Email">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="md-3">
-                                            <label for="customer_phone" class="col-sm-12 col-form-label">Customer Phone</label>
-                                            <input type="tel" class="form-control" name="customer_phone" id="customer_phone" placeholder="Customer Phone">
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="col-md-2">
                                     <div class="md-3">
                                         <label for="example-text-input" class="col-sm-12 col-form-label">Product
                                             Name</label>
-                                        <input type="text" class="form-control" id="product_name" name="product_name"
-                                            placeholder="Product Name" required=""
-                                            data-parsley-required-message="Product Name is required">
+                                        <input type="text" class="form-control" id="product_name" name="product_name" placeholder="Product Name" required="" data-parsley-required-message="Product Name is required">
                                         </select>
                                     </div>
                                 </div>
@@ -72,8 +48,7 @@
                                     <div class="md-3">
                                         <label for="example-text-input" class="col-sm-12 col-form-label">Category
                                             Name</label>
-                                        <select name="category_id" id="category_id"
-                                            class="form-control form-select select2">
+                                        <select name="category_id" id="category_id" class="form-control form-select select2">
                                             <option value="">Select Category Name</option>
                                             @foreach ($categories as $category)
                                                 <option value="{{ $category->id }}">
@@ -97,10 +72,31 @@
                                 <div class="col-md-2">
                                     <div class="md-3" id="default_addBtn">
                                         <label for="example-text-input" class="col-sm-12 col-form-label mt-4"></label>
-                                        <i class="btn btn-secondary btn-rounded wave-effect wave-light fas fa-plus-circle"
-                                            id="addEventMore">
+                                        <i class="btn btn-secondary btn-rounded wave-effect wave-light fas fa-plus-circle" id="addEventMore">
                                             Add
                                             More</i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Add New Customer Row --}}
+                            <div class="row mt-3" id="customer-info" style="display: none;">
+                                <div class="col-md-4">
+                                    <div class="md-3">
+                                        <label for="customer_name" class="col-sm-12 col-form-label">Customer Name</label>
+                                        <input type="text" class="form-control" name="customer_name" id="customer_name" placeholder="Customer Name">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="md-3">
+                                        <label for="customer_email" class="col-sm-12 col-form-label">Customer Email</label>
+                                        <input type="email" class="form-control" name="customer_email" id="customer_email" placeholder="Customer Email">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="md-3">
+                                        <label for="customer_phone" class="col-sm-12 col-form-label">Customer Phone</label>
+                                        <input type="tel" class="form-control" name="customer_phone" id="customer_phone" placeholder="Customer Phone">
                                     </div>
                                 </div>
                             </div>
@@ -108,8 +104,7 @@
 
 
                         <div class="card-body">
-                            <form method="POST" action="{{ route('invoice.store.local') }}" novalidate=""
-                                id="invoiceForm" autocomplete="off" class="custom-validation">
+                            <form method="POST" action="{{ route('invoice.store.local') }}" novalidate="" id="invoiceForm" autocomplete="off" class="custom-validation">
                                 @csrf
                                 <table class="table table-sm table-bordered" width="100%" style="border-color: #ddd;">
                                     <thead>
@@ -133,24 +128,19 @@
                                         <tr>
                                             <td colspan="8">Sub Total</td>
                                             <td>
-                                                <input type="number" name="sub_total" id="sub_total"
-                                                    class="form-control sub_total" placeholder="Sub Total" value="0"
-                                                    readonly>
+                                                <input type="number" name="sub_total" id="sub_total" class="form-control sub_total" placeholder="Sub Total" value="0" readonly>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td colspan="8">Discount Amount</td>
                                             <td>
-                                                <input type="number" name="discount_amount" id="discount_amount"
-                                                    class="form-control discount_amount" placeholder="Discount Amount">
+                                                <input type="number" name="discount_amount" id="discount_amount" class="form-control discount_amount" placeholder="Discount Amount">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td colspan="8">Grand Total</td>
                                             <td>
-                                                <input type="text" name="estimated_amount" id="estimated_amount"
-                                                    class="form-control estimated_amount" style="background:#ddd;" readonly
-                                                    value="0">
+                                                <input type="text" name="estimated_amount" id="estimated_amount" class="form-control estimated_amount" style="background:#ddd;" readonly value="0">
                                             </td>
                                         </tr>
                                     </tbody>
@@ -164,8 +154,7 @@
                                             <option value="full_due">Full Due</option>
                                             <option value="partial_paid">Partial Paid</option>
                                         </select>
-                                        <input type="text" placeholder="Enter Paid Amount" class="form-control"
-                                            name="paid_amount" id="paid_amount" style="display:none;">
+                                        <input type="text" placeholder="Enter Paid Amount" class="form-control" name="paid_amount" id="paid_amount" style="display:none;">
                                     </div>
                                     <div class="col-md-3" id="paid_source_col" style="display: none;">
                                         <select class="form-control" name="paid_source" id="paid_source">
@@ -174,9 +163,7 @@
                                             <option value="check">Check</option>
                                             <option value="online-banking">Online Banking</option>
                                         </select>
-                                        <input type="text" placeholder="Check OR Online Banking Name"
-                                            class="form-control" name="check_or_banking" id="check_or_banking"
-                                            style="display:none;">
+                                        <input type="text" placeholder="Check OR Online Banking Name" class="form-control" name="check_or_banking" id="check_or_banking" style="display:none;">
                                     </div>
                                 </div>
 
@@ -285,7 +272,7 @@
             $(document).on("click", "#addEventMore", function() {
 
                 let date = $("#date").val();
-                let customer_name = $("#customer_name").val();  
+                let customer_name = $("#customer_name").val();
                 let customer_email = $("#customer_email").val();
                 let customer_phone = $("#customer_phone").val();
                 let invoice_no = $("#invoice_no").val();
@@ -403,7 +390,7 @@
                 }
 
                 if (cat_name == 'Foyle Print' || cat_name == 'Paper' || cat_name == 'Pasting' || cat_name ==
-                    'Printing Item' || cat_name == 'Carton' || cat_name == 'Paper Cutting'  || cat_name == 'Garments Printing Item' || cat_name == 'Dise' || cat_name == 'Lamination Flim') {
+                    'Printing Item' || cat_name == 'Carton' || cat_name == 'Paper Cutting' || cat_name == 'Garments Printing Item' || cat_name == 'Dise' || cat_name == 'Lamination Flim') {
                     let total = Math.round(unit_price * selling_qty);
                     $(this).closest("tr").find('input.selling_price').val(total);
                     $("#discount_amount").trigger('keyup');
@@ -414,8 +401,8 @@
                     $(this).closest("tr").find('input.selling_price').val(total);
                     $("#discount_amount").trigger('keyup');
                 }
-                
-                if(selling_qty == 'MM'){
+
+                if (selling_qty == 'MM') {
                     let total = Math.round(unit_price * 1);
                     $(this).closest("tr").find('input.selling_price').val(total);
                     $("#discount_amount").trigger('keyup');
@@ -470,7 +457,7 @@
                 } else {
                     $('#paid_amount').hide();
                 }
-                
+
                 if (paidStatus == 'full_due') {
                     $('#paid_source_col').hide();
                 }
