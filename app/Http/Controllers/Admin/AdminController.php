@@ -38,9 +38,6 @@ class AdminController extends Controller
         $allSales = Transaction::where('type', 'sales')->where('approval_status', 'pending')->latest()->get();
         $allPurchase = Transaction::where('type', 'purchase')->where('approval_status', 'pending')->latest()->get();
 
-
-
-
         return view('admin.index', compact('purchase', 'expense', 'dueAmount', 'payment', 'pending_due_payment', 'supplier_pending_due_payment', 'allTransaction', 'allSales', 'allPurchase'));
     }
 

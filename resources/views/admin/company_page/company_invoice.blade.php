@@ -44,7 +44,7 @@
                                 </tfoot>
                                 <tbody>
                                     @php
-                                        $due_amount = App\Models\Payment::where('company_id', $id)->sum('due_amount');
+                                        $due_amount = App\Models\AccountDetail::where('company_id', $id)->latest('id')->first()->balance ?? 0;
                                     @endphp
                                     <h3 class="text-center text-danger">Total Due : {{ number_format($due_amount) }}/-</h3>
                                     @foreach ($allData as $key => $item)
