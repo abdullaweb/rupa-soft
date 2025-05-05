@@ -85,10 +85,7 @@
                                                         @elseif ($details->invoice_id == null && $details->status == '1')
                                                             Opening Balance
                                                         @elseif ($details->invoice_id == null && $details->status == '0')
-                                                        {!! $details->due_payment->code 
-                                                            ? '<a href="' . route('edit.due.payment', $details->due_payment->id) . '" target="_blank">' . $details->due_payment->code . '</a>' 
-                                                            : 'Cash Payment' !!}
-                                                        
+                                                           {{ $details->due_payment->code ?? 'Cash Payment' }} 
                                                         @elseif ($details->invoice_id != null && $details->status == '1')
                                                             #{{$details->invoice_id}}
                                                         @endif
