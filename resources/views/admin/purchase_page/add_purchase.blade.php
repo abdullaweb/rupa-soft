@@ -104,7 +104,7 @@
                                         <tr>
                                             <td colspan="5">Sub Total</td>
                                             <td>
-                                                <input type="number" name="sub_total" id="sub_total"
+                                                <input type="text" name="sub_total" id="sub_total"
                                                     class="form-control sub_total" placeholder="Sub Total" value="0"
                                                     readonly>
                                             </td>

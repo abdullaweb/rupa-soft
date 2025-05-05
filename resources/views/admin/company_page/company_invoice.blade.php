@@ -45,8 +45,19 @@
                                 <tbody>
                                     @php
                                         $due_amount = App\Models\Payment::where('company_id', $id)->sum('due_amount');
+
+                                        $total_amount = App\Models\Payment::where('company_id', $id)->sum('total_amount');
+
+                                        $paid_amount = App\Models\Payment::where('company_id', $id)->sum('paid_amount');
+
+                                        $new_due = $total_amount - $paid_amount;
                                     @endphp
-                                    <h3 class="text-center text-danger">Total Due : {{ number_format($due_amount) }}/-</h3>
+                                    <h3 class="text-center text-danger">
+                                        Total Due : {{ number_format($due_amount) }}/- <br>
+                                        Total Amount : {{ number_format($total_amount) }}/- <br>
+                                        Total Paid : {{ number_format($paid_amount) }}/- <br>
+                                        New Due : {{ number_format($new_due) }}/-
+                                    </h3>
                                     @foreach ($allData as $key => $item)
                                         <tr>
                                             <td>{{ $key + 1 }}</td>

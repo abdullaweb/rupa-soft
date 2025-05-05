@@ -63,7 +63,7 @@
                                             @php
                                                 $payment_due_amount = App\Models\Payment::where('company_id', $item->id)->sum('due_amount');
 
-                                                $account_due_amount = App\Models\AccountDetail::where('company_id', $item->id)->latest()->first();
+                                                $account_due_amount = App\Models\AccountDetail::where('company_id', $item->id)->latest('date')->first();
 
                                                 $due_amount = $account_due_amount->balance ??$payment_due_amount;
                                                 

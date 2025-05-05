@@ -591,7 +591,7 @@ class CompanyController extends Controller
 
     public function CorporateBillDetails($id)
     {
-        $billDetails = AccountDetail::where('approval_status', 'approved')->where('company_id', $id)->get();
+        $billDetails = AccountDetail::where('approval_status', 'approved')->where('company_id', $id)->orderBy('date', 'asc')->get();
         $companyInfo = Company::where('id', $id)->first();
         return view('admin.local_customer.company_bill_details', compact('billDetails','companyInfo'));
     }
@@ -699,16 +699,52 @@ class CompanyController extends Controller
 
     public function CompanyDynamicQuery(){
 
+        $companies = Company::where('status', '1')->where('id', 40)->get();
 
-        $billDetails = Transaction::get();
-        if($billDetails->isEmpty()) {
-            dd('No data found');
-        } else {
+        foreach ($companies as $company) {
+            $billDetails = AccountDetail::where('company_id', $company->id)->orderBy('date', 'asc')->get();
+
+            // dd($billDetails);
+            $previousBalance = 0;
+                    
             foreach ($billDetails as $key => $item) {
-                $item->approval_status = 'approved';
-                $item->save();
+                $item->balance = $previousBalance + $item->total_amount - $item->paid_amount;
+                $item->update();
+                $previousBalance = $item->balance; 
             }
         }
+
+        dd('done');
+
+        $corporateCompany = Company::where('status', '1')->where('id', 40)->get();
+
+        foreach($corporateCompany as $company) {
+            $payment = Payment::where('company_id', $company->id)->get();
+
+            // $previousBalance = 0;
+
+            foreach($payment as $pay) {
+
+                $existData = AccountDetail::where('invoice_id', $pay->invoice_id)->first(); 
+
+                if(!$existData) {
+                    $accountDetails = new AccountDetail();
+                    $accountDetails->invoice_id = $pay->invoice_id;
+                    $accountDetails->company_id = $pay->company_id;
+                    $accountDetails->date = $pay->invoice->date;
+                    $accountDetails->total_amount = $pay->total_amount;
+                    $accountDetails->paid_amount = $pay->paid_amount;
+                    $accountDetails->due_amount = $pay->due_amount;
+                    $accountDetails->balance = 0;
+                    $accountDetails->approval_status = 'approved';
+                    $accountDetails->save();
+                    // $previousBalance = $accountDetails->balance;
+                }
+
+                
+            }
+        }
+        
 
         dd('done');
 
