@@ -53,10 +53,10 @@
                                         $new_due = $total_amount - $paid_amount;
                                     @endphp
                                     <h3 class="text-center text-danger">
-                                        Total Due : {{ number_format($due_amount) }}/- <br>
+                                        {{-- Total Due : {{ number_format($due_amount) }}/- <br>
                                         Total Amount : {{ number_format($total_amount) }}/- <br>
-                                        Total Paid : {{ number_format($paid_amount) }}/- <br>
-                                        New Due : {{ number_format($new_due) }}/-
+                                        Total Paid : {{ number_format($paid_amount) }}/- <br> --}}
+                                        Total Due : {{ number_format($new_due) }}/-
                                     </h3>
                                     @foreach ($allData as $key => $item)
                                         <tr>
