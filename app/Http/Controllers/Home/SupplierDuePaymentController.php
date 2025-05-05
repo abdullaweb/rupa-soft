@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Home;
 
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
-use Exception;
 use Illuminate\Http\Request;
 use App\Models\SupplierDuePayment;
 use App\Models\Supplier;
@@ -12,8 +11,9 @@ use App\Models\Purchase;
 use App\Models\SupplierPaymentDetail;
 use App\Models\SupplierAccountDetail;
 use App\Models\SupplierDuePaymentDetail;
-use DB;
-use Log;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Exception;
 
 
 class SupplierDuePaymentController extends Controller

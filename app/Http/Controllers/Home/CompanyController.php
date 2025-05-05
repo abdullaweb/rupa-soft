@@ -699,24 +699,23 @@ class CompanyController extends Controller
 
     public function CompanyDynamicQuery(){
 
-        $companies = Company::where('status', '1')->where('id', 40)->get();
+        // $companies = Company::where('status', '1')->get();
 
-        foreach ($companies as $company) {
-            $billDetails = AccountDetail::where('company_id', $company->id)->orderBy('date', 'asc')->get();
+        // foreach ($companies as $company) {
+        //     $billDetails = AccountDetail::where('company_id', $company->id)->orderBy('date', 'asc')->get();
 
-            // dd($billDetails);
-            $previousBalance = 0;
+        //     $previousBalance = 0;
                     
-            foreach ($billDetails as $key => $item) {
-                $item->balance = $previousBalance + $item->total_amount - $item->paid_amount;
-                $item->update();
-                $previousBalance = $item->balance; 
-            }
-        }
+        //     foreach ($billDetails as $key => $item) {
+        //         $item->balance = $previousBalance + $item->total_amount - $item->paid_amount;
+        //         $item->update();
+        //         $previousBalance = $item->balance; 
+        //     }
+        // }
 
-        dd('done');
+        // dd('done');
 
-        $corporateCompany = Company::where('status', '1')->where('id', 40)->get();
+        $corporateCompany = Company::where('status', '1')->get();
 
         foreach($corporateCompany as $company) {
             $payment = Payment::where('company_id', $company->id)->get();
