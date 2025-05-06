@@ -277,7 +277,7 @@ class DuePaymentController extends Controller
     {
         $companyInfo = Company::where('id', $request->company_id)->first();
         if($companyInfo->status == '1') {
-            $accountBill = AccountDetail::where('company_id', $companyInfo->id)->where('approval_status', 'approved')->latest('date')->first();
+            $accountBill = AccountDetail::where('company_id', $companyInfo->id)->where('approval_status', 'approved')->latest('id')->first();
             $payment_due_amount = Payment::where('company_id', $request->company_id)->sum('due_amount');
 
             $due_amount = $accountBill->balance ?? $payment_due_amount;
@@ -286,7 +286,7 @@ class DuePaymentController extends Controller
                 $query->where('due_amount', '!=', 0);
             })->get();
         } elseif($companyInfo->status == '0') {
-            $accountBill = AccountDetail::where('company_id', $companyInfo->id)->where('approval_status', 'approved')->latest('date')->first();
+            $accountBill = AccountDetail::where('company_id', $companyInfo->id)->where('approval_status', 'approved')->latest('id')->first();
             $due_amount = $accountBill->balance ?? 0;
 
             $invoiceAll = NULL;
@@ -369,6 +369,9 @@ class DuePaymentController extends Controller
             ->where('approval_status', 'approved')
             ->latest('id')
             ->first();
+
+            // dd($account_details);
+
         $due_amount = Payment::where('company_id', $company_id)->sum('due_amount');
         $account_balance = $account_details->balance ?? $due_amount;
 

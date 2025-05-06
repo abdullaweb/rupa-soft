@@ -82,9 +82,7 @@
                                                                 href="{{ route('invoice.print.local', $details->invoice_id) }}">
                                                                 #{{ $details['account_details']['invoice_no_gen'] }}
                                                             </a>
-                                                        @elseif ($details->invoice_id == null && $details->status == '1')
-                                                            Opening Balance
-                                                        @elseif ($details->invoice_id == null && $details->status == '0')
+                                                        @elseif ($details->due_payment_id == true)
                                                            {{ $details->due_payment->code ?? 'Cash Payment' }} 
                                                         @elseif ($details->invoice_id != null && $details->status == '1')
                                                             #{{$details->invoice_id}}
