@@ -591,7 +591,7 @@ class CompanyController extends Controller
 
     public function CorporateBillDetails($id)
     {
-        $billDetails = AccountDetail::where('approval_status', 'approved')->where('company_id', $id)->orderBy('created_at', 'asc')->get();
+        $billDetails = AccountDetail::where('approval_status', 'approved')->where('company_id', $id)->orderBy('date', 'asc')->get();
         $companyInfo = Company::where('id', $id)->first();
         return view('admin.local_customer.company_bill_details', compact('billDetails','companyInfo'));
     }
