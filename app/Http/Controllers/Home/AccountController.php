@@ -315,7 +315,7 @@ class AccountController extends Controller
         if ($start_date && $end_date) {
             $startDate = Carbon::parse($start_date)->toDateTimeString();
             $endDate = Carbon::parse($end_date)->toDateTimeString();
-            $billDetails = AccountDetail::whereBetween('created_at', [$start_date, Carbon::parse($end_date)->endOfDay()])->where('company_id', $request->company_id)
+            $billDetails = AccountDetail::whereBetween('date', [$start_date, Carbon::parse($end_date)->endOfDay()])->where('company_id', $request->company_id)
                 ->get();
         }
         return view('admin.report.account_detials_report', compact('billDetails', 'start_date', 'end_date', 'company_id'));
