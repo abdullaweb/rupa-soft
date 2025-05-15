@@ -60,7 +60,7 @@
                                         <div class="col-md-4">
                                             <div class="border rounded bg-light py-2 px-2">
                                                 <small class="text-muted">Total Due</small>
-                                                <div class="fw-bold text-danger fs-5">BDT {{ number_format($billDetails->sum('due_amount')) ?? 0.00 }}/-</div>
+                                                <div class="fw-bold text-danger fs-5">BDT {{ number_format($billDetails->sum('total_amount') - $billDetails->sum('paid_amount')) ?? 0.00 }}/-</div>
                                             </div>
                                         </div>
                                     </div>

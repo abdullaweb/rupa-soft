@@ -312,6 +312,15 @@ class AccountController extends Controller
             $billDetails = AccountDetail::all();
         }
 
+        // start date null
+        if ($start_date && $end_date == null) {
+            $billDetails = AccountDetail::where('company_id', $request->company_id)->where('date', '>=', $start_date)->get();
+        }
+        // end date null
+        if ($start_date == null && $end_date) {
+            $billDetails = AccountDetail::where('company_id', $request->company_id)->where('date', '<=', $end_date)->get();
+        }
+
         if ($start_date && $end_date) {
             $startDate = Carbon::parse($start_date)->toDateTimeString();
             $endDate = Carbon::parse($end_date)->toDateTimeString();
