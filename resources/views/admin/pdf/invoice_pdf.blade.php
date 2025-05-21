@@ -169,11 +169,11 @@
                                                                 <td></td>
                                                             @endif
         
-                                                            <td class="text-center">{{ number_format($details->selling_qty) }}
+                                                            <td class="text-center">{{ number_format($details->selling_qty, 2) }}
                                                                 {{ $details['sub_category']['unit']['name'] }}</td>
                                                             <td class="text-center">{{ $details->unit_price }}/-</td>
                                                             <td class="text-center">
-                                                                {{ number_format($details->selling_price) }}/-
+                                                                {{ number_format($details->selling_price, 2) }}/-
                                                             </td>
                                                     </tr>
                                                 @endforeach

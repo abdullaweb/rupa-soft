@@ -72,6 +72,7 @@ class InvoiceController extends Controller
     public function InvoiceStore(Request $request)
     {
         // dd($request->all());
+        // dd($request->selling_qty);
         if ($request->company_id == null) {
             $notification = array(
                 'message' => 'Sorry, you do not any company',
@@ -667,7 +668,6 @@ class InvoiceController extends Controller
     public function InvoiceStoreLocal(Request $request)
     {
         // dd($request->all());
-
         if ($request->category_id == null) {
             $notification = array(
                 'message' => 'Sorry, you do not any category',
