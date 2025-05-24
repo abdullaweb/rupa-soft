@@ -169,7 +169,7 @@
                                                                 <td></td>
                                                             @endif
         
-                                                            <td class="text-center">{{ number_format($details->selling_qty, 2) }}
+                                                            <td class="text-center">{{ number_format($details->selling_qty) }}
                                                                 {{ $details['sub_category']['unit']['name'] }}</td>
                                                             <td class="text-center">{{ $details->unit_price }}/-</td>
                                                             <td class="text-center">
