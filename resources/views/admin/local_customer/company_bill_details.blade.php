@@ -78,38 +78,21 @@
                                                     <td>{{ date('d-m-Y', strtotime($details->date)) }}</td>
                                                     <td>
                                                         @if ($details->invoice_id != null  && $details->status == '0')
-                                                            <a
-                                                                href="{{ route('invoice.print.local', $details->invoice_id) }}">
-                                                                #{{ $details['account_details']['invoice_no_gen'] }}
-                                                            </a>
+                                                            @if ($details->company->status == '1')
+                                                                <a href="{{ route('invoice.print', $details->invoice_id) }}">
+                                                                    #{{ $details->invoice->invoice_no_gen }}
+                                                                </a>
+                                                            @else
+                                                                <a href="{{ route('invoice.print.local', $details->invoice_id) }}">
+                                                                    #{{ $details->invoice->invoice_no_gen }}
+                                                                </a>
+                                                            @endif
                                                         @elseif ($details->due_payment_id == true)
                                                            {{ $details->due_payment->code ?? 'Cash Payment' }} 
                                                         @elseif ($details->invoice_id != null && $details->status == '1')
                                                             #{{$details->invoice_id}}
                                                         @endif
                                                     </td>
-
-                                                    {{-- <td>
-                                                        @php
-                                                            $invoices = json_decode($details->voucher, true);
-                                                        @endphp
-                                                    
-                                                        @if ($invoices && is_array($invoices))
-                                                            @foreach ($invoices as $invoiceId)
-                                                                @php
-                                                                    $invoice = App\Models\Invoice::find($invoiceId);
-                                                                @endphp
-                                                    
-                                                                @if ($invoice)
-                                                                    {{ $invoice->invoice_no_gen }} <br>
-                                                                @else
-                                                                    Invoice Not Found <br>
-                                                                @endif
-                                                            @endforeach
-                                                        @else
-                                                            No invoice.
-                                                        @endif
-                                                    </td> --}}
 
                                                     <td>{{ $details->voucher ?? 'N/A' }}</td>
                                                     

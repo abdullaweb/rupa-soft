@@ -10,9 +10,13 @@
             position: absolute;
             bottom: 6vh;
         }
-        table.invoice_table td, table.invoice_table th, address{
+
+        table.invoice_table td,
+        table.invoice_table th,
+        address {
             color: #000 !important;
         }
+
         table.invoice_table tbody,
         td,
         tfoot,
@@ -56,13 +60,14 @@
             border-right-color: gray;
         }
 
-        td.des{
+        td.des {
             text-align: left !important;
         }
-        td.qty{
+
+        td.qty {
             text-align: right !important;
         }
-        
+
         tr.custom-border>td:first-child {
             border-color: transparent;
         }
@@ -83,8 +88,7 @@
 
                         <div class="d-print-none">
                             <div class="float-end">
-                                <a href="javascript:window.print()" class="btn btn-success waves-effect waves-light"><i
-                                        class="fa fa-print"></i> Print</a>
+                                <a href="javascript:window.print()" class="btn btn-success waves-effect waves-light"><i class="fa fa-print"></i> Print</a>
                             </div>
                         </div>
                     </div>
@@ -158,9 +162,7 @@
                                                         <td colspan="6">
                                                             <table width="100%" class="product_table">
                                                                 @php
-                                                                    $all_product = App\Models\InvoiceDetail::where('product_name', $product_name)
-                                                                        ->where('invoice_id', $invoice->id)
-                                                                        ->get();
+                                                                    $all_product = App\Models\InvoiceDetail::where('product_name', $product_name)->where('invoice_id', $invoice->id)->get();
                                                                 @endphp
                                                                 @foreach ($all_product as $item)
                                                                     <tr>
@@ -170,10 +172,10 @@
                                                                                     {{ $item['category']['name'] }}
                                                                                     @if ($item->sub_cat_id != null)
                                                                                         -
-                                                                                        {{ $item['sub_category']['name'] }} 
-                                                                                        
+                                                                                        {{ $item['sub_category']['name'] }}
+
                                                                                         @if ($item->description != null)
-                                                                                        - {{ $item->description }}
+                                                                                            - {{ $item->description }}
                                                                                         @else
                                                                                         @endif
                                                                                     @else
@@ -200,7 +202,7 @@
                                                                         @endif
 
                                                                         <td class="text-center" width="10%">
-                                                                            {{ number_format($item->selling_qty) }} {{ $item['sub_category']['unit']['name'] }}
+                                                                            {{ $item->selling_qty }} {{ $item['sub_category']['unit']['name'] }}
                                                                         </td>
                                                                         <td class="text-center" width="10%">
                                                                             {{ $item->unit_price }}/-
@@ -219,7 +221,7 @@
                                                         @php
                                                             $in_word = numberTowords($payments->total_amount);
                                                         @endphp
-                                                         <strong>In Word : </strong> {{ $in_word }}
+                                                        <strong>In Word : </strong> {{ $in_word }}
                                                     </td>
                                                     <td>Total</td>
                                                     <td class="text-center">{{ number_format($payments->total_amount) }}/-</td>
@@ -243,7 +245,7 @@
                                                 @endif
                                             </tbody>
                                         </table>
-                                        
+
                                     </div>
                                 </div>
 
@@ -298,13 +300,13 @@
                             $here_digits[$counter] .
                             $add_plural .
                             '
-                                                         ' .
+                                                                 ' .
                             $amt_hundred
                         : $change_words[floor($amount / 10) * 10] .
                             ' ' .
                             $change_words[$amount % 10] .
                             '
-                                                         ' .
+                                                                 ' .
                             $here_digits[$counter] .
                             $add_plural .
                             ' ' .
@@ -319,12 +321,12 @@
                 ? 'And ' .
                     ($change_words[$amount_after_decimal / 10] .
                         "
-                                                   " .
+                                                           " .
                         $change_words[$amount_after_decimal % 10]) .
                     ' Paise'
                 : '';
         return ($implode_to_Rupees ? $implode_to_Rupees . 'Taka Only ' : '') . $get_paise;
     }
-
+    
     ?>
 @endsection
