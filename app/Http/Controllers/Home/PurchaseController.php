@@ -90,7 +90,7 @@ class PurchaseController extends Controller
             $supplier_account_details->voucher = $request->voucher;
             $supplier_account_details->date = date('Y-m-d', strtotime($request->date));
             $supplier_account_details->total_amount = $request->estimated_amount;
-            $supplier_account_details->balance = $latest_account_balance + ($request->estimated_amount - $request->paid_amount);
+            // $supplier_account_details->balance = $latest_account_balance + ($request->estimated_amount - $request->paid_amount);
             $supplier_account_details->approval_status = 'pending';
 
             // transaction
@@ -115,6 +115,7 @@ class PurchaseController extends Controller
 
                 $supplier_account_details->paid_amount = $request->estimated_amount;
                 $supplier_account_details->due_amount = '0';
+                $supplier_account_details->balance = $latest_account_balance;
             } elseif ($request->paid_status == 'full_due') {
                 $supplier_payment->paid_amount = 0;
                 $supplier_payment->due_amount = $request->estimated_amount;
@@ -124,6 +125,7 @@ class PurchaseController extends Controller
 
                 $supplier_account_details->paid_amount = '0';
                 $supplier_account_details->due_amount = $request->estimated_amount;
+                $supplier_account_details->balance = $latest_account_balance + $request->estimated_amount;
             } elseif ($request->paid_status == 'partial_paid') {
                 $supplier_payment->paid_amount = $request->paid_amount;
                 $supplier_payment->due_amount = $request->estimated_amount - $request->paid_amount;
@@ -133,6 +135,7 @@ class PurchaseController extends Controller
 
                 $supplier_account_details->paid_amount = $request->paid_amount;
                 $supplier_account_details->due_amount = $request->estimated_amount - $request->paid_amount;
+                $supplier_account_details->balance = $latest_account_balance + ($request->estimated_amount - $request->paid_amount);
             }
 
             $supplier_payment->save();
