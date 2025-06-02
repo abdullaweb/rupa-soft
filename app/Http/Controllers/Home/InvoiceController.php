@@ -17,7 +17,7 @@ use App\Models\Tax;
 use App\Models\VatChalan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Log;
 
 class InvoiceController extends Controller
 {
@@ -71,9 +71,10 @@ class InvoiceController extends Controller
   
     public function InvoiceStore(Request $request)
     {
-        // dd($request->all());
-        // dd($request->selling_qty);
-        if ($request->company_id == null) {
+
+       DB::beginTransaction();
+        try {
+             if ($request->company_id == null) {
             $notification = array(
                 'message' => 'Sorry, you do not any company',
                 'alert-type' => 'error',
@@ -267,8 +268,6 @@ class InvoiceController extends Controller
                                 $payment->due_amount = $request->estimated_amount;
                                 $payment_details->current_paid_amount = '0';
 
-                                // dd('dhukse with tax');
-
                                 // transaction
                                 $transaction->paid_amount = '0';
                                 $transaction->due_amount = $request->estimated_amount;
@@ -312,11 +311,24 @@ class InvoiceController extends Controller
             } //end else
 
         }
+
+        DB::commit();
+
         $notification = array(
             'message' => 'Invoice Data Inserted Successfully',
             'alert-type' => 'success',
         );
+
         return redirect()->route('invoice.all')->with($notification);
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error('Invoice Store Error: ' . $e->getMessage());
+            $notification = array(
+                'message' => 'Something went wrong! Please try again.',
+                'alert-type' => 'error',
+            );
+            return redirect()->back()->with($notification);
+        }
     } //end method
 
 
@@ -335,8 +347,9 @@ class InvoiceController extends Controller
 
     public function InvoiceUpdate(Request $request)
     {
-        // dd($request->all());
-        $invoiceID = $request->id;
+        DB::beginTransaction();
+        try{
+           $invoiceID = $request->id;
 
         if ($request->company_id == null) {
             $notification = array(
@@ -365,15 +378,15 @@ class InvoiceController extends Controller
                 DB::transaction(function () use ($request, $invoice) {
                     if ($invoice->save()) {
                         // dd('hello');
-                        $count_company = count($request->company_id);
+                        $count_category = count($request->category_id);
 
-                        for ($i = 0; $i < $count_company; $i++) {
+                        for ($i = 0; $i < $count_category; $i++) {
 
                             $invoice_details = new InvoiceDetail();
                             $invoice_details->date = date('Y-m-d', strtotime($request->date));
                             $invoice_details->invoice_id = $invoice->id;
                             $invoice_details->invoice_no_gen = $invoice->invoice_no_gen;
-                            $invoice_details->company_id = $request->company_id[$i];
+                            $invoice_details->company_id = $request->company_id;
                             $invoice_details->category_id = $request->category_id[$i];
                             $invoice_details->sub_cat_id = $request->sub_cat_id[$i];
                             $invoice_details->description = $request->description[$i];
@@ -591,11 +604,23 @@ class InvoiceController extends Controller
             } //end else
 
         }
+
+        DB::commit();
+        
         $notification = array(
             'message' => 'Invoice Data Updated Successfully',
             'alert-type' => 'success',
         );
         return redirect()->route('invoice.all')->with($notification);
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error('Invoice Update Error: ' . $e->getMessage());
+            $notification = array(
+                'message' => 'Something went wrong! Please try again.',
+                'alert-type' => 'error',
+            );
+            return redirect()->back()->with($notification);
+        }
     }
     
     public function InvoiceDelete($id)
@@ -667,8 +692,9 @@ class InvoiceController extends Controller
 
     public function InvoiceStoreLocal(Request $request)
     {
-        // dd($request->all());
-        if ($request->category_id == null) {
+        DB::beginTransaction();
+        try {
+            if ($request->category_id == null) {
             $notification = array(
                 'message' => 'Sorry, you do not any category',
                 'alert-type' => 'error',
@@ -859,11 +885,24 @@ class InvoiceController extends Controller
             } //end else
 
         }
+
+        DB::commit();
+
         $notification = array(
             'message' => 'Invoice Data Inserted Successfully',
             'alert-type' => 'success',
         );
         return redirect()->route('invoice.all.local')->with($notification);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error('Local Invoice Store Error: ' . $e->getMessage());
+            $notification = array(
+                'message' => 'Something went wrong! Please try again.',
+                'alert-type' => 'error',
+            );
+            return redirect()->back()->with($notification);
+        }
     } //end method
     
     
@@ -881,7 +920,9 @@ class InvoiceController extends Controller
 
     public function InvoiceUpdateLocal(Request $request)
     {
-        $invoiceID = $request->id;
+        DB::beginTransaction();
+        try {
+            $invoiceID = $request->id;
         if ($request->category_id == null) {
             $notification = array(
                 'message' => 'Sorry, you do not any category',
@@ -915,7 +956,7 @@ class InvoiceController extends Controller
                             $invoice_details->date = date('Y-m-d', strtotime($request->date));
                             $invoice_details->invoice_id = $invoice->id;
                             $invoice_details->invoice_no_gen = $invoice->invoice_no_gen;
-                            $invoice_details->company_id = $request->company_id[$i];
+                            $invoice_details->company_id = $request->company_id;
                             $invoice_details->category_id = $request->category_id[$i];
                             $invoice_details->sub_cat_id = $request->sub_cat_id[$i];
                             $invoice_details->product_name = $request->product_name[$i];
@@ -1056,11 +1097,23 @@ class InvoiceController extends Controller
             } //end else
 
         }
+
+        DB::commit();
+        
         $notification = array(
             'message' => 'Invoice Updated Successfully',
             'alert-type' => 'success',
         );
         return redirect()->route('invoice.all.local')->with($notification);
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error('Local Invoice Update Error: ' . $e->getMessage());
+            $notification = array(
+                'message' => 'Something went wrong! Please try again.',
+                'alert-type' => 'error',
+            );
+            return redirect()->back()->with($notification);
+        }
     }
 
 

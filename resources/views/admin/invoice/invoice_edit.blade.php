@@ -145,7 +145,7 @@
                                                 <input type="hidden" name="po_number"
                                                     value="{{ $invoiceInfo->po_number }}">
                                                 <td hidden>
-                                                    <input type="hidden" name="company_id[]"
+                                                    <input type="hidden" name="company_id"
                                                         value="{{ $details->company_id }}">
                                                 </td>
                                                 <td hidden>
@@ -326,10 +326,7 @@
                 <input type="hidden" name="date" value="@{{ date }}">
                 <input type="hidden" name="invoice_no" value="@{{ invoice_no }}">
                 <input type="hidden" name="po_number" value="@{{ po_number }}">
-                <td hidden>
-                    <input type="hidden" name="company_id[]" value="@{{ company_id }}">
-                    @{{ company_name }}
-                </td>
+                <input type="hidden" name="company_id[]" value="@{{ company_id }}">
                 <td hidden>
                     <input type="hidden" name="category_id[]" value="@{{ category_id }}">
                     <span class="cat_name">@{{ category_name }}</span>

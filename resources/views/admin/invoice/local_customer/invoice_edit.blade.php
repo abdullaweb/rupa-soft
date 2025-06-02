@@ -109,7 +109,7 @@
                                                 <input type="hidden" name="invoice_no"
                                                     value="{{ $invoiceInfo->invoice_no }}">
                                                 <td hidden>
-                                                    <input type="hidden" name="company_id[]"
+                                                    <input type="hidden" name="company_id"
                                                         value="{{ $invoiceInfo->company_id }}">
                                                 </td>
                                                 <td hidden>
@@ -259,10 +259,7 @@
         <tr class="delete_add_more_item" id="delete_add_more_item">
             <input type="hidden" name="date" value="@{{ date }}">
             <input type="hidden" name="invoice_no" value="@{{ invoice_no }}">
-            <td hidden>
-                <input type="hidden" name="company_id[]" value="@{{ company_id }}">
-                @{{ company_name }}
-            </td>
+            <input type="hidden" name="company_id" value="@{{ company_id }}">
             <td hidden>
                 <input type="hidden" name="category_id[]" value="@{{ category_id }}">
                 <span class="cat_name">@{{ category_name }}</span>
@@ -387,16 +384,6 @@
                 $(this).closest(".delete_add_more_item").remove();
                 totalAmountPrice();
             });
-
-
-
-            //     $(document).on("keyup click", ".unit_price,.selling_qty", function() {
-            //         let unit_price = $(this).closest("tr").find('input.unit_price').val();
-            //         let selling_qty = $(this).closest("tr").find('input.selling_qty').val();
-            //         let total = unit_price * selling_qty;
-            //         $(this).closest("tr").find('input.selling_price').val(total);
-            //         $("#discount_amount").trigger('keyup');
-            //     });
 
 
             $(document).on("keyup click change", ".unit_price,.selling_qty,.size_length,.size_width,#side",
